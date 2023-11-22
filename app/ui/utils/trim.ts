@@ -1,0 +1,13 @@
+export const trim = (className: string) => className.replaceAll(/[\r\n]/gm, '')
+  .replaceAll(' false', '')
+  .replaceAll('false ', '')
+  .replaceAll(' true', '')
+  .replaceAll('true ', '')
+  .replaceAll(' undefined', '')
+  .replaceAll(' null', '')
+  .replaceAll('null ', '')
+  .replaceAll('undefined ', '')
+  .replace(/\s+/g, ' ')
+  .trim()
+  .trimEnd()
+  .trimStart();

@@ -1,7 +1,7 @@
 import { Swiper, SwiperClass, SwiperSlide, useSwiperSlide } from "swiper/react"
 import { trim } from "../utils/trim";
 import { Image } from "@shopify/hydrogen";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useRef, useState } from "react";
 
 type ImageProps = Omit<ComponentProps<typeof Image>, 'id'> & { alt: string };
 const ProductImage = ({ alt, ...props }: ImageProps) => {
@@ -26,6 +26,7 @@ type Props = {
 }
 export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, className = "" }: Props) => {
   const [currentSlide, setCurrentSlide] = useState(1);
+  const swiper = useRef<SwiperClass>();
 
   return (
     <div className={trim(`w-full h-full flex-col-center ${className}`)}>
@@ -36,10 +37,11 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
         spaceBetween={16}
         initialSlide={defaultIndex}
         onInit={(s) => {
+          swiper.current = s;
           getSwiper && getSwiper(s);
           setTimeout(() => { s.slideToLoop(defaultIndex) }, 500)
         }}
-        onSlideChange={(swiper) => setCurrentSlide(swiper.realIndex + 1)}
+        onSlideChange={(swiper) => setCurrentSlide(swiper.realIndex)}
         centeredSlides={true}
         breakpoints={{
           500: {
@@ -53,10 +55,16 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="lg:absolute right-10 flex flex-row lg:flex-col justify-start items-center text-neutral-600 mt-8 lg:mt-12">
-        <span>{currentSlide < 10 ? `0${currentSlide}` : currentSlide}</span>
-        <hr className="h-16 lg:border-r lg:my-3 lg:w-1px w-16 mx-3 border-neutral-600" />
-        <span>{images.length < 10 ? `0${images.length}` : images.length}</span>
+      <div className="pb-4 py-4 w-full overflow-y-hidden overflow-auto gap-x-4 flex flex-row justify-center items-center mt-4 lg:mt-8">
+        {images.map((img, i) => (
+          <button
+            onClick={() => swiper.current?.slideToLoop(i)}
+            className={trim(`flex-shrink-0 w-16 h-16 ${currentSlide === i && 'opacity-25'}`)}
+            key={i}
+          >
+            <Image {...img} className="w-full h-full" />
+          </button>
+        ))}
       </div>
     </div>
   )

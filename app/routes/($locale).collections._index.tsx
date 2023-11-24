@@ -1,44 +1,48 @@
-import {useLoaderData, Link} from '@remix-run/react';
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import {Pagination, getPaginationVariables, Image} from '@shopify/hydrogen';
-import type {CollectionFragment} from 'storefrontapi.generated';
+import { useLoaderData, Link } from '@remix-run/react';
+import { json, type LoaderArgs } from '@shopify/remix-oxygen';
+import { Pagination, getPaginationVariables, Image } from '@shopify/hydrogen';
+import type { CollectionFragment } from 'storefrontapi.generated';
+import { Card } from '~/ui/molecules';
+import { COLLECTIONS_QUERY } from '~/queries';
+import { ExtractCollection } from '~/components/collections';
 
-export async function loader({context, request}: LoaderArgs) {
+export async function loader({ context, request }: LoaderArgs) {
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: 4,
+    pageBy: 10,
   });
 
-  const {collections} = await context.storefront.query(COLLECTIONS_QUERY, {
+  const { collections } = await context.storefront.query(COLLECTIONS_QUERY, {
     variables: paginationVariables,
   });
 
-  return json({collections});
+  return json({ collections });
 }
 
 export default function Collections() {
-  const {collections} = useLoaderData<typeof loader>();
+  const { collections } = useLoaderData<typeof loader>();
 
   return (
     <div className="collections">
-      <h1>Collections</h1>
-      <Pagination connection={collections}>
-        {({nodes, isLoading, PreviousLink, NextLink}) => (
-          <div>
-            <PreviousLink>
-              {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
-            </PreviousLink>
-            <CollectionsGrid collections={nodes} />
-            <NextLink>
-              {isLoading ? 'Loading...' : <span>Load more ↓</span>}
-            </NextLink>
-          </div>
-        )}
-      </Pagination>
+      <div className="mb-32 lg:mb-48 mt-24">
+        <h1 className="text-3xl lg:text-6xl font-accent uppercase text-center mb-24 px-8">collections</h1>
+        <Pagination connection={collections}>
+          {({ nodes, isLoading, PreviousLink, NextLink }) => (
+            <ul className="flex flex-row justify-center items-start flex-wrap gap-8 sm:gap-x-16 2xl:gap-x-32 gap-y-16 max-w-7xl w-11/12 mx-auto">
+              <ExtractCollection collections={nodes} filter="nos kits" />
+              <ExtractCollection collections={nodes} filter="gels" />
+              <ExtractCollection collections={nodes} filter="accessoires" />
+              <ExtractCollection collections={nodes} filter="tout voir" />
+            </ul>
+          )}
+        </Pagination>
+      </div>
     </div>
   );
 }
 
-function CollectionsGrid({collections}: {collections: CollectionFragment[]}) {
+
+
+function CollectionsGrid({ collections }: { collections: CollectionFragment[] }) {
   return (
     <div className="collections-grid">
       {collections.map((collection, index) => (
@@ -79,42 +83,3 @@ function CollectionItem({
   );
 }
 
-const COLLECTIONS_QUERY = `#graphql
-  fragment Collection on Collection {
-    id
-    title
-    handle
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-  }
-  query StoreCollections(
-    $country: CountryCode
-    $endCursor: String
-    $first: Int
-    $language: LanguageCode
-    $last: Int
-    $startCursor: String
-  ) @inContext(country: $country, language: $language) {
-    collections(
-      first: $first,
-      last: $last,
-      before: $startCursor,
-      after: $endCursor
-    ) {
-      nodes {
-        ...Collection
-      }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
-      }
-    }
-  }
-` as const;

@@ -1,19 +1,19 @@
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type V2_MetaFunction} from '@remix-run/react';
-import {type Shop} from '@shopify/hydrogen/storefront-api-types';
+import { json, type LoaderArgs } from '@shopify/remix-oxygen';
+import { Link, useLoaderData, type V2_MetaFunction } from '@remix-run/react';
+import { type Shop } from '@shopify/hydrogen/storefront-api-types';
 
 type SelectedPolicies = keyof Pick<
   Shop,
   'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy'
 >;
 
-export const meta: V2_MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data.policy.title}`}];
+export const meta: V2_MetaFunction = ({ data }) => {
+  return [{ title: `Hydrogen | ${data.policy.title}` }];
 };
 
-export async function loader({params, context}: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
   if (!params.handle) {
-    throw new Response('No handle was passed in', {status: 404});
+    throw new Response('No handle was passed in', { status: 404 });
   }
 
   const policyName = params.handle.replace(
@@ -35,25 +35,21 @@ export async function loader({params, context}: LoaderArgs) {
   const policy = data.shop?.[policyName];
 
   if (!policy) {
-    throw new Response('Could not find the policy', {status: 404});
+    throw new Response('Could not find the policy', { status: 404 });
   }
 
-  return json({policy});
+  return json({ policy });
 }
 
 export default function Policy() {
-  const {policy} = useLoaderData<typeof loader>();
+  const { policy } = useLoaderData<typeof loader>();
 
   return (
-    <div className="policy">
-      <br />
-      <br />
-      <div>
-        <Link to="/policies">← Back to Policies</Link>
-      </div>
-      <br />
-      <h1>{policy.title}</h1>
-      <div dangerouslySetInnerHTML={{__html: policy.body}} />
+    <div className="page px-4 max-w-5xl mx-auto mt-24">
+      <header>
+        <h1 className="uppercase text-2xl lg:text-7xl font-accent">{policy.title}</h1>
+      </header>
+      <main dangerouslySetInnerHTML={{ __html: policy.body }} className="mt-6 mb-32" />
     </div>
   );
 }

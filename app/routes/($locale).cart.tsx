@@ -89,8 +89,8 @@ export default function Cart() {
   const cart = root.data?.cart as Promise<CartApiQueryFragment | null>;
 
   return (
-    <div className="cart">
-      <h1 className="text-2xl uppercase font-accent">Cart</h1>
+    <div className="cart mx-auto max-w-7xl px-4">
+      <h1 className="text-2xl lg:text-7xl mt-16 mb-8 uppercase font-accent">Cart</h1>
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await errorElement={<div>An error occurred</div>} resolve={cart}>
           {(cart) => {

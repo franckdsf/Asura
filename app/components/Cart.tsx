@@ -59,7 +59,7 @@ function CartLines({
         {lines.nodes.map((line) => (
           <CartLineItem key={line.id} line={line} layout={layout} />
         ))}
-        <FreeItem />
+        {lines.nodes.length > 0 && <FreeItem />}
       </ul>
     </div>
   );
@@ -123,7 +123,7 @@ function CartCheckoutActions({ checkoutUrl }: { checkoutUrl: string }) {
   if (!checkoutUrl) return null;
 
   return (
-    <div className="py-3 px-5 bg-neutral-900 rounded-full text-center mb-5">
+    <div className="max-w-xl float-right w-full py-3 px-5 bg-neutral-900 rounded-full text-center mb-5">
       <a href={checkoutUrl} target="_self">
         <p className="text-neutral-50 uppercase text-sm lg:text-md">Passer à la caisse</p>
       </a>

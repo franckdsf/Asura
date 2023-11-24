@@ -159,16 +159,16 @@ export default function Product() {
 
   return (
     <div>
-      <div className="lg:h-screen-w-header lg:bg-container-light">
+      <div className="lg:h-screen-w-header lg:bg-container-light lg:flex flex-row justify-between items-center">
         {selectedVariant?.image && <CarouselProductImages
           defaultIndex={0}
-          className="pt-4 lg:pb-[15vh]"
+          className="pt-4 lg:pt-10 lg:pb-[15vh] border-r border-neutral-300"
           getSwiper={(s) => swiper.current = s}
           images={images}
         />}
         {/* <ProductImage image={selectedVariant?.image} /> */}
         <ProductMain
-          className="z-10 lg:absolute bottom-24 left-0 lg:bg-container-light w-full lg:max-w-md xl:max-w-xl lg:px-10 lg:py-6"
+          className="z-10 w-full lg:max-w-xl 2xl:max-w-3xl lg:px-24 2xl:px-32 lg:py-6 lg:-mt-16"
           selectedVariant={selectedVariant}
           product={product}
           variants={variants}
@@ -217,7 +217,7 @@ function ProductMain({
         <span className="text-xs">ebook offert</span>
       </div>
       <AddToCartButton
-        className="w-full !py-4 mt-4 lg:hidden"
+        className="w-full lg:max-w-lg !py-4 mt-4 lg:mt-12"
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
           window.location.href = window.location.href + '#cart-aside';

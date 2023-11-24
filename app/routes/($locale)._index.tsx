@@ -12,8 +12,9 @@ import type {
 import { Landing, ProductsSpotlight, SpecialOffer } from '@ui/templates';
 import { Card } from '@ui/molecules';
 import { CarouselProducts } from '@ui/organisms';
-import { COLLECTION_QUERY } from '../queries';
+import { COLLECTION_QUERY, COLLECTIONS_QUERY } from '../queries';
 import { RecommendedProducts } from '~/components/products';
+import { ExtractCollection } from '~/components/collections';
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Hydrogen | Home' }];
@@ -21,18 +22,24 @@ export const meta: V2_MetaFunction = () => {
 
 export async function loader({ context, request }: LoaderArgs) {
   const { storefront } = context;
-  const { collections } = await storefront.query(FEATURED_COLLECTION_QUERY);
-  const featuredCollection = collections.nodes[0];
+  const { collections: collectionsTmp } = await storefront.query(FEATURED_COLLECTION_QUERY);
+  const featuredCollection = collectionsTmp.nodes[0];
 
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 100,
   });
 
+
   const { collection: recommendedProducts } = await storefront.query(COLLECTION_QUERY, {
     variables: { handle: 'recommended', ...paginationVariables },
   });
 
-  return json({ featuredCollection, recommendedProducts });
+
+  const { collections } = await context.storefront.query(COLLECTIONS_QUERY, {
+    variables: paginationVariables,
+  });
+
+  return json({ collections: collections, featuredCollection, recommendedProducts });
 }
 
 export default function Homepage() {
@@ -43,10 +50,10 @@ export default function Homepage() {
       <div className="mb-32 lg:mb-48 mt-24">
         <h1 className="text-3xl lg:text-6xl font-accent uppercase text-center mb-24 px-8">nos produits</h1>
         <ul className="flex flex-row justify-center items-start flex-wrap gap-8 sm:gap-x-16 2xl:gap-x-32 gap-y-16 max-w-7xl w-11/12 mx-auto">
-          <li><Card.Category text="nos gels" /></li>
-          <li><Card.Category text="nos coats" /></li>
-          <li><Card.Category text="accessoires" /></li>
-          <li><Card.Category text="nos produits" /></li>
+          <ExtractCollection collections={data.collections.nodes} filter="nos kits" />
+          <ExtractCollection collections={data.collections.nodes} filter="gels" />
+          <ExtractCollection collections={data.collections.nodes} filter="accessoires" />
+          <ExtractCollection collections={data.collections.nodes} filter="tout voir" />
         </ul>
       </div>
       <SpecialOffer

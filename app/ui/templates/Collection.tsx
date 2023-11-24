@@ -40,14 +40,6 @@ const TemplateBig = ({ products }: TemplateProps) => (
 )
 const TEMPLATE_BIG: TemplateInfo = { Component: TemplateBig, name: 'TEMPLATE_BIG', elements: 1, rows: 2 };
 
-const TemplateBigAndSmall = ({ products, gap }: TemplateProps) => (
-  <ul className={trim(`grid grid-cols-2 ${gap} w-full`)}>
-    <li className="w-full col-span-2 row-span-2">{products.length > 0 && <Product {...products[0]} />}</li>
-    <li className="w-full">{products.length > 1 && <Product {...products[1]} />}</li>
-  </ul>
-)
-const TEMPLATE_BIG_AND_SMALL: TemplateInfo = { Component: TemplateBigAndSmall, name: 'TEMPLATE_BIG_AND_SMALL', elements: 2, rows: 2 };
-
 const TemplateSpaceBottom = ({ products, gap }: TemplateProps) => (
   <ul className={trim(`grid grid-cols-2 ${gap} xl:row-span-2 w-full`)}>
     <li className="w-full">{products.length > 0 && <Product {...products[0]} />}</li>
@@ -92,8 +84,9 @@ const TemplateSpaceLeft = ({ products, gap }: TemplateProps) => (
 )
 const TEMPLATE_SPACE_LEFT: TemplateInfo = { Component: TemplateSpaceLeft, name: 'TEMPLATE_SPACE_LEFT', elements: 1, rows: 2 };
 
-const CHUNKS_TEMPLATE = [TEMPLATE_BIG_AND_SMALL, TEMPLATE_BIG, TEMPLATE_SPACE_BOTTOM, TEMPLATE_SPACE_RIGHT,
+const CHUNKS_TEMPLATE_COMPLEX = [TEMPLATE_BIG, TEMPLATE_SPACE_RIGHT, TEMPLATE_BIG,
   TEMPLATE_2_COLS, TEMPLATE_ONE_OF_TWO, TEMPLATE_SPACE_LEFT] as const;
+const CHUNKS_TEMPLATE_MINIMALIST = [TEMPLATE_BIG, TEMPLATE_2_COLS] as const;
 
 type Props = {
   title: string;
@@ -115,6 +108,9 @@ export const Collection = ({ className = "", title, description, products }: Pro
 
     let previous2Chunk: string = '';
     let previousChunk: string = '';
+
+    const CHUNKS_TEMPLATE = products.length > 8 ? CHUNKS_TEMPLATE_COMPLEX : CHUNKS_TEMPLATE_MINIMALIST;
+
     const chunks2Elements = CHUNKS_TEMPLATE.filter((c) => c.elements === 2);
     const chunks1Element = CHUNKS_TEMPLATE.filter((c) => c.elements === 1);
 
@@ -127,10 +123,11 @@ export const Collection = ({ className = "", title, description, products }: Pro
 
       const templates = isLength2 ? chunks2Elements : isLength1 ? chunks1Element : CHUNKS_TEMPLATE;
       const filteredChunksTemplate = templates.filter((c) => c.name !== previousChunk && c.name !== previous2Chunk);
+      const filteredChunksCleaned = filteredChunksTemplate.length > 0 ? filteredChunksTemplate : templates;
 
       // select a random number between 0 & filteredChunksTemplate.length using
-      const randomIndex = Math.floor(random(i) * filteredChunksTemplate.length);
-      const randomTemplate = filteredChunksTemplate[randomIndex];
+      const randomIndex = Math.floor(random(i) * filteredChunksCleaned.length);
+      const randomTemplate = filteredChunksCleaned[randomIndex];
 
       previous2Chunk = previousChunk;
       previousChunk = randomTemplate.name;
@@ -140,6 +137,26 @@ export const Collection = ({ className = "", title, description, products }: Pro
         template: randomTemplate
       }
     })
+
+    const hasChunkOfLength2 = generatedChunks.some((c) => c.chunk.length > 1);
+    if (hasChunkOfLength2) {
+      let randomIndex = Math.floor(generatedChunks.length / 2);
+      while (generatedChunks[randomIndex].chunk.length === 1) {
+        randomIndex = Math.floor(random(randomIndex) * generatedChunks.length);
+      }
+
+      // break the chunk
+      const chunkToBreak = generatedChunks[randomIndex];
+      const chunkToBreakLength = chunkToBreak.chunk.length;
+      const chunkToBreakTemplate = chunkToBreak.template;
+      const newChunk = {
+        chunk: chunkToBreak.chunk.slice(chunkToBreakLength - 1),
+        template: chunkToBreakTemplate
+      }
+      chunkToBreak.chunk = chunkToBreak.chunk.slice(0, chunkToBreakLength - 1);
+      generatedChunks.splice(randomIndex + 1, 0, newChunk);
+
+    }
 
     // check if there is at least one TEMPLATE_BIG chunk in the chunks, if not, replace a chunk with length 1 by it
     const hasBigChunk = generatedChunks.some((c) => c.template.name === TEMPLATE_BIG.name);

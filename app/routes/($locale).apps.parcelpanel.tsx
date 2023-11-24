@@ -11,7 +11,7 @@ export default function Parcel() {
       if (element?.hasAttribute('data-v-app')) return;
 
       location.reload();
-    }, 2000)
+    }, 4000)
 
 
 

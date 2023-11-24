@@ -5,12 +5,13 @@ import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
 import { useState } from "react";
 import { CartLineInput } from "@shopify/hydrogen/storefront-api-types";
-import { useBreakpoint, useScrollDirection } from "@ui/hooks";
+import { useBreakpoint, useClickOutside, useScrollDirection } from "@ui/hooks";
 
 type DefaultProps = { className?: string }
 
 export function ProductOptions({ option, defaultOpen = false }: { option: VariantOption, defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
+  const ref = useClickOutside(() => open && setOpen(false));
 
   const selectedValue = option.values.find((o) => o.isActive);
 
@@ -26,7 +27,7 @@ export function ProductOptions({ option, defaultOpen = false }: { option: Varian
         {selectedValue?.value}
         {open ? <Icon.CaretDown className="icon-sm lg:icon-md" /> : <Icon.CaretUp className="icon-sm lg:icon-md" />}
       </button>
-      {open && <div className={trim(`border border-neutral-300 absolute w-full bottom-16 lg:max-w-xl lg:bottom-20 bg-container-light flex flex-wrap p-4 gap-2`)}>
+      {open && <div ref={ref} className={trim(`border border-neutral-300 absolute w-full bottom-16 lg:max-w-xl lg:bottom-20 bg-container-light flex flex-wrap p-4 gap-2`)}>
         {option.values.map(({ value, isAvailable, isActive, to }) => {
           return (
             <Link
@@ -130,7 +131,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
   const { scrolled, direction } = useScrollDirection();
   const { isGreater } = useBreakpoint(768);
 
-  const showExtra = (!isGreater && scrolled && direction === "up") || isGreater || !scrolled
+  const showExtra = (!isGreater && scrolled && direction === "up") || isGreater || !scrolled;
 
   return (
     <div className={trim(`z-50 sticky bottom-0 w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>
@@ -140,16 +141,21 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
           resolve={variants}
         >
           {(data) => (
-            showExtra &&
-            <div className={trim(`w-full ${(data.product?.variants.nodes.length || 1) > 1 && 'mb-4'} lg:mb-0 py-1px px-4`)}>
-              <VariantSelector
-                handle={product.handle}
-                options={product.options}
-                variants={data.product?.variants.nodes || []}
-              >
-                {({ option }) => <ProductOptions key={option.name} option={option} />}
-              </VariantSelector>
-            </div>
+            (data.product?.variants.nodes.length || 1) <= 1 ?
+              <div className="w-full flex flex-col justify-center items-start max-lg:hidden">
+                <h1 className="text-md-semibold uppercase">{product.title}</h1>
+              </div>
+              : (
+                showExtra &&
+                <div className={trim(`w-full mb-4 lg:mb-0 py-1px px-4`)}>
+                  <VariantSelector
+                    handle={product.handle}
+                    options={product.options}
+                    variants={data.product?.variants.nodes || []}
+                  >
+                    {({ option }) => <ProductOptions key={option.name} option={option} />}
+                  </VariantSelector>
+                </div>)
           )}
         </Await>
         {showExtra && <div className="w-full flex-row-between lg:hidden mb-2 px-4 lg:px-10">

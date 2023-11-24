@@ -1,13 +1,15 @@
 import ReactCurvedText from 'react-curved-text';
-
+import { Image } from '@shopify/hydrogen';
+import { ComponentProps } from 'react';
 type Props = {
   text: string;
   posX?: number;
+  image?: ComponentProps<typeof Image>;
 }
-export const Category = ({ text, posX = 60 }: Props) => {
+export const Category = ({ image, text, posX = 60 }: Props) => {
   return (
     <div className="flex-col-center overflow-hidden">
-      <div className="object-over w-32 xl:w-52 aspect-product rounded-full bg-container-light" />
+      <Image {...image} className="object-over w-32 xl:w-52 aspect-product rounded-full bg-container-light" />
       <span className="text-lg mt-6 text-neutral-600">+</span>
       <h3 className="text-md lg:text-[32px] font-accent uppercase mt-2 lg:mt-4 pb-1 text-neutral-600">{text}</h3>
       <div className="h-8 relative hidden">

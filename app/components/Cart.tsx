@@ -99,7 +99,7 @@ function CartLineItem({
             }
           }}
         >
-          <p className="text-xs-semibold uppercase">
+          <p className="uppercase text-xs-semibold">
             {product.title}
           </p>
         </Link>
@@ -123,9 +123,9 @@ function CartCheckoutActions({ checkoutUrl }: { checkoutUrl: string }) {
   if (!checkoutUrl) return null;
 
   return (
-    <div className="max-w-xl float-right w-full py-3 px-5 bg-neutral-900 rounded-full text-center mb-5">
+    <div className="float-right w-full max-w-xl px-5 py-3 mb-5 text-center rounded-full bg-neutral-900">
       <a href={checkoutUrl} target="_self">
-        <p className="text-neutral-50 uppercase text-sm lg:text-md">Passer à la caisse</p>
+        <p className="text-sm uppercase text-neutral-50 lg:text-md">Passer à la caisse</p>
       </a>
     </div>
   );
@@ -145,7 +145,7 @@ export function CartSummary({
 
   return (
     <div aria-labelledby="cart-summary" className={className}>
-      <dl className="cart-subtotal text-md mb-6 flex-row-between">
+      <dl className="mb-6 cart-subtotal text-md flex-row-between">
         <dt>Sous-total</dt>
         <dd className="ml-4">
           {cost?.subtotalAmount?.amount ? (
@@ -168,7 +168,7 @@ function CartLineRemoveButton({ lineIds }: { lineIds: string[] }) {
       inputs={{ lineIds }}
     >
       <div>
-        <button type="submit" className="p-2 rounded-full border border-neutral-500">
+        <button type="submit" className="p-2 border rounded-full border-neutral-500">
           <Icon.Minus className="icon-xs" />
         </button>
       </div>
@@ -183,15 +183,15 @@ function CartLineQuantity({ line }: { line: CartLine }) {
   const nextQuantity = Number((quantity + 1).toFixed(0));
 
   return (
-    <div className="cart-line-quantiy flex-row flex justify-start items-center">
-      {prevQuantity <= 1 ? <CartLineRemoveButton lineIds={[lineId]} /> :
+    <div className="flex flex-row items-center justify-start cart-line-quantiy">
+      {prevQuantity < 1 ? <CartLineRemoveButton lineIds={[lineId]} /> :
         <CartLineUpdateButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
             aria-label="Decrease quantity"
             disabled={quantity <= 1}
             name="decrease-quantity"
             value={prevQuantity}
-            className="p-2 rounded-full border border-neutral-500"
+            className="p-2 border rounded-full border-neutral-500"
           >
             <Icon.Minus className="icon-xs" />
           </button>
@@ -202,7 +202,7 @@ function CartLineQuantity({ line }: { line: CartLine }) {
           aria-label="Increase quantity"
           name="increase-quantity"
           value={nextQuantity}
-          className="p-2 rounded-full border border-neutral-500"
+          className="p-2 border rounded-full border-neutral-500"
         >
           <Icon.Plus className="icon-xs" />
         </button>
@@ -249,11 +249,11 @@ export function CartEmpty({
 }) {
   return (
     <div hidden={hidden} className={`${hidden && '!hidden'} h-112 flex-col-center`}>
-      <p className="text-2xl text-center font-accent uppercase">
+      <p className="text-2xl text-center uppercase font-accent">
         Votre panier est vide
       </p>
       <Link
-        className="mt-16 py-3 px-6 rounded-full bg-neutral-900 text-neutral-50"
+        className="px-6 py-3 mt-16 rounded-full bg-neutral-900 text-neutral-50"
         to="/collections"
         onClick={() => {
           if (layout === 'aside') {

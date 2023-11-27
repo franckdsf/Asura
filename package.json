@@ -15,7 +15,7 @@
   "prettier": "@shopify/prettier-config",
   "dependencies": {
     "@phosphor-icons/react": "^2.0.14",
-    "@remix-run/react": "1.19.1",
+    "@remix-run/react": "^2.1.0",
     "@sanity/client": "^6.8.6",
     "@shopify/cli": "3.49.2",
     "@shopify/cli-hydrogen": "^5.4.3",

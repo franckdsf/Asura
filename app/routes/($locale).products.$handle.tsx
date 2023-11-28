@@ -31,12 +31,12 @@ import { AddToCartButton, BigText, DeliveryDate, DescriptionBlock, MoreInformati
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
 import { Icon } from '~/ui/atoms';
-import { SwiperClass } from 'swiper/react';
+import { type SwiperClass } from 'swiper/react';
 import { COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
 
-export const meta: MetaFunction = ({ data }) => {
-  return [{ title: `Hydrogen | ${data.product.title}` }];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Hydrogen | ${data?.product.title}` }];
 };
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {

@@ -10,8 +10,8 @@ import type { ProductItemFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
 import { Collection as CollectionTemplate } from '@ui/templates';
 
-export const meta: MetaFunction = ({ data }) => {
-  return [{ title: `Hydrogen | ${data.collection.title} Collection` }];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Hydrogen | ${data?.collection.title} Collection` }];
 };
 
 export async function loader({ request, params, context }: LoaderFunctionArgs) {
@@ -43,7 +43,7 @@ export default function Collection() {
   return (
     <div className="collection">
       <CollectionTemplate
-        className="mt-8 lg:mt-16 pb-32"
+        className="pb-32 mt-8 lg:mt-16"
         title={collection.title}
         products={collection.products.nodes}
       // description={collection.description}

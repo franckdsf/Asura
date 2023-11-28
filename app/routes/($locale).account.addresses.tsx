@@ -23,7 +23,7 @@ export type ActionResponse = {
   updatedAddress?: AddressFragment;
 };
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [{ title: 'Addresses' }];
 };
 

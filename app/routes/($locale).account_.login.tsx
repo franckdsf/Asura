@@ -15,7 +15,7 @@ type ActionResponse = {
   error: string | null;
 };
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [{ title: 'Login' }];
 };
 

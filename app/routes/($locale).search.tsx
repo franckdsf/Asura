@@ -4,7 +4,7 @@ import { getPaginationVariables } from '@shopify/hydrogen';
 
 import { SearchForm, SearchResults, NoSearchResults } from '~/components/Search';
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [{ title: `Hydrogen | Search` }];
 };
 

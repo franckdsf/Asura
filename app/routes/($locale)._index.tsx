@@ -16,7 +16,7 @@ import { COLLECTION_QUERY, COLLECTIONS_QUERY } from '../queries';
 import { RecommendedProducts } from '~/components/products';
 import { ExtractCollection } from '~/components/collections';
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [{ title: 'Hydrogen | Home' }];
 };
 

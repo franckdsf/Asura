@@ -2,7 +2,7 @@ import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
 import { Pagination, getPaginationVariables } from '@shopify/hydrogen';
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [{ title: `Hydrogen | Blogs` }];
 };
 

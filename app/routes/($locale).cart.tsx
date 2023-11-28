@@ -6,7 +6,7 @@ import { type ActionFunctionArgs, json } from '@shopify/remix-oxygen';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { CartMain } from '~/components/Cart';
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [{ title: `Hydrogen | Cart` }];
 };
 

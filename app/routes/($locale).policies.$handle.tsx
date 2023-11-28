@@ -7,8 +7,8 @@ type SelectedPolicies = keyof Pick<
   'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy'
 >;
 
-export const meta: MetaFunction = ({ data }) => {
-  return [{ title: `Hydrogen | ${data.policy.title}` }];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Hydrogen | ${data?.policy.title}` }];
 };
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
@@ -45,9 +45,9 @@ export default function Policy() {
   const { policy } = useLoaderData<typeof loader>();
 
   return (
-    <div className="page px-4 max-w-5xl mx-auto mt-24">
+    <div className="max-w-5xl px-4 mx-auto mt-24 page">
       <header>
-        <h1 className="uppercase text-2xl lg:text-7xl font-accent">{policy.title}</h1>
+        <h1 className="text-2xl uppercase lg:text-7xl font-accent">{policy.title}</h1>
       </header>
       <main dangerouslySetInnerHTML={{ __html: policy.body }} className="mt-6 mb-32" />
     </div>

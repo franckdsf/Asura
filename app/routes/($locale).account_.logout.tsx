@@ -1,7 +1,7 @@
 import { json, redirect, type ActionFunctionArgs } from '@shopify/remix-oxygen';
 import { type MetaFunction } from '@remix-run/react';
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [{ title: 'Logout' }];
 };
 

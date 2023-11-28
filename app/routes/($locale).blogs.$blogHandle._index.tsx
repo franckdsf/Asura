@@ -3,8 +3,8 @@ import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
 import { Image, Pagination, getPaginationVariables } from '@shopify/hydrogen';
 import type { ArticleItemFragment } from 'storefrontapi.generated';
 
-export const meta: MetaFunction = ({ data }) => {
-  return [{ title: `Hydrogen | ${data.blog.title} blog` }];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Hydrogen | ${data?.blog.title} blog` }];
 };
 
 export const loader = async ({

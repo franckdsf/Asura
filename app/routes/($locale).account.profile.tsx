@@ -19,7 +19,7 @@ export type ActionResponse = {
   customer: CustomerFragment | null;
 };
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
   return [{ title: 'Profile' }];
 };
 

@@ -1,17 +1,17 @@
-import {Link, useLoaderData, type V2_MetaFunction} from '@remix-run/react';
-import {Money, Pagination, getPaginationVariables} from '@shopify/hydrogen';
-import {json, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
+import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
+import { Money, Pagination, getPaginationVariables } from '@shopify/hydrogen';
+import { json, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import type {
   CustomerOrdersFragment,
   OrderItemFragment,
 } from 'storefrontapi.generated';
 
-export const meta: V2_MetaFunction = () => {
-  return [{title: 'Orders'}];
+export const meta: MetaFunction = () => {
+  return [{ title: 'Orders' }];
 };
 
-export async function loader({request, context}: LoaderArgs) {
-  const {session, storefront} = context;
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  const { session, storefront } = context;
 
   const customerAccessToken = await session.get('customerAccessToken');
   if (!customerAccessToken?.accessToken) {
@@ -23,7 +23,7 @@ export async function loader({request, context}: LoaderArgs) {
       pageBy: 20,
     });
 
-    const {customer} = await storefront.query(CUSTOMER_ORDERS_QUERY, {
+    const { customer } = await storefront.query(CUSTOMER_ORDERS_QUERY, {
       variables: {
         customerAccessToken: customerAccessToken.accessToken,
         country: storefront.i18n.country,
@@ -37,18 +37,18 @@ export async function loader({request, context}: LoaderArgs) {
       throw new Error('Customer not found');
     }
 
-    return json({customer});
+    return json({ customer });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return json({error: error.message}, {status: 400});
+      return json({ error: error.message }, { status: 400 });
     }
-    return json({error}, {status: 400});
+    return json({ error }, { status: 400 });
   }
 }
 
 export default function Orders() {
-  const {customer} = useLoaderData<{customer: CustomerOrdersFragment}>();
-  const {orders, numberOfOrders} = customer;
+  const { customer } = useLoaderData<{ customer: CustomerOrdersFragment }>();
+  const { orders, numberOfOrders } = customer;
   return (
     <div className="orders">
       <h2>
@@ -60,12 +60,12 @@ export default function Orders() {
   );
 }
 
-function OrdersTable({orders}: Pick<CustomerOrdersFragment, 'orders'>) {
+function OrdersTable({ orders }: Pick<CustomerOrdersFragment, 'orders'>) {
   return (
     <div className="acccount-orders">
       {orders?.nodes.length ? (
         <Pagination connection={orders}>
-          {({nodes, isLoading, PreviousLink, NextLink}) => {
+          {({ nodes, isLoading, PreviousLink, NextLink }) => {
             return (
               <>
                 <PreviousLink>
@@ -100,7 +100,7 @@ function EmptyOrders() {
   );
 }
 
-function OrderItem({order}: {order: OrderItemFragment}) {
+function OrderItem({ order }: { order: OrderItemFragment }) {
   return (
     <>
       <fieldset>

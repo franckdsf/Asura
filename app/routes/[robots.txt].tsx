@@ -1,14 +1,14 @@
-import {type LoaderArgs} from '@shopify/remix-oxygen';
-import {useRouteError, isRouteErrorResponse} from '@remix-run/react';
-import {parseGid} from '@shopify/hydrogen';
+import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { useRouteError, isRouteErrorResponse } from '@remix-run/react';
+import { parseGid } from '@shopify/hydrogen';
 
-export async function loader({request, context}: LoaderArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
   const url = new URL(request.url);
 
-  const {shop} = await context.storefront.query(ROBOTS_QUERY);
+  const { shop } = await context.storefront.query(ROBOTS_QUERY);
 
   const shopId = parseGid(shop.id).id;
-  const body = robotsTxtData({url: url.origin, shopId});
+  const body = robotsTxtData({ url: url.origin, shopId });
 
   return new Response(body, {
     status: 200,
@@ -47,12 +47,12 @@ export function ErrorBoundary() {
   );
 }
 
-function robotsTxtData({url, shopId}: {shopId?: string; url?: string}) {
+function robotsTxtData({ url, shopId }: { shopId?: string; url?: string }) {
   const sitemapUrl = url ? `${url}/sitemap.xml` : undefined;
 
   return `
 User-agent: *
-${generalDisallowRules({sitemapUrl, shopId})}
+${generalDisallowRules({ sitemapUrl, shopId })}
 
 # Google adsbot ignores robots.txt unless specifically named!
 User-agent: adsbot-google
@@ -71,11 +71,11 @@ Disallow: /
 
 User-agent: AhrefsBot
 Crawl-delay: 10
-${generalDisallowRules({sitemapUrl, shopId})}
+${generalDisallowRules({ sitemapUrl, shopId })}
 
 User-agent: AhrefsSiteAudit
 Crawl-delay: 10
-${generalDisallowRules({sitemapUrl, shopId})}
+${generalDisallowRules({ sitemapUrl, shopId })}
 
 User-agent: MJ12bot
 Crawl-Delay: 10

@@ -1,17 +1,17 @@
-import type {CustomerFragment} from 'storefrontapi.generated';
-import type {CustomerUpdateInput} from '@shopify/hydrogen/storefront-api-types';
+import type { CustomerFragment } from 'storefrontapi.generated';
+import type { CustomerUpdateInput } from '@shopify/hydrogen/storefront-api-types';
 import {
   json,
   redirect,
-  type ActionArgs,
-  type LoaderArgs,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
 import {
   Form,
   useActionData,
   useNavigation,
   useOutletContext,
-  type V2_MetaFunction,
+  type MetaFunction,
 } from '@remix-run/react';
 
 export type ActionResponse = {
@@ -19,11 +19,11 @@ export type ActionResponse = {
   customer: CustomerFragment | null;
 };
 
-export const meta: V2_MetaFunction = () => {
-  return [{title: 'Profile'}];
+export const meta: MetaFunction = () => {
+  return [{ title: 'Profile' }];
 };
 
-export async function loader({context}: LoaderArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
   if (!customerAccessToken) {
     return redirect('/account/login');
@@ -31,17 +31,17 @@ export async function loader({context}: LoaderArgs) {
   return json({});
 }
 
-export async function action({request, context}: ActionArgs) {
-  const {session, storefront} = context;
+export async function action({ request, context }: ActionFunctionArgs) {
+  const { session, storefront } = context;
 
   if (request.method !== 'PUT') {
-    return json({error: 'Method not allowed'}, {status: 405});
+    return json({ error: 'Method not allowed' }, { status: 405 });
   }
 
   const form = await request.formData();
   const customerAccessToken = await session.get('customerAccessToken');
   if (!customerAccessToken) {
-    return json({error: 'Unauthorized'}, {status: 401});
+    return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
@@ -81,8 +81,8 @@ export async function action({request, context}: ActionArgs) {
     // check for mutation errors
     if (updated.customerUpdate?.customerUserErrors?.length) {
       return json(
-        {error: updated.customerUpdate?.customerUserErrors[0]},
-        {status: 400},
+        { error: updated.customerUpdate?.customerUserErrors[0] },
+        { status: 400 },
       );
     }
 
@@ -95,7 +95,7 @@ export async function action({request, context}: ActionArgs) {
     }
 
     return json(
-      {error: null, customer: updated.customerUpdate?.customer},
+      { error: null, customer: updated.customerUpdate?.customer },
       {
         headers: {
           'Set-Cookie': await session.commit(),
@@ -103,13 +103,13 @@ export async function action({request, context}: ActionArgs) {
       },
     );
   } catch (error: any) {
-    return json({error: error.message, customer: null}, {status: 400});
+    return json({ error: error.message, customer: null }, { status: 400 });
   }
 }
 
 export default function AccountProfile() {
-  const account = useOutletContext<{customer: CustomerFragment}>();
-  const {state} = useNavigation();
+  const account = useOutletContext<{ customer: CustomerFragment }>();
+  const { state } = useNavigation();
   const action = useActionData<ActionResponse>();
   const customer = action?.customer ?? account?.customer;
 

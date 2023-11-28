@@ -1,32 +1,32 @@
 import {
   json,
   redirect,
-  type ActionArgs,
-  type LoaderArgs,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
+import { Form, useActionData, type MetaFunction } from '@remix-run/react';
 
 type ActionResponse = {
   error: string | null;
 };
 
-export const meta: V2_MetaFunction = () => {
-  return [{title: 'Activate Account'}];
+export const meta: MetaFunction = () => {
+  return [{ title: 'Activate Account' }];
 };
 
-export async function loader({context}: LoaderArgs) {
+export async function loader({ context }: LoaderFunctionArgs) {
   if (await context.session.get('customerAccessToken')) {
     return redirect('/account');
   }
   return json({});
 }
 
-export async function action({request, context, params}: ActionArgs) {
-  const {session, storefront} = context;
-  const {id, activationToken} = params;
+export async function action({ request, context, params }: ActionFunctionArgs) {
+  const { session, storefront } = context;
+  const { id, activationToken } = params;
 
   if (request.method !== 'POST') {
-    return json({error: 'Method not allowed'}, {status: 405});
+    return json({ error: 'Method not allowed' }, { status: 405 });
   }
 
   try {
@@ -47,7 +47,7 @@ export async function action({request, context, params}: ActionArgs) {
       throw new Error('Passwords do not match');
     }
 
-    const {customerActivate} = await storefront.mutate(
+    const { customerActivate } = await storefront.mutate(
       CUSTOMER_ACTIVATE_MUTATION,
       {
         variables: {
@@ -64,7 +64,7 @@ export async function action({request, context, params}: ActionArgs) {
       throw new Error(customerActivate.customerUserErrors[0].message);
     }
 
-    const {customerAccessToken} = customerActivate ?? {};
+    const { customerAccessToken } = customerActivate ?? {};
     if (!customerAccessToken) {
       throw new Error('Could not activate account.');
     }
@@ -77,9 +77,9 @@ export async function action({request, context, params}: ActionArgs) {
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return json({error: error.message}, {status: 400});
+      return json({ error: error.message }, { status: 400 });
     }
-    return json({error}, {status: 400});
+    return json({ error }, { status: 400 });
   }
 }
 

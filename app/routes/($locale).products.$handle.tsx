@@ -1,10 +1,10 @@
 import { Suspense, useEffect, useRef } from 'react';
-import { defer, redirect, type LoaderArgs } from '@shopify/remix-oxygen';
+import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import {
   Await,
   Link,
   useLoaderData,
-  type V2_MetaFunction,
+  type MetaFunction,
   type FetcherWithComponents,
 } from '@remix-run/react';
 import type {
@@ -35,11 +35,11 @@ import { SwiperClass } from 'swiper/react';
 import { COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
 
-export const meta: V2_MetaFunction = ({ data }) => {
+export const meta: MetaFunction = ({ data }) => {
   return [{ title: `Hydrogen | ${data.product.title}` }];
 };
 
-export async function loader({ params, request, context }: LoaderArgs) {
+export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const { handle } = params;
   const { storefront } = context;
 

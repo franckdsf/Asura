@@ -1,26 +1,26 @@
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type V2_MetaFunction} from '@remix-run/react';
-import {Image, Pagination, getPaginationVariables} from '@shopify/hydrogen';
-import type {ArticleItemFragment} from 'storefrontapi.generated';
+import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
+import { Image, Pagination, getPaginationVariables } from '@shopify/hydrogen';
+import type { ArticleItemFragment } from 'storefrontapi.generated';
 
-export const meta: V2_MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data.blog.title} blog`}];
+export const meta: MetaFunction = ({ data }) => {
+  return [{ title: `Hydrogen | ${data.blog.title} blog` }];
 };
 
 export const loader = async ({
   request,
   params,
-  context: {storefront},
-}: LoaderArgs) => {
+  context: { storefront },
+}: LoaderFunctionArgs) => {
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 4,
   });
 
   if (!params.blogHandle) {
-    throw new Response(`blog not found`, {status: 404});
+    throw new Response(`blog not found`, { status: 404 });
   }
 
-  const {blog} = await storefront.query(BLOGS_QUERY, {
+  const { blog } = await storefront.query(BLOGS_QUERY, {
     variables: {
       blogHandle: params.blogHandle,
       ...paginationVariables,
@@ -28,22 +28,22 @@ export const loader = async ({
   });
 
   if (!blog?.articles) {
-    throw new Response('Not found', {status: 404});
+    throw new Response('Not found', { status: 404 });
   }
 
-  return json({blog});
+  return json({ blog });
 };
 
 export default function Blog() {
-  const {blog} = useLoaderData<typeof loader>();
-  const {articles} = blog;
+  const { blog } = useLoaderData<typeof loader>();
+  const { articles } = blog;
 
   return (
     <div className="blog">
       <h1>{blog.title}</h1>
       <div className="blog-grid">
         <Pagination connection={articles}>
-          {({nodes, isLoading, PreviousLink, NextLink}) => {
+          {({ nodes, isLoading, PreviousLink, NextLink }) => {
             return (
               <>
                 <PreviousLink>

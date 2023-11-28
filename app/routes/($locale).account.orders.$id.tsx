@@ -1,14 +1,14 @@
-import {json, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type V2_MetaFunction} from '@remix-run/react';
-import {Money, Image, flattenConnection} from '@shopify/hydrogen';
-import type {OrderLineItemFullFragment} from 'storefrontapi.generated';
+import { json, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
+import { Money, Image, flattenConnection } from '@shopify/hydrogen';
+import type { OrderLineItemFullFragment } from 'storefrontapi.generated';
 
-export const meta: V2_MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Order ${data?.order?.name}`}];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Order ${data?.order?.name}` }];
 };
 
-export async function loader({params, context}: LoaderArgs) {
-  const {session, storefront} = context;
+export async function loader({ params, context }: LoaderFunctionArgs) {
+  const { session, storefront } = context;
 
   if (!params.id) {
     return redirect('/account/orders');
@@ -21,12 +21,12 @@ export async function loader({params, context}: LoaderArgs) {
     return redirect('/account/login');
   }
 
-  const {order} = await storefront.query(CUSTOMER_ORDER_QUERY, {
-    variables: {orderId},
+  const { order } = await storefront.query(CUSTOMER_ORDER_QUERY, {
+    variables: { orderId },
   });
 
   if (!order || !('lineItems' in order)) {
-    throw new Response('Order not found', {status: 404});
+    throw new Response('Order not found', { status: 404 });
   }
 
   const lineItems = flattenConnection(order.lineItems);
@@ -50,7 +50,7 @@ export async function loader({params, context}: LoaderArgs) {
 }
 
 export default function OrderRoute() {
-  const {order, lineItems, discountValue, discountPercentage} =
+  const { order, lineItems, discountValue, discountPercentage } =
     useLoaderData<typeof loader>();
   return (
     <div className="account-order">
@@ -76,22 +76,22 @@ export default function OrderRoute() {
           <tfoot>
             {((discountValue && discountValue.amount) ||
               discountPercentage) && (
-              <tr>
-                <th scope="row" colSpan={3}>
-                  <p>Discounts</p>
-                </th>
-                <th scope="row">
-                  <p>Discounts</p>
-                </th>
-                <td>
-                  {discountPercentage ? (
-                    <span>-{discountPercentage}% OFF</span>
-                  ) : (
-                    discountValue && <Money data={discountValue!} />
-                  )}
-                </td>
-              </tr>
-            )}
+                <tr>
+                  <th scope="row" colSpan={3}>
+                    <p>Discounts</p>
+                  </th>
+                  <th scope="row">
+                    <p>Discounts</p>
+                  </th>
+                  <td>
+                    {discountPercentage ? (
+                      <span>-{discountPercentage}% OFF</span>
+                    ) : (
+                      discountValue && <Money data={discountValue!} />
+                    )}
+                  </td>
+                </tr>
+              )}
             <tr>
               <th scope="row" colSpan={3}>
                 <p>Subtotal</p>
@@ -163,7 +163,7 @@ export default function OrderRoute() {
   );
 }
 
-function OrderLineRow({lineItem}: {lineItem: OrderLineItemFullFragment}) {
+function OrderLineRow({ lineItem }: { lineItem: OrderLineItemFullFragment }) {
   return (
     <tr key={lineItem.variant!.id}>
       <td>

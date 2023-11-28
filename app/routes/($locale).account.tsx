@@ -1,14 +1,14 @@
-import {Form, NavLink, Outlet, useLoaderData} from '@remix-run/react';
-import {json, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
-import type {CustomerFragment} from 'storefrontapi.generated';
+import { Form, NavLink, Outlet, useLoaderData } from '@remix-run/react';
+import { json, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import type { CustomerFragment } from 'storefrontapi.generated';
 
 export function shouldRevalidate() {
   return true;
 }
 
-export async function loader({request, context}: LoaderArgs) {
-  const {session, storefront} = context;
-  const {pathname} = new URL(request.url);
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  const { session, storefront } = context;
+  const { pathname } = new URL(request.url);
   const customerAccessToken = await session.get('customerAccessToken');
   const isLoggedIn = !!customerAccessToken?.accessToken;
   const isAccountHome = pathname === '/account' || pathname === '/account/';
@@ -42,7 +42,7 @@ export async function loader({request, context}: LoaderArgs) {
   }
 
   try {
-    const {customer} = await storefront.query(CUSTOMER_QUERY, {
+    const { customer } = await storefront.query(CUSTOMER_QUERY, {
       variables: {
         customerAccessToken: customerAccessToken.accessToken,
         country: storefront.i18n.country,
@@ -56,7 +56,7 @@ export async function loader({request, context}: LoaderArgs) {
     }
 
     return json(
-      {isLoggedIn, isPrivateRoute, isAccountHome, customer},
+      { isLoggedIn, isPrivateRoute, isAccountHome, customer },
       {
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -76,18 +76,18 @@ export async function loader({request, context}: LoaderArgs) {
 }
 
 export default function Acccount() {
-  const {customer, isPrivateRoute, isAccountHome} =
+  const { customer, isPrivateRoute, isAccountHome } =
     useLoaderData<typeof loader>();
 
   if (!isPrivateRoute && !isAccountHome) {
-    return <Outlet context={{customer}} />;
+    return <Outlet context={{ customer }} />;
   }
 
   return (
     <AccountLayout customer={customer as CustomerFragment}>
       <br />
       <br />
-      <Outlet context={{customer}} />
+      <Outlet context={{ customer }} />
     </AccountLayout>
   );
 }

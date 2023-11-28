@@ -1,9 +1,9 @@
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
+import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import type {
   NormalizedPredictiveSearch,
   NormalizedPredictiveSearchResults,
 } from '~/components/Search';
-import {NO_PREDICTIVE_SEARCH_RESULTS} from '~/components/Search';
+import { NO_PREDICTIVE_SEARCH_RESULTS } from '~/components/Search';
 
 import type {
   PredictiveArticleFragment,
@@ -39,7 +39,7 @@ const DEFAULT_SEARCH_TYPES: PredictiveSearchTypes[] = [
  * Fetches the search results from the predictive search API
  * requested by the SearchForm component
  */
-export async function action({request, params, context}: LoaderArgs) {
+export async function action({ request, params, context }: LoaderFunctionArgs) {
   if (request.method !== 'POST') {
     throw new Error('Invalid request method');
   }
@@ -57,13 +57,13 @@ async function fetchPredictiveSearchResults({
   params,
   request,
   context,
-}: Pick<LoaderArgs, 'params' | 'context' | 'request'>) {
+}: Pick<LoaderFunctionArgs, 'params' | 'context' | 'request'>) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   let body;
   try {
     body = await request.formData();
-  } catch (error) {}
+  } catch (error) { }
   const searchTerm = String(body?.get('q') || searchParams.get('q') || '');
   const limit = Number(body?.get('limit') || searchParams.get('limit') || 10);
   const rawTypes = String(
@@ -73,13 +73,13 @@ async function fetchPredictiveSearchResults({
     rawTypes === 'ANY'
       ? DEFAULT_SEARCH_TYPES
       : rawTypes
-          .split(',')
-          .map((t) => t.toUpperCase() as PredictiveSearchTypes)
-          .filter((t) => DEFAULT_SEARCH_TYPES.includes(t));
+        .split(',')
+        .map((t) => t.toUpperCase() as PredictiveSearchTypes)
+        .filter((t) => DEFAULT_SEARCH_TYPES.includes(t));
 
   if (!searchTerm) {
     return {
-      searchResults: {results: null, totalResults: 0},
+      searchResults: { results: null, totalResults: 0 },
       searchTerm,
       searchTypes,
     };
@@ -103,7 +103,7 @@ async function fetchPredictiveSearchResults({
     params.locale,
   );
 
-  return {searchResults, searchTerm, searchTypes};
+  return { searchResults, searchTerm, searchTypes };
 }
 
 /**
@@ -111,7 +111,7 @@ async function fetchPredictiveSearchResults({
  */
 export function normalizePredictiveSearchResults(
   predictiveSearch: PredictiveSearchQuery['predictiveSearch'],
-  locale: LoaderArgs['params']['locale'],
+  locale: LoaderFunctionArgs['params']['locale'],
 ): NormalizedPredictiveSearch {
   let totalResults = 0;
   if (!predictiveSearch) {
@@ -241,7 +241,7 @@ export function normalizePredictiveSearchResults(
     });
   }
 
-  return {results, totalResults};
+  return { results, totalResults };
 }
 
 const PREDICTIVE_SEARCH_QUERY = `#graphql

@@ -34,7 +34,7 @@ export function HeaderMenu({
   viewport: Viewport;
 }) {
   const [root] = useMatches();
-  const publicStoreDomain = root?.data?.publicStoreDomain;
+  const publicStoreDomain = (root?.data as { publicStoreDomain: string })?.publicStoreDomain;
   const className = `header-menu-${viewport}`;
 
   function closeAside(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -103,7 +103,7 @@ function HeaderCtas({
         prefetch="intent"
         style={activeLinkStyle}
         to="/apps/parcelpanel"
-        className="uppercase mr-6 max-lg:hidden header-menu-item text-md"
+        className="mr-6 uppercase max-lg:hidden header-menu-item text-md"
       >
         ma commande
       </NavLink>

@@ -18,9 +18,9 @@ export const Product = ({ handle, priceRange, variants, featuredImage, title }: 
         prefetch="intent"
         href={variantUrl}
       >
-        {featuredImage && <Image data={featuredImage} className="w-full aspect-square object-cover bg-container-light" sizes="33vw" />}
-        <span className="text-2xs lg:text-md-semibold line-clamp-1 uppercase mt-2 lg:mt-4">{title}</span>
-        <Money className="text-2xs lg:text-xs line-clamp-1 mt-1" data={priceRange.minVariantPrice} />
+        {featuredImage && <Image data={featuredImage} className="object-cover w-full aspect-square bg-container-light" sizes="33vw" />}
+        <span className="mt-2 uppercase text-2xs lg:text-md-semibold line-clamp-1 lg:mt-4">{title}</span>
+        <Money className="mt-1 text-2xs lg:text-xs line-clamp-1" data={priceRange.minVariantPrice} />
       </Link>
     </div>
   )
@@ -36,7 +36,7 @@ type TemplateInfo = {
 };
 
 const TemplateBig = ({ products }: TemplateProps) => (
-  <li className="row-span-2 w-full">{products.length > 0 && <Product {...products[0]} />}</li>
+  <li className="w-full row-span-2">{products.length > 0 && <Product {...products[0]} />}</li>
 )
 const TEMPLATE_BIG: TemplateInfo = { Component: TemplateBig, name: 'TEMPLATE_BIG', elements: 1, rows: 2 };
 
@@ -106,8 +106,8 @@ export const Collection = ({ className = "", title, description, products }: Pro
 
     const random = (number: number) => generateRandomNumber(`${title}${number}`)
 
-    let previous2Chunk: string = '';
-    let previousChunk: string = '';
+    let previous2Chunk = '';
+    let previousChunk = '';
 
     const CHUNKS_TEMPLATE = products.length > 8 ? CHUNKS_TEMPLATE_COMPLEX : CHUNKS_TEMPLATE_MINIMALIST;
 
@@ -167,11 +167,12 @@ export const Collection = ({ className = "", title, description, products }: Pro
     }
 
     return generatedChunks;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products])
 
   return (
     <div className={trim(`px-4 lg:px-10 ${className}`)}>
-      <h1 className="text-2xl md:text-4xl lg:text-7xl uppercase font-accent mb-8 lg:mb-24">{title}</h1>
+      <h1 className="mb-8 text-2xl uppercase md:text-4xl lg:text-7xl font-accent lg:mb-24">{title}</h1>
       {description && <p className="collection-description">{description}</p>}
       <ul className={trim(`grid grid-cols-1 xl:grid-cols-2 grid-flow-dense ${gap}`)}>
         {chunks.map((chunk, i) => {

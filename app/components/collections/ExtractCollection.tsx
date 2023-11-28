@@ -1,12 +1,14 @@
 import { Link } from "@remix-run/react";
-import { CollectionFragment } from "storefrontapi.generated";
+import { type CollectionFragment } from "storefrontapi.generated";
 import { Card } from "~/ui/molecules";
 
 export const ExtractCollection = ({ collections, filter }: { filter: string, collections: CollectionFragment[] }) => {
   const collection = collections.find((c) => c.title.toUpperCase() === filter.toUpperCase())
   if (!collection) return null;
 
-  const img = collection?.image;
+  const img = Object.assign({}, collection?.image);
+  delete img.altText;
+
   return (
     <li>
       <Link
@@ -14,6 +16,7 @@ export const ExtractCollection = ({ collections, filter }: { filter: string, col
       >
         <Card.Category text={collection?.title} image={{
           ...img,
+          alt: img?.altText || undefined,
           id: undefined,
           src: img?.url,
           width: img?.width || 200,

@@ -159,7 +159,7 @@ export default function Product() {
 
   return (
     <div>
-      <div className="lg:h-screen-w-header lg:bg-container-light lg:flex flex-row justify-between items-center">
+      <div className="flex-row items-center justify-between lg:h-screen-w-header lg:bg-container-light lg:flex">
         {selectedVariant?.image && <CarouselProductImages
           defaultIndex={0}
           className="pt-4 lg:pt-10 lg:pb-[15vh] border-r border-neutral-300"
@@ -180,7 +180,7 @@ export default function Product() {
         type="right"
         showSectionTitle={false}
       />
-      <BigText className="my-24 md:my-48 px-4 md:px-10" />
+      <BigText className="px-4 my-24 md:my-48 md:px-10" />
       {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
       <ProductStickyATC
         className="mt-12"
@@ -212,7 +212,7 @@ function ProductMain({
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="text-md" />
-      <div className="mt-6 uppercase px-4 py-2 rounded-full bg-neutral-600 text-neutral-50 inline-flex align-center gap-x-2">
+      <div className="inline-flex px-4 py-2 mt-6 uppercase rounded-full bg-neutral-600 text-neutral-50 align-center gap-x-2">
         <Icon.Book />
         <span className="text-xs">ebook offert</span>
       </div>

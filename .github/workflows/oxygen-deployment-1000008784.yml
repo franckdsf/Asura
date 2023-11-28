@@ -36,7 +36,9 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install -g pnpm
+          pnpm install
 
       - name: Build and Publish to Oxygen
         id: deploy

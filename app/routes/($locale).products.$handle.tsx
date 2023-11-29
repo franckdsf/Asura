@@ -1,29 +1,20 @@
-import { Suspense, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import {
-  Await,
-  Link,
   useLoaderData,
   type MetaFunction,
-  type FetcherWithComponents,
 } from '@remix-run/react';
 import type {
   ProductFragment,
   ProductVariantsQuery,
-  ProductVariantFragment,
 } from 'storefrontapi.generated';
 
 import {
-  Image,
   Money,
-  VariantSelector,
-  type VariantOption,
   getSelectedProductOptions,
-  CartForm,
   getPaginationVariables,
 } from '@shopify/hydrogen';
 import type {
-  CartLineInput,
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
@@ -189,7 +180,7 @@ export default function Product() {
             return <DescriptionBlock
               key={JSON.stringify(m)}
               description={m.description}
-              imageSrc={CMS.urlFor(m.image.asset._ref).width(800).url()}
+              imageSrc={m.image ? CMS.urlFor(m.image.asset._ref).width(800).url() : selectedVariant?.image?.url}
               list={m.list.map((i) => ({
                 icon: i.icon,
                 title: i.title,
@@ -201,9 +192,9 @@ export default function Product() {
             return <MoreInformation
               key={JSON.stringify(m)}
               className="mb-16 md:my-32" showTitleOnMobile={false}
-              delivery={m.delivery?.[0].children[0].text}
-              guaranty={m.guaranty?.[0].children[0].text}
-              included={m.included?.[0].children[0].text}
+              delivery={m.delivery}
+              guaranty={m.guaranty}
+              included={m.included}
             />
           default:
             return null;

@@ -11,7 +11,7 @@ export default function Parcel() {
       if (element?.hasAttribute('data-v-app')) return;
 
       location.reload();
-    }, 4000)
+    }, 2000)
 
 
 
@@ -22,7 +22,7 @@ export default function Parcel() {
   return (
     <div>
       <div id="pp-tracking-page-app">
-        <div className="flex-row-center py-56">
+        <div className="py-56 flex-row-center">
           <Icon.Loader className="animate-spin icon-lg" />
         </div>
       </div>

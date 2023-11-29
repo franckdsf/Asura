@@ -20,7 +20,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     throw new Response('Not Found', { status: 404 });
   }
 
-  return json({ page });
+  return json({ handle: params.handle, page });
 }
 
 export default function Page() {
@@ -31,7 +31,7 @@ export default function Page() {
       <header>
         <h1 className="text-2xl uppercase lg:text-7xl font-accent">{page.title}</h1>
       </header>
-      <main dangerouslySetInnerHTML={{ __html: page.body }} className="mt-6 mb-32" />
+      <main dangerouslySetInnerHTML={{ __html: page.body }} className="mt-6 mb-32 [&>p]:mt-6" />
     </div>
   );
 }

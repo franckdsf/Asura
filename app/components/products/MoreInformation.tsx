@@ -1,36 +1,13 @@
-import { trim } from "@ui/utils/trim";
-import { useState } from "react";
-
-const minusIcon = '-'
-const plusIcon = '+'
-
-const Accordion = ({ title, content }: { title: string, content: string }) => {
-  const [expanded, setExpanded] = useState(false);
-  const toggleExpanded = () => setExpanded((current) => !current)
-
-  return (
-    <button className="w-full my-2 border-b cursor-pointer sm:my-4 md:my-6 border-neutral-600" onClick={toggleExpanded}>
-      <div className="flex flex-row items-center justify-between px-6 text-left select-none h-14">
-        <h5 className="flex-1 uppercase text-md-semibold md:text-lg-semibold">
-          {title}
-        </h5>
-        <div className="flex-none pl-2">{expanded ? minusIcon : plusIcon}</div>
-      </div>
-      <div className={`px-6 pt-0 overflow-hidden transition-[max-height] duration-500 ease-in ${expanded ? "max-h-40" : "max-h-0"}`}>
-        <p className="pb-8 text-left text-md">
-          {content}
-        </p>
-      </div>
-    </button>
-  )
-}
+import { trim } from "~/ui/utils/trim";
+import { Accordion } from "~/ui/molecules";
+import { type ComponentProps } from "react";
 
 type Props = {
   className?: string;
   showTitleOnMobile?: boolean;
-  included?: string;
-  delivery?: string;
-  guaranty?: string;
+  included?: ComponentProps<typeof Accordion>['content'];
+  delivery?: ComponentProps<typeof Accordion>['content'];
+  guaranty?: ComponentProps<typeof Accordion>['content'];
 }
 
 export const MoreInformation = ({ included, delivery, guaranty, showTitleOnMobile = true, className = "" }: Props) => (

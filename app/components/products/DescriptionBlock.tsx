@@ -1,7 +1,7 @@
 import { Icon } from "@ui/atoms"
 import { trim } from "@ui/utils/trim"
-import { useMemo } from "react";
-
+import { type ComponentProps, useMemo } from "react";
+import { PortableText } from '@portabletext/react';
 type ElementProps = {
   icon?: string;
   title: string;
@@ -18,6 +18,8 @@ const Element = ({ icon, title, content }: ElementProps) => {
         return <Icon.Pencil />
       case 'tree':
         return <Icon.Tree />
+      case 'thumbup':
+        return <Icon.ThumbsUp />
       default:
         return <Icon.Pencil />
     }
@@ -43,23 +45,24 @@ const Element = ({ icon, title, content }: ElementProps) => {
 
 type Props = {
   className?: string;
-  imageSrc: string;
-  description: string;
+  imageSrc?: string;
+  description: string | ComponentProps<typeof PortableText>['value'];
   list: Array<ElementProps>
 }
 export const DescriptionBlock = ({ imageSrc, description, list, className = "" }: Props) => {
   return (
     <div className={trim(`px-4 md:px-10 flex flex-col md:flex-row justify-center items-center md:items-stretch gap-x-16 lg:gap-x-24 2xl:gap-x-40 ${className}`)}>
       <img
-        className="object-cover w-full h-64 rounded-full sm:h-128 md:w-112 md:h-auto bg-container-light"
+        className="object-cover w-full h-64 rounded-full sm:h-128 md:w-96 lg:w-112 2xl:w-128 md:h-auto bg-container-light"
         alt="description cover"
         src={imageSrc}
       />
       <div className="max-w-md mt-16 sm:mt-24 md:py-24">
         <h3 className="text-2xl uppercase font-accent text-neutral-600">Description</h3>
-        <p className="mt-10 text-sm md:w-11/12 md:text-md">
-          {description}
-        </p>
+        <div className="mt-10 text-sm md:w-11/12 md:text-md">
+          {typeof description === "string" ? <p dangerouslySetInnerHTML={{ __html: description }}>
+          </p> : <div><PortableText value={description} /></div>}
+        </div>
         <ul className="max-w-md space-y-8 max-md:float-right mt-14 ">
           {list.map((i) => (
             <li key={JSON.stringify(i)}>

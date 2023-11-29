@@ -101,7 +101,7 @@ export const Collection = ({ className = "", title, description, products }: Pro
   const { randomChunk, generateRandomNumber } = useRandomSeed();
 
   const chunks = useMemo(() => {
-    const STYLE = products.length > 8 ? "exploded" : "clean";
+    const STYLE = products.length > 50 ? "exploded" : "clean";
     const productsCopy = JSON.parse(JSON.stringify(products)) as typeof products;
     const data = randomChunk(productsCopy, title);
 

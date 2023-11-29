@@ -18,7 +18,7 @@ export type Block = {
 
 export type ContentDescription = {
   _type: 'module.content.description';
-  description: string;
+  description: Array<Block>;
   image: Image;
   list: Array<{
     title: string;

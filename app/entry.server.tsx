@@ -19,6 +19,11 @@ export default async function handleRequest(
       "https://pp-proxy.parcelpanel.com",
       "https://cdn.shopifycdn.net"
     ],
+    connectSrc: [
+      "'self'",
+      "https://pp-proxy.parcelpanel.com",
+      // any other URLs your app needs to connect to
+    ],
   });
 
   const body = await renderToReadableStream(

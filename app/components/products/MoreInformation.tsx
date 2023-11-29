@@ -9,8 +9,8 @@ const Accordion = ({ title, content }: { title: string, content: string }) => {
   const toggleExpanded = () => setExpanded((current) => !current)
 
   return (
-    <div className="my-2 sm:my-4 md:my-6 border-b border-neutral-600 cursor-pointer" onClick={toggleExpanded}>
-      <div className="px-6 text-left items-center h-20 select-none flex justify-between flex-row">
+    <button className="w-full my-2 border-b cursor-pointer sm:my-4 md:my-6 border-neutral-600" onClick={toggleExpanded}>
+      <div className="flex flex-row items-center justify-between px-6 text-left select-none h-14">
         <h5 className="flex-1 uppercase text-md-semibold md:text-lg-semibold">
           {title}
         </h5>
@@ -21,39 +21,42 @@ const Accordion = ({ title, content }: { title: string, content: string }) => {
           {content}
         </p>
       </div>
-    </div>
+    </button>
   )
 }
 
 type Props = {
   className?: string;
   showTitleOnMobile?: boolean;
+  included?: string;
+  delivery?: string;
+  guaranty?: string;
 }
 
-export const MoreInformation = ({ showTitleOnMobile = true, className = "" }: Props) => (
+export const MoreInformation = ({ included, delivery, guaranty, showTitleOnMobile = true, className = "" }: Props) => (
   <div className={trim(`px-4 md:px-10 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-x-48 xl:gap-x-72 ${className}`)}>
     <h3 className={trim(`${!showTitleOnMobile && 'max-md:hidden'} pt-8 lg:max-w-xs uppercase max-md:scale-75 text-2xl lg:text-4xl font-accent text-neutral-600`)}>
       plus d’informations
     </h3>
-    <ul className="w-full flex-shrink-0 max-w-md mt-8 lg:-mt-2">
-      <li>
+    <ul className="flex-shrink-0 w-full max-w-md mt-8 lg:-mt-2">
+      {included && <li>
         <Accordion
           title="inclus"
-          content="Découvrez notre kit pose d'ongle à l'américaine, la solution idéale pour des ongles sublimes en un éclair ! Une variété de formes d'ongles à votre portée, pour exprimer votre créativité."
+          content={included}
         />
-      </li>
-      <li>
+      </li>}
+      {delivery && <li>
         <Accordion
           title="livraison"
-          content="Découvrez notre kit pose d'ongle à l'américaine, la solution idéale pour des ongles sublimes en un éclair ! Une variété de formes d'ongles à votre portée, pour exprimer votre créativité."
+          content={delivery}
         />
-      </li>
-      <li>
+      </li>}
+      {guaranty && <li>
         <Accordion
           title="garantie"
-          content="Découvrez notre kit pose d'ongle à l'américaine, la solution idéale pour des ongles sublimes en un éclair ! Une variété de formes d'ongles à votre portée, pour exprimer votre créativité."
+          content={guaranty}
         />
-      </li>
+      </li>}
     </ul>
   </div>
 )

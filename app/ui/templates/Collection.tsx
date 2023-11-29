@@ -101,6 +101,7 @@ export const Collection = ({ className = "", title, description, products }: Pro
   const { randomChunk, generateRandomNumber } = useRandomSeed();
 
   const chunks = useMemo(() => {
+    const STYLE = products.length > 8 ? "exploded" : "clean";
     const productsCopy = JSON.parse(JSON.stringify(products)) as typeof products;
     const data = randomChunk(productsCopy, title);
 
@@ -109,7 +110,7 @@ export const Collection = ({ className = "", title, description, products }: Pro
     let previous2Chunk = '';
     let previousChunk = '';
 
-    const CHUNKS_TEMPLATE = products.length > 8 ? CHUNKS_TEMPLATE_COMPLEX : CHUNKS_TEMPLATE_MINIMALIST;
+    const CHUNKS_TEMPLATE = STYLE === "exploded" ? CHUNKS_TEMPLATE_COMPLEX : CHUNKS_TEMPLATE_MINIMALIST;
 
     const chunks2Elements = CHUNKS_TEMPLATE.filter((c) => c.elements === 2);
     const chunks1Element = CHUNKS_TEMPLATE.filter((c) => c.elements === 1);
@@ -139,7 +140,7 @@ export const Collection = ({ className = "", title, description, products }: Pro
     })
 
     const hasChunkOfLength2 = generatedChunks.some((c) => c.chunk.length > 1);
-    if (hasChunkOfLength2) {
+    if (hasChunkOfLength2 && STYLE === "exploded") {
       let randomIndex = Math.floor(generatedChunks.length / 2);
       while (generatedChunks[randomIndex].chunk.length === 1) {
         randomIndex = Math.floor(random(randomIndex) * generatedChunks.length);
@@ -155,13 +156,11 @@ export const Collection = ({ className = "", title, description, products }: Pro
       }
       chunkToBreak.chunk = chunkToBreak.chunk.slice(0, chunkToBreakLength - 1);
       generatedChunks.splice(randomIndex + 1, 0, newChunk);
-
     }
 
     // check if there is at least one TEMPLATE_BIG chunk in the chunks, if not, replace a chunk with length 1 by it
     const hasBigChunk = generatedChunks.some((c) => c.template.name === TEMPLATE_BIG.name);
     const indexOfChunkWithLength1 = generatedChunks.find((c) => c.chunk.length === 1);
-
     if (!hasBigChunk && indexOfChunkWithLength1) {
       indexOfChunkWithLength1.template = TEMPLATE_BIG;
     }

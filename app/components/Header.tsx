@@ -17,7 +17,7 @@ export function Header({ header, isLoggedIn, cart }: HeaderProps) {
   const { scrollPosition } = useScrollDirection();
 
   return (
-    <header className={trim(`${scrollPosition > 0 && 'bg-white'} sticky flex flex-row items-center justify-between px-4 sm:px-10 header`)}>
+    <header className={trim(`${scrollPosition > 0 && 'bg-white'} sticky flex flex-row items-center justify-between px-4 sm:px-10 header lg:border-b border-neutral-300`)}>
       <HeaderMenuMobileToggle />
       <HeaderMenu menu={menu} viewport="desktop" />
       <NavLink to="/"><img src={logo} alt="logo" className="absolute h-6 lg:h-10 inset-center" width="auto" /></NavLink>
@@ -70,6 +70,7 @@ export function HeaderMenu({
             item.url.includes(publicStoreDomain)
             ? new URL(item.url).pathname
             : item.url;
+
         return (
           <NavLink
             className="uppercase header-menu-item text-md"

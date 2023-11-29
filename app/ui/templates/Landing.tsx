@@ -1,7 +1,6 @@
-import Girl from '../../../public/assets/temp/1663194917-victoria-krivchenkova-ojjigxqyh7y-unsplash.webp'
 import { trim } from '../utils/trim';
 import { Icon, Link } from '../atoms';
-import { Swiper, SwiperClass, SwiperSlide, useSwiperSlide } from 'swiper/react';
+import { Swiper, type SwiperClass, SwiperSlide, useSwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from '../motion';
@@ -11,28 +10,30 @@ type DefaultProps = {
 
 }
 type CarouseImageProps = DefaultProps & {
+  src: string;
   className?: string;
   position: 'odd' | 'even';
 }
-const CarouselImage = ({ position }: CarouseImageProps) => {
+const CarouselImage = ({ src, position }: CarouseImageProps) => {
   const e = useSwiperSlide();
 
   const isDefault = !(e.isActive || e.isNext || e.isPrev);
   const rotation = isDefault ? (position === 'even' ? 'rotate-[17deg]' : '-rotate-[13deg]') : ((e.isNext || e.isPrev) ? '-rotate-[17deg]' : 'rotate-[13deg]');
 
   return (
-    <img src={Girl} className={trim(`object-cover rounded-none ${isDefault && 'w-5/6 h-5/6'} ${e.isActive && 'w-full h-full scale-110'} ${(e.isNext || e.isPrev) && 'w-11/12 h-11/12'}
-      aspect-product transition-all delay-200 ${rotation}`)} />
+    <img src={src} alt="carousel item"
+      className={trim(`object-cover rounded-none ${isDefault && 'w-5/6 h-5/6'} ${e.isActive && 'w-full h-full scale-110'} ${(e.isNext || e.isPrev) && 'w-11/12 h-11/12'}
+      aspect-product transition-all delay-200 ${rotation}`)}
+    />
   )
 }
 
-const items = new Array(10).fill(0);
 type ImagesCarouselProps = DefaultProps & {
+  images: Array<string>;
   updateSwiper?: (newSwiper: SwiperClass) => void;
   onSlideChange?: (newSwiper: SwiperClass) => void;
 }
-const ImagesCarousel = ({ className, onSlideChange, updateSwiper }: ImagesCarouselProps) => {
-
+const ImagesCarousel = ({ images, className, onSlideChange, updateSwiper }: ImagesCarouselProps) => {
   return (
     <Swiper
       className={trim(`carousel-rotated-images ${className}`)}
@@ -60,9 +61,9 @@ const ImagesCarousel = ({ className, onSlideChange, updateSwiper }: ImagesCarous
         disableOnInteraction: false,
       }}
     >
-      {items.map((_, i) => (
-        <SwiperSlide className={trim(`!flex-row-center w-114 h-128 py-16`)} key={i}>
-          <CarouselImage position={i % 2 === 0 ? 'even' : 'odd'} />
+      {images.map((src, i) => (
+        <SwiperSlide className={trim(`!flex-row-center w-114 h-128 py-16`)} key={`${src}`}>
+          <CarouselImage position={i % 2 === 0 ? 'even' : 'odd'} src={src} />
         </SwiperSlide>
       ))}
     </Swiper>
@@ -78,15 +79,21 @@ const CarouselButton = ({ className, arrow, onClick }: CarouselButtonProps) => {
   )
 }
 
-type Props = {}
-export const Landing = ({ }: Props) => {
+type Props = {
+  carousel: Array<string>;
+  cta: {
+    text: string;
+    link: string;
+  }
+}
+export const Landing = ({ carousel, cta }: Props) => {
   const [currentSlide, setCurrentSlide] = useState(1);
   const swiper = useRef<SwiperClass>();
 
   const updateSwiper = (newSwiper: SwiperClass) => swiper.current = newSwiper;
 
   return (
-    <div className="relative mb-0 w-full">
+    <div className="relative w-full mb-0">
       <div className="absolute w-full h-full overflow-hidden">
         <div className="max-md:hidden rounded-[336px/50vh] border border-neutral-300 h-screen w-168 absolute -rotate-[20deg] inset-x-center -top-1/4" />
       </div>
@@ -94,21 +101,22 @@ export const Landing = ({ }: Props) => {
         <div className="mb-10 flex-row-center gap-x-2 text-neutral-600">
           <span>{currentSlide < 10 ? `0${currentSlide}` : currentSlide}</span>
           <hr className="w-16 border-neutral-600" />
-          <span>08</span>
+          <span>{carousel.length < 10 ? `0${carousel.length}` : carousel.length}</span>
         </div>
-        <div className="text-4xl xl:text-6xl text-center uppercase font-accent">
-          <h1>Free shipping</h1>
+        <div className="text-4xl text-center uppercase xl:text-6xl font-accent">
+          <h1>Livraison gratuite</h1>
           <div className="flex flex-row items-start justify-center">
-            <h1>On $25</h1>
-            <span className="ml-4 text-2xl lg:text-3xl font-medium text-neutral-600">+</span>
+            <h1>au delà de 25€</h1>
+            <span className="ml-4 text-2xl font-medium lg:text-3xl text-neutral-600">+</span>
           </div>
         </div>
-        <CarouselButton className="absolute top-1/4 left-10 hidden lg:block" arrow='left' onClick={() => swiper.current?.slidePrev()} />
-        <CarouselButton className="absolute top-1/4 right-10 hidden lg:block" arrow='right' onClick={() => swiper.current?.slideNext()} />
-        <Link href="/" underline className={"uppercase mt-10 text-sm lg:text-md"}>read more</Link>
+        <CarouselButton className="absolute hidden top-1/4 left-10 lg:block" arrow='left' onClick={() => swiper.current?.slidePrev()} />
+        <CarouselButton className="absolute hidden top-1/4 right-10 lg:block" arrow='right' onClick={() => swiper.current?.slideNext()} />
+        <Link href={cta.link} underline className={"uppercase mt-10 text-sm lg:text-md"}>{cta.text}</Link>
       </div>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <ImagesCarousel className="mt-16 lg:mt-24 -z-10"
+          images={carousel}
           updateSwiper={(s) => updateSwiper(s)}
           onSlideChange={(s) => setCurrentSlide(s.realIndex + 1)}
         />

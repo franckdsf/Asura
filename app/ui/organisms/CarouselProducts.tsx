@@ -1,7 +1,7 @@
-import { Swiper, SwiperClass, SwiperSlide } from "swiper/react"
+import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react"
 import { Card } from "../molecules"
 import { Icon } from "../atoms"
-import { ComponentProps, useRef } from "react"
+import { type ComponentProps, useRef } from "react"
 import { Link } from "@remix-run/react"
 
 type Props = {
@@ -31,11 +31,11 @@ export const CarouselProducts = ({ products }: Props) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="flex-row-center gap-x-4 mt-8">
-        <button className="p-3 rounded-full border border-neutral-300" onClick={() => swiper.current?.slidePrev()}>
+      <div className="mt-8 flex-row-center gap-x-4">
+        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slidePrev()}>
           <Icon.ArrowLeft className="icon-sm lg:icon-lg" />
         </button>
-        <button className="p-3 rounded-full border border-neutral-300" onClick={() => swiper.current?.slideNext()}>
+        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slideNext()}>
           <Icon.ArrowRight className="icon-sm lg:icon-lg" />
         </button>
       </div>

@@ -32,7 +32,7 @@ import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
 import { Icon } from '~/ui/atoms';
 import { type SwiperClass } from 'swiper/react';
-import { COLLECTION_QUERY } from '~/queries';
+import { CMS, COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -42,7 +42,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export async function loader({ params, request, context }: LoaderFunctionArgs) {
   const { handle } = params;
   const { storefront } = context;
-
 
   // recommended products
   const paginationVariables = getPaginationVariables(request, {
@@ -67,6 +66,9 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   if (!handle) {
     throw new Error('Expected product handle to be defined');
   }
+
+  const productPage = await CMS.PRODUCT_PAGE_QUERY(handle);
+  const specialOffer = await CMS.OFFER_BLOCK_QUERY();
 
   // await the query for the critical product data
   const { product } = await storefront.query(PRODUCT_QUERY, {
@@ -104,7 +106,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     variables: { handle },
   });
 
-  return defer({ product, variants, recommendedProducts });
+  return defer({ specialOffer, productPage, product, variants, recommendedProducts });
 }
 
 function redirectToFirstVariant({
@@ -133,33 +135,32 @@ function redirectToFirstVariant({
 type ImageStructure = { src: string, alt: string, width: number, height: number }
 export default function Product() {
   const swiper = useRef<SwiperClass>();
-  const { product, variants, recommendedProducts } = useLoaderData<typeof loader>();
+  const { specialOffer, productPage, product, variants, recommendedProducts } = useLoaderData<typeof loader>();
   const { selectedVariant } = product;
 
   useEffect(() => {
     if (swiper.current)
-      swiper.current.slideToLoop(product.images.nodes.length);
+      swiper.current.slideToLoop(0);
   }, [selectedVariant]);
 
-
   const images = [
-    ...product.images.nodes.map((img) => ({
-      src: img.url,
-      alt: img.altText || '',
-      width: img.width || 500,
-      height: img.height || 500,
-    })).filter((img) => img.src !== selectedVariant?.image?.url),
     selectedVariant?.image ? {
       src: selectedVariant.image.url,
       alt: selectedVariant.image.altText || '',
       width: selectedVariant.image.width || 500,
       height: selectedVariant.image.height || 500,
     } : undefined,
+    ...product.images.nodes.map((img) => ({
+      src: img.url,
+      alt: img.altText || '',
+      width: img.width || 500,
+      height: img.height || 500,
+    })).filter((img) => img.src !== selectedVariant?.image?.url),
   ].filter((img): img is ImageStructure => !!img)
 
   return (
     <div>
-      <div className="flex-row items-center justify-between lg:h-screen-w-header lg:bg-container-light lg:flex">
+      <div className="flex-row items-center justify-between lg:h-screen-w-header lg:border-b border-neutral-300 lg:flex">
         {selectedVariant?.image && <CarouselProductImages
           defaultIndex={0}
           className="pt-4 lg:pt-10 lg:pb-[15vh] border-r border-neutral-300"
@@ -174,13 +175,50 @@ export default function Product() {
           variants={variants}
         />
       </div>
-      <DescriptionBlock className="mt-16 md:mt-28" />
-      <MoreInformation className="mb-16 md:my-32" showTitleOnMobile={false} />
-      <SpecialOffer
+      {productPage?.modules?.map((m) => {
+        switch (m._type) {
+          case "module.content.bigTitle":
+            return <BigText
+              key={JSON.stringify(m)}
+              title={m.title}
+              bigTitle={m.bigTitle}
+              imageSrc={CMS.urlFor(m.sideImage.asset._ref).width(200).url()}
+              className="px-4 my-24 md:my-48 md:px-10"
+            />
+          case "module.content.description":
+            return <DescriptionBlock
+              key={JSON.stringify(m)}
+              description={m.description}
+              imageSrc={CMS.urlFor(m.image.asset._ref).width(800).url()}
+              list={m.list.map((i) => ({
+                icon: i.icon,
+                title: i.title,
+                content: i.description,
+              }))}
+              className="mt-16 md:mt-28"
+            />
+          case "module.content.moreInformation":
+            return <MoreInformation
+              key={JSON.stringify(m)}
+              className="mb-16 md:my-32" showTitleOnMobile={false}
+              delivery={m.delivery?.[0].children[0].text}
+              guaranty={m.guaranty?.[0].children[0].text}
+              included={m.included?.[0].children[0].text}
+            />
+          default:
+            return null;
+        }
+      })}
+      {specialOffer && <SpecialOffer
         type="right"
         showSectionTitle={false}
-      />
-      <BigText className="px-4 my-24 md:my-48 md:px-10" />
+        catchPhrase={specialOffer.catchPhrase}
+        title={specialOffer.title}
+        content={specialOffer.content}
+        mainImageSrc={specialOffer.mainImage.url}
+        additionalImageSrc={specialOffer.additionalImage?.url}
+      // cta={{ link: specialOffer.cta.link, text: specialOffer.cta.text }}
+      />}
       {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
       <ProductStickyATC
         className="mt-12"

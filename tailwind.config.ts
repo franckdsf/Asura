@@ -56,7 +56,6 @@ const fontSize: Record<string, Array<unknown>> = {
 const typo = fontSize;
 for (const key in fontSize) {
   for (const name in fontWeight) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     typo[`${key}-${name}`] = [fontSize[key]![0], { ...fontSize[key]![1]!, fontWeight: fontWeight[name] }]
   }
 }
@@ -66,7 +65,7 @@ export default {
   content: ['./app/**/*.{js,ts,jsx,tsx}'],
   theme: {
     fontSize: typo as never,
-    fontWeight: fontWeight,
+    fontWeight,
     colors: {
       transparent: 'transparent',
       dark: 'black',

@@ -125,7 +125,7 @@ export default function App() {
   const data = useLoaderData<typeof loader>();
 
   useEffect(() => {
-    hotjar.initialize(3718244, 6)
+    hotjar.initialize(3766033, 6)
   }, [])
 
   return (

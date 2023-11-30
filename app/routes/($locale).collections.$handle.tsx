@@ -9,9 +9,18 @@ import {
 import type { ProductItemFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
 import { Collection as CollectionTemplate } from '@ui/templates';
+import { type rootLoader } from '~/root';
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [{ title: `Asura | ${data?.collection.title} Collection` }];
+export const meta: MetaFunction<typeof loader, { 'root': rootLoader }> = ({ data, matches }) => {
+  const rootData = matches.find((m) => m.id === "root");
+  const k = [
+    ...(rootData?.meta || []),
+    { title: `${rootData?.data.header.shop.name} | ${data?.collection.title} Collection` }
+  ].filter((obj, index, self) => index !== self.findIndex((t) => (
+    'title' in t && 'title' in obj
+  )));
+
+  return k;
 };
 
 export async function loader({ request, params, context }: LoaderFunctionArgs) {

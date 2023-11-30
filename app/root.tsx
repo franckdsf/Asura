@@ -1,5 +1,5 @@
-import { useNonce } from '@shopify/hydrogen';
-import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { Script, useNonce } from '@shopify/hydrogen';
+import { defer, type MetaFunction, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import {
   Links,
   Meta,
@@ -20,8 +20,10 @@ import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
 import { Layout } from '~/components/Layout';
 import tailwindCss from './styles/tailwind.css';
+import { hotjar } from 'react-hotjar';
 /* @ts-ignore */
 import swiperCss from 'swiper/css';
+import { useEffect } from 'react';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -90,11 +92,21 @@ export async function loader({ context }: LoaderFunctionArgs) {
     },
   });
 
+  const header = await headerPromise;
+
   return defer(
     {
+      meta: [{ title: header.shop.name },
+      { property: "og:site_name", content: header.shop.name },
+      { property: "og:url", content: publicStoreDomain },
+      { property: "og:title", content: header.shop.name },
+      { property: "og:image", content: header.shop.brand?.logo?.image?.url },
+      { property: "og:image:secure_url", content: header.shop.brand?.logo?.image?.url },
+      { property: "og:image:width", content: "836" },
+      { property: "og:image:height", content: "175" }],
       cart: cartPromise,
       footer: footerPromise,
-      header: await headerPromise,
+      header,
       isLoggedIn,
       publicStoreDomain,
     },
@@ -102,15 +114,26 @@ export async function loader({ context }: LoaderFunctionArgs) {
   );
 }
 
+export type rootLoader = typeof loader;
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [...data?.meta || []]
+}
+
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
+
+  useEffect(() => {
+    hotjar.initialize(3718244, 6)
+  }, [])
 
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="google-site-verification" content="tC-eTfj_wAb60oZ3b2Trc4yiR1PiK5p3hS0kjv3V8Ks" />
         <Meta />
         <Links />
       </head>
@@ -149,7 +172,7 @@ export function ErrorBoundary() {
         <Links />
       </head>
       <body>
-        <Layout {...root.data}>
+        <Layout {...root.data as any}>
           <div className="route-error">
             <h1>Oops</h1>
             <h2>{errorStatus}</h2>

@@ -26,8 +26,29 @@ import { type SwiperClass } from 'swiper/react';
 import { CMS, COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [{ title: `Hydrogen | ${data?.product.title}` }];
+export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
+  const siteName = 'Asura';
+  const title = data?.product.seo.title || `${data?.product.title} | ${siteName}`;
+  const description = `${data?.product.seo.description || data?.product.description}`;
+
+  return [
+    { title },
+    { description },
+    { property: 'og:site_name', content: siteName },
+    { property: 'og:url', content: location },
+    { property: 'og:title', content: title },
+    { property: 'og:type', content: 'product' },
+    { property: 'og:description', content: description },
+    { property: 'og:image', content: data?.product.images.nodes[0].url },
+    { property: 'og:image:secure_url', content: data?.product.images.nodes[0].url },
+    { property: 'og:image:width', content: data?.product.images.nodes[0].width },
+    { property: 'og:image:height', content: data?.product.images.nodes[0].height },
+    { property: 'og:image:amount', content: data?.product.selectedVariant?.price.amount },
+    { property: 'og:image:currency', content: data?.product.selectedVariant?.price.currencyCode },
+    { property: 'twitter:card', content: 'summary_large_image' },
+    { property: 'twitter:title', content: title },
+    { property: 'twitter:description', content: description },
+  ];
 };
 
 export async function loader({ params, request, context }: LoaderFunctionArgs) {

@@ -5,19 +5,23 @@ import {
   type MetaFunction,
 } from '@remix-run/react';
 import { getPaginationVariables, Image } from '@shopify/hydrogen';
-import type {
-  FeaturedCollectionFragment,
-  CollectionQuery,
-} from 'storefrontapi.generated';
+import type { FeaturedCollectionFragment, } from 'storefrontapi.generated';
 import { Landing, ProductsSpotlight, SpecialOffer } from '@ui/templates';
-import { Card } from '@ui/molecules';
-import { CarouselProducts } from '@ui/organisms';
 import { CMS, COLLECTION_QUERY, COLLECTIONS_QUERY } from '../queries';
 import { RecommendedProducts } from '~/components/products';
 import { ExtractCollection } from '~/components/collections';
+import { type rootLoader } from '~/root';
 
-export const meta: MetaFunction<typeof loader> = () => {
-  return [{ title: `Asura | Accueil` }];
+export const meta: MetaFunction<typeof loader, { 'root': rootLoader }> = ({ matches }) => {
+  const rootData = matches.find((m) => m.id === "root");
+  const k = [
+    ...(rootData?.meta || []),
+    { title: `${rootData?.data.header.shop.name} | Accueil` }
+  ].filter((obj, index, self) => index !== self.findIndex((t) => (
+    'title' in t && 'title' in obj
+  )));
+
+  return k;
 };
 
 export async function loader({ context, request }: LoaderFunctionArgs) {

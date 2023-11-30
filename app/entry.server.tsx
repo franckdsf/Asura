@@ -17,11 +17,13 @@ export default async function handleRequest(
       'https://shopify.com',
       'https://cdn.sanity.io',
       "https://pp-proxy.parcelpanel.com",
-      "https://cdn.shopifycdn.net"
+      "https://cdn.shopifycdn.net",
+      "https://static.hotjar.com"
     ],
     connectSrc: [
       "'self'",
       "https://pp-proxy.parcelpanel.com",
+      "https://static.hotjar.com",
       // any other URLs your app needs to connect to
     ],
   });

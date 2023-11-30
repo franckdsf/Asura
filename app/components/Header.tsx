@@ -2,9 +2,7 @@ import { Await, NavLink, useMatches } from '@remix-run/react';
 import { Suspense } from 'react';
 import type { LayoutProps } from './Layout';
 import { Icon } from '@ui/atoms';
-import { Image } from '@shopify/hydrogen';
 import logo from '../../public/assets/logo.png';
-import { useScrollDirection } from '@ui/hooks';
 import { trim } from '@ui/utils/trim';
 
 type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>;
@@ -14,10 +12,8 @@ type Viewport = 'desktop' | 'mobile';
 export function Header({ header, isLoggedIn, cart }: HeaderProps) {
   const { shop, menu } = header;
 
-  const { scrollPosition } = useScrollDirection();
-
   return (
-    <header className={trim(`${scrollPosition > 0 && 'bg-white'} sticky flex flex-row items-center justify-between px-4 sm:px-10 header lg:border-b border-neutral-300`)}>
+    <header className={trim(`sticky flex flex-row items-center justify-between px-4 sm:px-10 header lg:border-b border-neutral-300`)}>
       <HeaderMenuMobileToggle />
       <HeaderMenu menu={menu} viewport="desktop" />
       <NavLink to="/"><img src={logo} alt="logo" className="absolute h-6 lg:h-10 inset-center" width="auto" /></NavLink>

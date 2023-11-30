@@ -3,7 +3,7 @@ import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
 import { Pagination, getPaginationVariables } from '@shopify/hydrogen';
 
 export const meta: MetaFunction<typeof loader> = () => {
-  return [{ title: `Hydrogen | Blogs` }];
+  return [{ title: `Asura | Blogs` }];
 };
 
 export const loader = async ({ request, context: { storefront } }: LoaderFunctionArgs) => {

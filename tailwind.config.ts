@@ -104,6 +104,10 @@ export default {
       0: '0',
       2: '2px'
     },
+    screens: {
+      'xs': '425px',
+      ...defaultTheme.screens,
+    },
     extend: {
       maxWidth: {
         '2xs': '14rem',

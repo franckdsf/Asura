@@ -104,9 +104,9 @@ export const Landing = ({ carousel, cta }: Props) => {
           <span>{carousel.length < 10 ? `0${carousel.length}` : carousel.length}</span>
         </div>
         <div className="text-4xl text-center uppercase xl:text-6xl font-accent">
-          <h1>Livraison gratuite</h1>
+          <h1>Vos mains</h1>
           <div className="flex flex-row items-start justify-center">
-            <h1>au delà de 25€</h1>
+            <h1>notre expertise</h1>
             <span className="ml-4 text-2xl font-medium lg:text-3xl text-neutral-600">+</span>
           </div>
         </div>

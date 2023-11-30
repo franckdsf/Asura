@@ -11,7 +11,7 @@ import { useVariantUrl } from '~/utils';
 import { Collection as CollectionTemplate } from '@ui/templates';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [{ title: `Hydrogen | ${data?.collection.title} Collection` }];
+  return [{ title: `Asura | ${data?.collection.title} Collection` }];
 };
 
 export async function loader({ request, params, context }: LoaderFunctionArgs) {

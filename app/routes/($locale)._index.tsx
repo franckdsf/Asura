@@ -17,7 +17,7 @@ import { RecommendedProducts } from '~/components/products';
 import { ExtractCollection } from '~/components/collections';
 
 export const meta: MetaFunction<typeof loader> = () => {
-  return [{ title: 'Hydrogen | Home' }];
+  return [{ title: `Asura | Accueil` }];
 };
 
 export async function loader({ context, request }: LoaderFunctionArgs) {

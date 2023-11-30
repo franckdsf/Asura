@@ -35,7 +35,7 @@ export const ProductsSpotlight = ({ products }: Props) => {
             <span>{products.length < 10 ? `0${products.length}` : products.length}</span>
           </div>
           <Link href={product.link}>
-            <h4 className="text-3xl uppercase break-words lg:text-4xl font-accent my-9">
+            <h4 className="text-2xl uppercase break-words xs:text-3xl lg:text-4xl font-accent my-9">
               {product.title}
             </h4>
           </Link>

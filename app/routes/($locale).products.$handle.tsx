@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import {
   useLoaderData,
@@ -149,6 +149,31 @@ export default function Product() {
     })).filter((img) => img.src !== selectedVariant?.image?.url),
   ].filter((img): img is ImageStructure => !!img)
 
+  const modules = useMemo(() => {
+    const showDefaultMoreInformation = !productPage?.modules.some((m) => m._type === "module.content.moreInformation");
+    const showDefaultBigTitle = productPage?.modules[productPage?.modules.length - 1]._type !== "module.content.bigTitle";
+
+    const defaultMoreInformation = {
+      _type: "module.content.moreInformation",
+      ...productPage?.page?.defaultInformation,
+    } as const;
+
+    const defaultBigTitle = productPage?.page ? {
+      ...productPage.page.bigTitle,
+      _type: "module.content.bigTitle",
+    } as const : null;
+
+    const modules = [...(productPage?.modules || [])];
+
+    if (defaultMoreInformation && showDefaultMoreInformation)
+      modules.push(defaultMoreInformation);
+
+    if (defaultBigTitle && showDefaultBigTitle)
+      modules.push(defaultBigTitle);
+
+    return modules;
+  }, [productPage])
+
   return (
     <div>
       <div className="flex-row items-center justify-between lg:h-screen-w-header lg:border-b border-neutral-300 lg:flex">
@@ -166,7 +191,7 @@ export default function Product() {
           variants={variants}
         />
       </div>
-      {productPage?.modules?.map((m) => {
+      {modules.map((m) => {
         switch (m._type) {
           case "module.content.bigTitle":
             return <BigText
@@ -192,8 +217,8 @@ export default function Product() {
             return <MoreInformation
               key={JSON.stringify(m)}
               className="mb-16 md:my-32" showTitleOnMobile={false}
-              delivery={m.delivery}
-              guaranty={m.guaranty}
+              delivery={m.delivery || productPage?.page?.defaultInformation.delivery}
+              guaranty={m.guaranty || productPage?.page?.defaultInformation.guaranty}
               included={m.included}
             />
           default:

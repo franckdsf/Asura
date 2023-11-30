@@ -6,8 +6,8 @@ import { type ActionFunctionArgs, json } from '@shopify/remix-oxygen';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { CartMain } from '~/components/Cart';
 
-export const meta: MetaFunction<typeof loader> = () => {
-  return [{ title: `Hydrogen | Cart` }];
+export const meta: MetaFunction<typeof action> = () => {
+  return [{ title: `Asura | Cart` }];
 };
 
 export async function action({ request, context }: ActionFunctionArgs) {
@@ -86,11 +86,11 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
 export default function Cart() {
   const [root] = useMatches();
-  const cart = root.data?.cart as Promise<CartApiQueryFragment | null>;
+  const cart = (root.data as { cart: Promise<CartApiQueryFragment | null> })?.cart;
 
   return (
-    <div className="cart mx-auto max-w-7xl px-4">
-      <h1 className="text-2xl lg:text-7xl mt-16 mb-8 uppercase font-accent">Cart</h1>
+    <div className="px-4 mx-auto cart max-w-7xl">
+      <h1 className="mt-16 mb-8 text-2xl uppercase lg:text-7xl font-accent">Cart</h1>
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await errorElement={<div>An error occurred</div>} resolve={cart}>
           {(cart) => {

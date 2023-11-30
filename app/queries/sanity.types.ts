@@ -54,6 +54,15 @@ export type OfferBlock = {
   }
 }
 
+export type ProductPage = {
+  _type: 'productPage',
+  bigTitle: ContentBigTitle,
+  defaultInformation: {
+    delivery: Array<Block>;
+    guaranty: Array<Block>;
+  }
+}
+
 export type HomePage = {
   _type: 'home',
   hero: {

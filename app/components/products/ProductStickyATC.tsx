@@ -1,10 +1,10 @@
-import { Await, FetcherWithComponents, Link } from "@remix-run/react";
-import { CartForm, Money, VariantOption, VariantSelector } from "@shopify/hydrogen";
-import { ProductFragment, ProductVariantFragment, ProductVariantsQuery } from "storefrontapi.generated";
+import { Await, type FetcherWithComponents, Link } from "@remix-run/react";
+import { CartForm, Money, type VariantOption, VariantSelector } from "@shopify/hydrogen";
+import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
-import { useState } from "react";
-import { CartLineInput } from "@shopify/hydrogen/storefront-api-types";
+import { useEffect, useState } from "react";
+import { type CartLineInput } from "@shopify/hydrogen/storefront-api-types";
 import { useBreakpoint, useClickOutside, useScrollDirection } from "@ui/hooks";
 
 type DefaultProps = { className?: string }
@@ -18,8 +18,8 @@ export function ProductOptions({ option, defaultOpen = false }: { option: Varian
   if (option.values.length < 2) return null;
 
   return (
-    <div className="relative flex flex-row justify-start items-center" key={option.name}>
-      <h5 className="max-md:hidden uppercase text-2xs text-neutral-600 mr-4 flex-shrink-0">cliquez pour changer de {option.name}</h5>
+    <div className="relative flex flex-row items-center justify-start" key={option.name}>
+      <h5 className="flex-shrink-0 mr-4 uppercase max-md:hidden text-2xs text-neutral-600">cliquez pour changer de {option.name}</h5>
       <button className="w-full lg:w-auto flex-row-between uppercase text-xs rounded-full px-4 py-2 md:py-2.5 text-neutral-900 border border-neutral-600
       gap-x-4"
         onClick={() => setOpen((o) => !o)}
@@ -62,7 +62,7 @@ function ProductPrice({
         <>
           <div className="product-price-on-sale">
             {selectedVariant ? <Money data={selectedVariant.price} /> : null}
-            <s className="lg:font-regular mr-1">
+            <s className="mr-1 lg:font-regular">
               <Money data={selectedVariant.compareAtPrice} />
             </s>
             <PromotionTag className="max-lg:hidden" />
@@ -135,15 +135,15 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
 
   return (
     <div className={trim(`z-50 sticky bottom-0 w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>
-      <div className="flex flex-col lg:flex-row justify-between items-stretch">
+      <div className="flex flex-col items-stretch justify-between lg:flex-row">
         <Await
           errorElement="There was a problem loading product variants"
           resolve={variants}
         >
           {(data) => (
             (data.product?.variants.nodes.length || 1) <= 1 ?
-              <div className="w-full flex flex-col justify-center items-start max-lg:hidden">
-                <h1 className="text-md-semibold uppercase">{product.title}</h1>
+              <div className="flex flex-col items-start justify-center w-full max-lg:hidden">
+                <h1 className="uppercase text-md-semibold">{product.title}</h1>
               </div>
               : (
                 showExtra &&
@@ -158,16 +158,16 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
                 </div>)
           )}
         </Await>
-        {showExtra && <div className="w-full flex-row-between lg:hidden mb-2 px-4 lg:px-10">
+        {showExtra && <div className="w-full px-4 mb-2 flex-row-between lg:hidden lg:px-10">
           <PromotionTag />
           <div className="flex-row-center">
             {Array(5).fill(0).map((_, i) => <Icon.Star className="icon-xs text-[#FBC400]" weight="fill" key={i} />)}
           </div>
         </div>}
-        <div className="max-lg:hidden h-full relative mr-16">
-          <div className="h-16 absolute -top-6 w-1px bg-neutral-300 mr-16" />
+        <div className="relative h-full mr-16 max-lg:hidden">
+          <div className="absolute h-16 mr-16 -top-6 w-1px bg-neutral-300" />
         </div>
-        <div className="flex flex-row justify-between items-center w-full max-lg:px-4">
+        <div className="flex flex-row items-center justify-between w-full max-lg:px-4">
           <ProductPrice selectedVariant={selectedVariant} />
           <AddToCartButton
             disabled={!selectedVariant || !selectedVariant.availableForSale}

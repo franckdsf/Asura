@@ -3,7 +3,8 @@ import { loadQuery, urlFor } from "sanity";
 import type {
   ContentBigTitle, ContentMoreInformation, ContentDescription, ImageWithUrl,
   OfferBlock,
-  HomePage
+  HomePage,
+  ProductPage
 } from "./sanity.types";
 
 
@@ -12,17 +13,22 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
     store: {
       slug: string,
     },
-    modules: Array<ContentDescription | ContentBigTitle | ContentMoreInformation>
+    modules: Array<ContentDescription | ContentBigTitle | ContentMoreInformation>,
+    page: ProductPage[] | null
   }> = await loadQuery(groq`*[_type == "product" && store.slug.current == "${slug}" ] {
     store {
       slug
     },
-    modules
+    modules,
+    "page": *[_type == "productPage"]
   }
   `);
 
   if (query.length === 0) return null;
-  return query[0];
+  return {
+    ...query[0],
+    page: query[0].page?.[0] || null,
+  };
 }
 
 const OFFER_BLOCK_QUERY = async () => {

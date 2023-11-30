@@ -4,7 +4,7 @@ import { Accordion } from '~/ui/molecules';
 import { Link } from '~/ui/atoms';
 
 export const meta: MetaFunction = ({ data }) => {
-  return [{ title: `Hydrogen | FAQ` }];
+  return [{ title: `Asura | FAQ` }];
 };
 
 export default function Page() {

@@ -18,7 +18,7 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { BigText, DeliveryDate, DescriptionBlock, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
+import { BigText, DeliveryDate, DescriptionBlock, MoreInformation, ProductStickyATC, RecommendedProducts, Reviews } from '~/components/products';
 import { AddToCartButton } from '~/components/tracking';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
@@ -260,6 +260,7 @@ export default function Product() {
             return null;
         }
       })}
+      <Reviews productId={product.id} storeDomain='f22921-2.myshopify.com' />
       {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
       <ProductStickyATC
         className="mt-12"

@@ -18,7 +18,8 @@ export default async function handleRequest(
       'https://cdn.sanity.io',
       "https://pp-proxy.parcelpanel.com",
       "https://cdn.shopifycdn.net",
-      "https://static.hotjar.com"
+      "https://static.hotjar.com",
+      "https://loox.io"
     ],
     connectSrc: [
       "'self'",
@@ -26,6 +27,10 @@ export default async function handleRequest(
       "https://static.hotjar.com",
       // any other URLs your app needs to connect to
     ],
+    frameAncestors: [
+      "'self'",
+      "https://loox.io"
+    ]
   });
 
   const body = await renderToReadableStream(
@@ -46,6 +51,7 @@ export default async function handleRequest(
   if (isbot(request.headers.get('user-agent'))) {
     await body.allReady;
   }
+  console.log(header);
 
   responseHeaders.set('Content-Type', 'text/html');
   responseHeaders.set('Content-Security-Policy', header);

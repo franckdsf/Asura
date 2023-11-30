@@ -29,7 +29,6 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const { collections: collectionsTmp } = await storefront.query(FEATURED_COLLECTION_QUERY);
   const featuredCollection = collectionsTmp.nodes[0];
 
-  const offerBlock = await CMS.OFFER_BLOCK_QUERY();
   const homePage = await CMS.HOME_PAGE_QUERY();
 
   const paginationVariables = getPaginationVariables(request, {
@@ -46,12 +45,12 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     variables: paginationVariables,
   });
 
-  return json({ homePage, offerBlock, collections, featuredCollection, recommendedProducts });
+  return json({ homePage, collections, featuredCollection, recommendedProducts });
 }
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
-  const offer = data.offerBlock;
+  const offer = data.homePage?.cta;
 
   return (
     <div className="home">

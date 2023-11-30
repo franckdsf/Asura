@@ -80,7 +80,6 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }
 
   const productPage = await CMS.PRODUCT_PAGE_QUERY(handle);
-  const specialOffer = await CMS.OFFER_BLOCK_QUERY();
 
   // await the query for the critical product data
   const { product } = await storefront.query(PRODUCT_QUERY, {
@@ -118,7 +117,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     variables: { handle },
   });
 
-  return defer({ specialOffer, productPage, product, variants, recommendedProducts });
+  return defer({ productPage, product, variants, recommendedProducts });
 }
 
 function redirectToFirstVariant({
@@ -147,7 +146,7 @@ function redirectToFirstVariant({
 type ImageStructure = { src: string, alt: string, width: number, height: number }
 export default function Product() {
   const swiper = useRef<SwiperClass>();
-  const { specialOffer, productPage, product, variants, recommendedProducts } = useLoaderData<typeof loader>();
+  const { productPage, product, variants, recommendedProducts } = useLoaderData<typeof loader>();
   const { selectedVariant } = product;
 
   useEffect(() => {
@@ -171,8 +170,10 @@ export default function Product() {
   ].filter((img): img is ImageStructure => !!img)
 
   const modules = useMemo(() => {
-    const showDefaultMoreInformation = !productPage?.modules.some((m) => m._type === "module.content.moreInformation");
-    const showDefaultBigTitle = productPage?.modules[productPage?.modules.length - 1]._type !== "module.content.bigTitle";
+    const baseModules = productPage?.modules || [];
+
+    const showDefaultMoreInformation = !baseModules.some((m) => m._type === "module.content.moreInformation");
+    const showDefaultBigTitle = baseModules.length > 0 ? baseModules[baseModules.length - 1]._type !== "module.content.bigTitle" : true;
 
     const defaultMoreInformation = {
       _type: "module.content.moreInformation",
@@ -184,7 +185,7 @@ export default function Product() {
       _type: "module.content.bigTitle",
     } as const : null;
 
-    const modules = [...(productPage?.modules || [])];
+    const modules = [...(baseModules || [])];
 
     if (defaultMoreInformation && showDefaultMoreInformation)
       modules.push(defaultMoreInformation);
@@ -242,20 +243,22 @@ export default function Product() {
               guaranty={m.guaranty || productPage?.page?.defaultInformation.guaranty}
               included={m.included}
             />
+          case "actionBlock":
+            return <SpecialOffer
+              key={JSON.stringify(m)}
+              type="right"
+              showSectionTitle={false}
+              catchPhrase={m.catchPhrase}
+              title={m.title}
+              content={m.content}
+              mainImageSrc={m.mainImage.url}
+              additionalImageSrc={m.additionalImage?.url}
+              cta={m.cta ? { link: m.cta.link, text: m.cta.text } : undefined}
+            />
           default:
             return null;
         }
       })}
-      {specialOffer && <SpecialOffer
-        type="right"
-        showSectionTitle={false}
-        catchPhrase={specialOffer.catchPhrase}
-        title={specialOffer.title}
-        content={specialOffer.content}
-        mainImageSrc={specialOffer.mainImage.url}
-        additionalImageSrc={specialOffer.additionalImage?.url}
-      // cta={{ link: specialOffer.cta.link, text: specialOffer.cta.text }}
-      />}
       {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
       <ProductStickyATC
         className="mt-12"

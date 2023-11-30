@@ -41,8 +41,8 @@ export type ContentMoreInformation = {
   guaranty?: Array<Block>;
 }
 
-export type OfferBlock = {
-  _type: 'offerBlock';
+export type ActionBlock = {
+  _type: 'actionBlock';
   catchPhrase: string;
   title: string;
   content: string;
@@ -68,6 +68,7 @@ export type HomePage = {
   hero: {
     carousel: Array<Image>;
   },
+  cta: ActionBlock,
   productsSpotlight: Array<{
     store: {
       title: string,

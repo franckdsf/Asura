@@ -6,7 +6,7 @@ export const DeliveryDate = ({ className = "" }: Props) => {
 
   const fourDaysAfter = useMemo(() => {
     // Calculate date 4 days after
-    let date = new Date(currentDate);
+    const date = new Date(currentDate);
 
     date.setDate(currentDate.getDate() + 4);
 
@@ -17,7 +17,7 @@ export const DeliveryDate = ({ className = "" }: Props) => {
 
   const tenDaysAfter = useMemo(() => {
     // Calculate date 4 days after
-    let date = new Date(currentDate);
+    const date = new Date(currentDate);
 
     date.setDate(currentDate.getDate() + 10);
 

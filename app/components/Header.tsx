@@ -69,11 +69,10 @@ export function HeaderMenu({
               : element.url;
 
           return (
-            <div>
+            <div key={element.id}>
               <NavLink
                 className={`uppercase header-menu-item text-md flex flex-row justify-start items-center`}
                 end
-                key={element.id}
                 onClick={closeAside}
                 prefetch="intent"
                 style={activeLinkStyle}
@@ -108,7 +107,7 @@ export function HeaderMenu({
         }
 
         return extractItem(item);
-      }).flat(1)}
+      })}
     </nav>
   );
 }

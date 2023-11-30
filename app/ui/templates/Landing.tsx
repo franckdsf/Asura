@@ -62,7 +62,8 @@ const ImagesCarousel = ({ images, className, onSlideChange, updateSwiper }: Imag
       }}
     >
       {images.map((src, i) => (
-        <SwiperSlide className={trim(`!flex-row-center w-114 h-128 py-16`)} key={`${src}`}>
+        // eslint-disable-next-line react/no-array-index-key
+        <SwiperSlide className={trim(`!flex-row-center w-114 h-128 py-16`)} key={`${src}${i}`}>
           <CarouselImage position={i % 2 === 0 ? 'even' : 'odd'} src={src} />
         </SwiperSlide>
       ))}

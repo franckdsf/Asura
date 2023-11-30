@@ -18,7 +18,8 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { AddToCartButton, BigText, DeliveryDate, DescriptionBlock, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
+import { BigText, DeliveryDate, DescriptionBlock, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
+import { AddToCartButton } from '~/components/tracking';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
 import { Icon } from '~/ui/atoms';
@@ -285,8 +286,10 @@ function ProductMain({
   return (
     <div className={trim(`px-4 mt-6 ${className}`)}>
       <div className="flex mb-3 max-lg:hidden">
+        {/* eslint-disable-next-line react/no-array-index-key */}
         {Array(5).fill(0).map((_, i) => <Icon.Star className="icon-xs text-[#FBC400]" weight="fill" key={i} />)}
       </div>
+      <ProductPrice selectedVariant={selectedVariant} className="mb-2 max-lg:hidden" />
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="text-md" />
@@ -319,18 +322,18 @@ function ProductMain({
 
 function ProductPrice({
   selectedVariant,
+  className = "",
 }: {
   selectedVariant: ProductFragment['selectedVariant'];
+  className?: string
 }) {
   return (
-    <div className="product-price">
+    <div className={trim(`text-md-medium lg:text-lg-semibold ${className}`)}>
       {selectedVariant?.compareAtPrice ? (
         <>
-          <p>Sale</p>
-          <br />
           <div className="product-price-on-sale">
             {selectedVariant ? <Money data={selectedVariant.price} /> : null}
-            <s>
+            <s className="mr-1 lg:font-regular">
               <Money data={selectedVariant.compareAtPrice} />
             </s>
           </div>

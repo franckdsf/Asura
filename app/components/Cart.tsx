@@ -59,7 +59,7 @@ function CartLines({
         {lines.nodes.map((line) => (
           <CartLineItem key={line.id} line={line} layout={layout} />
         ))}
-        {lines.nodes.length > 0 && <FreeItem />}
+        {/* {lines.nodes.length > 0 && <FreeItem />} */}
       </ul>
     </div>
   );

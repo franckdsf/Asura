@@ -1,11 +1,11 @@
-import { Await, type FetcherWithComponents, Link } from "@remix-run/react";
-import { CartForm, Money, type VariantOption, VariantSelector } from "@shopify/hydrogen";
+import { Await, Link } from "@remix-run/react";
+import { Money, type VariantOption, VariantSelector } from "@shopify/hydrogen";
 import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
-import { useEffect, useState } from "react";
-import { type CartLineInput } from "@shopify/hydrogen/storefront-api-types";
+import { useState } from "react";
 import { useBreakpoint, useClickOutside, useScrollDirection } from "@ui/hooks";
+import { AddToCartButton } from "../tracking";
 
 type DefaultProps = { className?: string }
 
@@ -82,44 +82,6 @@ const PromotionTag = ({ className }: DefaultProps) => (
     <span className="uppercase text-2xs lg:text-xs">BLACK FRIDAY</span>
   </div>
 )
-
-export function AddToCartButton({
-  analytics,
-  children,
-  disabled,
-  lines,
-  className = "",
-  onClick,
-}: {
-  className?: string;
-  analytics?: unknown;
-  children: React.ReactNode;
-  disabled?: boolean;
-  lines: CartLineInput[];
-  onClick?: () => void;
-}) {
-  return (
-    <CartForm route="/cart" inputs={{ lines }} action={CartForm.ACTIONS.LinesAdd}>
-      {(fetcher: FetcherWithComponents<any>) => (
-        <>
-          <input
-            name="analytics"
-            type="hidden"
-            value={JSON.stringify(analytics)}
-          />
-          <button
-            type="submit"
-            onClick={onClick}
-            disabled={disabled ?? fetcher.state !== 'idle'}
-            className={trim(`text-xs md:text-md px-6 md:px-8 py-3 rounded-full bg-neutral-900 text-neutral-50 uppercase ${className}`)}
-          >
-            {children}
-          </button>
-        </>
-      )}
-    </CartForm>
-  );
-}
 
 type Props = {
   product: ProductFragment;

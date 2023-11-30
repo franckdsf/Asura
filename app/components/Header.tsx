@@ -13,7 +13,7 @@ export function Header({ header, isLoggedIn, cart }: HeaderProps) {
   const { shop, menu } = header;
 
   return (
-    <header className={trim(`sticky flex flex-row items-center justify-between px-4 sm:px-10 header lg:border-b border-neutral-300`)}>
+    <header className={trim(`bg-white sticky flex flex-row items-center justify-between px-4 sm:px-10 header lg:border-b border-neutral-300`)}>
       <HeaderMenuMobileToggle />
       <HeaderMenu menu={menu} viewport="desktop" />
       <NavLink to="/"><img src={logo} alt="logo" className="absolute h-6 lg:h-10 inset-center" width="auto" /></NavLink>

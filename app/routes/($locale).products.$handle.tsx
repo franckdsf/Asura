@@ -229,11 +229,11 @@ export default function Product() {
               key={JSON.stringify(m)}
               description={m.description}
               imageSrc={m.image ? CMS.urlFor(m.image.asset._ref).width(800).url() : selectedVariant?.image?.url}
-              list={m.list.map((i) => ({
+              list={(m.list?.map((i) => ({
                 icon: i.icon,
                 title: i.title,
                 content: i.description,
-              }))}
+              })) || [])}
               className="mt-16 md:mt-28"
             />
           case "module.content.moreInformation":

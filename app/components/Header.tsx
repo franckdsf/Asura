@@ -64,7 +64,7 @@ export function HeaderMenu({
           // if the url is internal, we strip the domain
           const url =
             element.url.includes('myshopify.com') ||
-              element.url.includes(publicStoreDomain)
+              element.url.includes(publicStoreDomain) || element.url // TODO REMOVE (|| element.url)
               ? new URL(element.url).pathname
               : element.url;
 

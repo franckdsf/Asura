@@ -1,4 +1,4 @@
-import { Script, useNonce } from '@shopify/hydrogen';
+import { useNonce } from '@shopify/hydrogen';
 import { defer, type MetaFunction, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import {
   Links,
@@ -24,7 +24,7 @@ import { hotjar } from 'react-hotjar';
 /* @ts-ignore */
 import swiperCss from 'swiper/css';
 import { useEffect } from 'react';
-import { ConversionLinker, GoogleTagManager } from './pixels';
+import { GoogleTagManager, GoogleTagManagerNoScript } from './pixels';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -132,15 +132,15 @@ export default function App() {
   return (
     <html lang="en">
       <head>
+        <GoogleTagManager />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="google-site-verification" content="tC-eTfj_wAb60oZ3b2Trc4yiR1PiK5p3hS0kjv3V8Ks" />
         <Meta />
         <Links />
-        <ConversionLinker />
       </head>
       <body>
-        <GoogleTagManager />
+        <GoogleTagManagerNoScript />
         <Layout {...data}>
           <Outlet />
         </Layout>

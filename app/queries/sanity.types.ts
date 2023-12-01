@@ -20,7 +20,7 @@ export type ContentDescription = {
   _type: 'module.content.description';
   description: Array<Block>;
   image: Image;
-  list: Array<{
+  list?: Array<{
     title: string;
     description: string;
     icon: string;

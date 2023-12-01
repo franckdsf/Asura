@@ -11,7 +11,7 @@ const config: ClientConfig = {
   projectId: PROJECT_ID,
   dataset: DATASET,
   apiVersion: '2023-05-03',
-  useCdn: true,
+  useCdn: false,
 }
 
 const client = createClient(config);

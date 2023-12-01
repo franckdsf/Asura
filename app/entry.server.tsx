@@ -15,11 +15,15 @@ export default async function handleRequest(
       "'self'",
       'https://cdn.shopify.com',
       'https://shopify.com',
-      'https://cdn.sanity.io',
-      "https://pp-proxy.parcelpanel.com",
       "https://cdn.shopifycdn.net",
+      // apps
+      "https://pp-proxy.parcelpanel.com",
+      "https://loox.io",
+      // cms
+      'https://cdn.sanity.io',
+      // pixels
       "https://static.hotjar.com",
-      "https://loox.io"
+      "https://www.googletagmanager.com"
     ],
     connectSrc: [
       "'self'",
@@ -29,7 +33,8 @@ export default async function handleRequest(
     ],
     frameAncestors: [
       "'self'",
-      "https://loox.io"
+      "https://loox.io",
+      "https://www.googletagmanager.com"
     ]
   });
 
@@ -51,7 +56,6 @@ export default async function handleRequest(
   if (isbot(request.headers.get('user-agent'))) {
     await body.allReady;
   }
-  console.log(header);
 
   responseHeaders.set('Content-Type', 'text/html');
   responseHeaders.set('Content-Security-Policy', header);

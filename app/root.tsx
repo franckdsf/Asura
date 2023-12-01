@@ -24,6 +24,7 @@ import { hotjar } from 'react-hotjar';
 /* @ts-ignore */
 import swiperCss from 'swiper/css';
 import { useEffect } from 'react';
+import { ConversionLinker, GoogleTagManager } from './pixels';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -136,8 +137,10 @@ export default function App() {
         <meta name="google-site-verification" content="tC-eTfj_wAb60oZ3b2Trc4yiR1PiK5p3hS0kjv3V8Ks" />
         <Meta />
         <Links />
+        <ConversionLinker />
       </head>
       <body>
+        <GoogleTagManager />
         <Layout {...data}>
           <Outlet />
         </Layout>

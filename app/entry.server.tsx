@@ -19,10 +19,12 @@ export default async function handleRequest(
       "https://pp-proxy.parcelpanel.com",
       "https://cdn.shopifycdn.net",
       "https://static.hotjar.com",
-      "https://loox.io"
+      "https://loox.io",
+      "https://cdn.judge.me"
     ],
     connectSrc: [
       "'self'",
+      "https://cdn.judge.me",
       "https://pp-proxy.parcelpanel.com",
       "https://static.hotjar.com",
       // any other URLs your app needs to connect to
@@ -51,7 +53,6 @@ export default async function handleRequest(
   if (isbot(request.headers.get('user-agent'))) {
     await body.allReady;
   }
-  console.log(header);
 
   responseHeaders.set('Content-Type', 'text/html');
   responseHeaders.set('Content-Security-Policy', header);

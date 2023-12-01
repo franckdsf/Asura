@@ -24,6 +24,7 @@ import { hotjar } from 'react-hotjar';
 /* @ts-ignore */
 import swiperCss from 'swiper/css';
 import { useEffect } from 'react';
+import { useJudgeme } from '@judgeme/shopify-hydrogen';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({

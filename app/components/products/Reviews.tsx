@@ -1,10 +1,17 @@
 import { Script } from "@shopify/hydrogen"
+import { JudgemeReviewWidget, useJudgeme } from '@judgeme/shopify-hydrogen'
 
-export const Reviews = ({ productId, storeDomain }: { productId: string, storeDomain: string }) => {
+export const JudgeMeReviews = ({ productId }: { productId: string }) => {
+  useJudgeme({
+    shopDomain: 'f22921-2.myshopify.com',
+    publicToken: 'HfCllSLXKeBh1Lf2noMU10gI7j4',
+    cdnHost: 'https://cdn.judge.me',
+    delay: 500
+  })
+
   return (
     <div>
-      <Script async src={`https://loox.io/widget/loox.js?shop=${storeDomain}`} />
-      <div id="looxReviews" data-product-id={productId} />
+      <JudgemeReviewWidget id={productId} />
     </div>
   )
 }

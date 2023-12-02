@@ -11,6 +11,7 @@ const GOOGLE = [
   "https://*.google.fr",  // "https://*.google.<TLD>"
   "https://*.google.com",
   // gads
+  "https://google.com",
   "https://*.googleadservices.com"
   // "https://*.g.doubleclick.net",
   // "https://*.google.com",
@@ -33,7 +34,8 @@ export const securityPolicies = {
   ],
   connectSrc: [
     // hotjar
-    "https://static.hotjar.com",
+    "https://*.hotjar.com",
+    "https://*.hotjar.io",
     // google
     ...GOOGLE,
   ]

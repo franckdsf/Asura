@@ -5,6 +5,7 @@ import {
   getPaginationVariables,
   Image,
   Money,
+  AnalyticsPageType,
 } from '@shopify/hydrogen';
 import type { ProductItemFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
@@ -43,7 +44,13 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
       status: 404,
     });
   }
-  return json({ collection });
+  return json({
+    collection,
+    analytics: {
+      pageType: AnalyticsPageType.collection,
+      collections: [collection]
+    },
+  });
 }
 
 export default function Collection() {

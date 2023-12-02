@@ -1,5 +1,5 @@
-import { useNonce } from '@shopify/hydrogen';
-import { defer, type MetaFunction, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { useNonce, useShopifyCookies } from '@shopify/hydrogen';
+import { defer, type MetaFunction, type LoaderFunctionArgs, json } from '@shopify/remix-oxygen';
 import {
   Links,
   Meta,
@@ -23,6 +23,8 @@ import tailwindCss from './styles/tailwind.css';
 /* @ts-ignore */
 import swiperCss from 'swiper/css';
 import { BodyPixel, HeadPixel } from './pixels';
+import { useShopifyPixel } from './pixels/Shopify';
+import { useShopId } from './components/tracking/useShopId';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -106,6 +108,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
       cart: cartPromise,
       footer: footerPromise,
       header,
+      shopId: header.shop.id,
       isLoggedIn,
       publicStoreDomain,
     },
@@ -122,6 +125,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
+
+  useShopId(data.shopId);
+  useShopifyPixel({ shopId: data.shopId });
 
   return (
     <html lang="en">

@@ -13,12 +13,13 @@ import {
   Money,
   getSelectedProductOptions,
   getPaginationVariables,
+  AnalyticsPageType,
 } from '@shopify/hydrogen';
 import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { BigText, DeliveryDate, DescriptionBlock, MoreInformation, ProductStickyATC, RecommendedProducts, Reviews } from '~/components/products';
+import { BigText, DeliveryDate, DescriptionBlock, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
 import { AddToCartButton } from '~/components/tracking';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
@@ -118,7 +119,16 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     variables: { handle },
   });
 
-  return defer({ productPage, product, variants, recommendedProducts });
+  return defer({
+    productPage,
+    product,
+    variants,
+    recommendedProducts,
+    analytics: {
+      pageType: AnalyticsPageType.product,
+      products: [product],
+    },
+  });
 }
 
 function redirectToFirstVariant({
@@ -260,7 +270,6 @@ export default function Product() {
             return null;
         }
       })}
-      <Reviews productId={product.id} storeDomain='f22921-2.myshopify.com' />
       {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
       <ProductStickyATC
         className="mt-12"
@@ -304,16 +313,14 @@ function ProductMain({
         onClick={() => {
           window.location.href = window.location.href + '#cart-aside';
         }}
-        lines={
-          selectedVariant
-            ? [
-              {
-                merchandiseId: selectedVariant.id,
-                quantity: 1,
-              },
-            ]
-            : []
-        }
+        product={{
+          ...product,
+          name: product.title,
+          brand: product.vendor,
+          price: selectedVariant!.price.amount,
+          productGid: product.id,
+          variantGid: selectedVariant!.id
+        }}
       >
         {selectedVariant?.availableForSale ? 'Ajouter au panier' : 'Rupture de stock'}
       </AddToCartButton>

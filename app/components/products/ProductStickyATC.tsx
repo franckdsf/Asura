@@ -1,5 +1,5 @@
 import { Await, Link } from "@remix-run/react";
-import { Money, type VariantOption, VariantSelector } from "@shopify/hydrogen";
+import { Money, type VariantOption, VariantSelector, type ShopifyAnalyticsProduct } from "@shopify/hydrogen";
 import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
@@ -123,6 +123,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
         {showExtra && <div className="w-full px-4 mb-2 flex-row-between lg:hidden lg:px-10">
           <PromotionTag />
           <div className="flex-row-center">
+            {/* eslint-disable-next-line react/no-array-index-key */}
             {Array(5).fill(0).map((_, i) => <Icon.Star className="icon-xs text-[#FBC400]" weight="fill" key={i} />)}
           </div>
         </div>}
@@ -136,16 +137,14 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
             onClick={() => {
               window.location.href = window.location.href + '#cart-aside';
             }}
-            lines={
-              selectedVariant
-                ? [
-                  {
-                    merchandiseId: selectedVariant.id,
-                    quantity: 1,
-                  },
-                ]
-                : []
-            }
+            product={{
+              ...product,
+              name: product.title,
+              brand: product.vendor,
+              price: selectedVariant!.price.amount,
+              productGid: product.id,
+              variantGid: selectedVariant!.id
+            }}
           >
             {selectedVariant?.availableForSale ? 'Ajouter au panier' : 'Rupture de stock'}
           </AddToCartButton>

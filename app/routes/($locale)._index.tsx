@@ -4,7 +4,7 @@ import {
   Link,
   type MetaFunction,
 } from '@remix-run/react';
-import { getPaginationVariables, Image } from '@shopify/hydrogen';
+import { AnalyticsPageType, getPaginationVariables, Image } from '@shopify/hydrogen';
 import type { FeaturedCollectionFragment, } from 'storefrontapi.generated';
 import { Landing, ProductsSpotlight, SpecialOffer } from '@ui/templates';
 import { CMS, COLLECTION_QUERY, COLLECTIONS_QUERY } from '../queries';
@@ -45,7 +45,12 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     variables: paginationVariables,
   });
 
-  return json({ homePage, collections, featuredCollection, recommendedProducts });
+  return json({
+    homePage, collections, featuredCollection, recommendedProducts,
+    analytics: {
+      pageType: AnalyticsPageType.home,
+    },
+  });
 }
 
 export default function Homepage() {

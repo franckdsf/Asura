@@ -1,7 +1,15 @@
-import { Script } from "@shopify/hydrogen";
+import { AnalyticsPageType, Script } from "@shopify/hydrogen";
 import { useEffect } from "react";
 import { Icon } from "@ui/atoms";
+import { json } from "@shopify/remix-oxygen";
 
+export async function loader() {
+  return json({
+    analytics: {
+      pageType: AnalyticsPageType.page,
+    },
+  })
+}
 export default function Parcel() {
   useEffect(() => {
     const tracking = "#pp-tracking-page-app";
@@ -12,8 +20,6 @@ export default function Parcel() {
 
       location.reload();
     }, 2000)
-
-
 
     return () => clearTimeout(checker);
 

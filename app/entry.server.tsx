@@ -10,6 +10,7 @@ const BASIC_SECURITY_POLICIES = [
   'https://cdn.shopify.com',
   'https://shopify.com',
   "https://cdn.shopifycdn.net",
+  "https://*.shopifysvc.com"
 ]
 
 export default async function handleRequest(

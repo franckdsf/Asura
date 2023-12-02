@@ -3,6 +3,14 @@ import { RemixServer } from '@remix-run/react';
 import isbot from 'isbot';
 import { renderToReadableStream } from 'react-dom/server';
 import { createContentSecurityPolicy } from '@shopify/hydrogen';
+import { securityPolicies } from './pixels';
+
+const BASIC_SECURITY_POLICIES = [
+  "'self'",
+  'https://cdn.shopify.com',
+  'https://shopify.com',
+  "https://cdn.shopifycdn.net",
+]
 
 export default async function handleRequest(
   request: Request,
@@ -12,10 +20,7 @@ export default async function handleRequest(
 ) {
   const { nonce, header, NonceProvider } = createContentSecurityPolicy({
     defaultSrc: [
-      "'self'",
-      'https://cdn.shopify.com',
-      'https://shopify.com',
-      "https://cdn.shopifycdn.net",
+      ...BASIC_SECURITY_POLICIES,
       // apps
       "https://pp-proxy.parcelpanel.com",
       "https://loox.io",
@@ -23,18 +28,23 @@ export default async function handleRequest(
       'https://cdn.sanity.io',
       // pixels
       "https://static.hotjar.com",
-      "https://www.googletagmanager.com"
+      ...securityPolicies.defaultSrc,
     ],
     connectSrc: [
-      "'self'",
-      "https://pp-proxy.parcelpanel.com",
-      "https://static.hotjar.com",
+      ...BASIC_SECURITY_POLICIES,
       // any other URLs your app needs to connect to
+      "https://pp-proxy.parcelpanel.com",
+      ...securityPolicies.connectSrc,
     ],
     frameAncestors: [
-      "'self'",
+      ...BASIC_SECURITY_POLICIES,
       "https://loox.io",
-      "https://www.googletagmanager.com"
+      ...securityPolicies.frameAncestors,
+    ],
+    styleSrc: [
+      ...BASIC_SECURITY_POLICIES,
+      "'unsafe-inline'",
+      ...securityPolicies.styleSrc,
     ]
   });
 

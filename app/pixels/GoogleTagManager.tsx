@@ -1,17 +1,14 @@
 import { Script } from "@shopify/hydrogen";
 import { useEffect } from "react";
 
-const GOOGLE_TAG_MANAGER_ID = "GTM-PDR3G28M";
-const GOOGLE_AW_ID = "AW-11350350384";
-
 /**
- * Google Tag Manager, put it at the top of <body>
+ * Google Tag Manager for noscript (optional), put it at the top of <body>
  * @returns returns a google tag manager iframe
  */
-export const GoogleTagManagerNoScript: React.FC = () => {
+export const GoogleTagManagerNoScript = ({ id }: { id: string }) => {
   return (
     <noscript>
-      <iframe src={`https://www.googletagmanager.com/ns.html?id=${GOOGLE_TAG_MANAGER_ID}`} title="Google Tag Manager"
+      <iframe src={`https://www.googletagmanager.com/ns.html?id=${id}`} title="Google Tag Manager"
         height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
     </noscript>
   );
@@ -19,10 +16,10 @@ export const GoogleTagManagerNoScript: React.FC = () => {
 
 
 /**
- * Conversion Linker from Google Tag Manager, put it at the top of <head>
- * @returns returns a conversion linker script
+ * Google Tag Manager, put it at the top of <head>
+ * @returns returns a Tag Manager
  */
-const ConversionLinker: React.FC = () => {
+export const GoogleTagManager = ({ id }: { id: string }) => {
   useEffect(() => {
     (function (w: Window, d: Document, s: string, l: string, i: string) {
       const src = 'https://www.googletagmanager.com/gtm.js?id=';
@@ -40,18 +37,17 @@ const ConversionLinker: React.FC = () => {
       if (f && f.parentNode) {
         f.parentNode.insertBefore(j, f);
       }
-    })(window, document, 'script', 'dataLayer', GOOGLE_TAG_MANAGER_ID);
-  }, []);
+    })(window, document, 'script', 'dataLayer', id);
+  }, [id]);
 
   return null;
 };
-
 
 /**
  * Put it at the top of <head>
  * @returns 
  */
-export const GoogleTagManager = () => {
+export const GoogleAdsTag = ({ id }: { id: string }) => {
   useEffect(() => {
     (window as any).dataLayer = (window as any).dataLayer || [];
     function gtag() {
@@ -62,13 +58,10 @@ export const GoogleTagManager = () => {
     // @ts-ignore
     gtag('js', new Date());
     // @ts-ignore
-    gtag('config', GOOGLE_AW_ID);
+    gtag('config', id);
   }, []);
 
   return (
-    <>
-      <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_AW_ID}`} />
-      <ConversionLinker />
-    </>
+    <Script async src={`https://www.googletagmanager.com/gtag/js?id=${id}`} />
   )
 }

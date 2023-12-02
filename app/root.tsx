@@ -20,11 +20,9 @@ import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
 import { Layout } from '~/components/Layout';
 import tailwindCss from './styles/tailwind.css';
-import { hotjar } from 'react-hotjar';
 /* @ts-ignore */
 import swiperCss from 'swiper/css';
-import { useEffect } from 'react';
-import { GoogleTagManager, GoogleTagManagerNoScript } from './pixels';
+import { BodyPixel, HeadPixel } from './pixels';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -125,14 +123,10 @@ export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
 
-  useEffect(() => {
-    hotjar.initialize(3766033, 6)
-  }, [])
-
   return (
     <html lang="en">
       <head>
-        <GoogleTagManager />
+        <HeadPixel />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="google-site-verification" content="tC-eTfj_wAb60oZ3b2Trc4yiR1PiK5p3hS0kjv3V8Ks" />
@@ -140,7 +134,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <GoogleTagManagerNoScript />
+        <BodyPixel />
         <Layout {...data}>
           <Outlet />
         </Layout>

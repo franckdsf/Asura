@@ -74,17 +74,18 @@ const Element = ({ icon, title, content }: ElementProps) => {
 type Props = {
   className?: string;
   imageSrc?: string;
+  videoSrc?: string;
   description: string | ComponentProps<typeof PortableText>['value'];
   list: Array<ElementProps>
 }
-export const DescriptionBlock = ({ imageSrc, description, list, className = "" }: Props) => {
+
+export const DescriptionBlock = ({ imageSrc, videoSrc, description, list, className = "" }: Props) => {
+  const mediaBlockClass = "object-cover w-full h-64 rounded-full sm:h-128 md:w-96 lg:w-112 2xl:w-128 md:h-auto bg-container-light";
+
   return (
     <div className={trim(`px-4 md:px-10 flex flex-col md:flex-row justify-center items-center md:items-stretch gap-x-16 lg:gap-x-24 2xl:gap-x-40 ${className}`)}>
-      <img
-        className="object-cover w-full h-64 rounded-full sm:h-128 md:w-96 lg:w-112 2xl:w-128 md:h-auto bg-container-light"
-        alt="description cover"
-        src={imageSrc}
-      />
+      {!videoSrc && <img className={mediaBlockClass} alt="description cover" src={imageSrc} />}
+      {videoSrc && <video src={videoSrc} className={mediaBlockClass} autoPlay={true} muted={true} loop={true} />}
       <div className="max-w-md mt-16 sm:mt-24 md:py-24">
         <h3 className="text-2xl uppercase font-accent text-neutral-600">Description</h3>
         <div className="mt-10 text-sm md:w-11/12 md:text-md">

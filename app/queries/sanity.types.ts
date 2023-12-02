@@ -5,6 +5,13 @@ export type Image = {
   }
 }
 
+export type File = {
+  _type: 'file';
+  asset: {
+    _ref: string;
+  }
+}
+
 export type ImageWithUrl = Image & {
   url: string;
 }
@@ -19,7 +26,8 @@ export type Block = {
 export type ContentDescription = {
   _type: 'module.content.description';
   description: Array<Block>;
-  image: Image;
+  image?: Image;
+  media?: File;
   list?: Array<{
     title: string;
     description: string;

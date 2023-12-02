@@ -165,6 +165,9 @@ export default function Product() {
       swiper.current.slideToLoop(0);
   }, [selectedVariant]);
 
+  const indexOfVariantInProductImages = product.images.nodes.findIndex((img) => img.url === selectedVariant?.image?.url);
+  const defaultCarouselIndex = product.variants.nodes.length > 1 && indexOfVariantInProductImages !== 0 ? 1 : 0;
+
   const images = [
     selectedVariant?.image ? {
       src: selectedVariant.image.url,
@@ -211,7 +214,7 @@ export default function Product() {
     <div>
       <div className="flex-row items-center justify-between lg:h-screen-w-header lg:border-b border-neutral-300 lg:flex">
         {selectedVariant?.image && <CarouselProductImages
-          defaultIndex={0}
+          defaultIndex={defaultCarouselIndex}
           className="pt-4 lg:pt-10 lg:pb-[15vh] border-r border-neutral-300"
           getSwiper={(s) => swiper.current = s}
           images={images}
@@ -231,14 +234,15 @@ export default function Product() {
               key={JSON.stringify(m)}
               title={m.title}
               bigTitle={m.bigTitle}
-              imageSrc={CMS.urlFor(m.sideImage.asset._ref).width(200).url()}
+              imageSrc={CMS.urlForImg(m.sideImage.asset._ref).width(200).url()}
               className="px-4 my-24 md:my-48 md:px-10"
             />
           case "module.content.description":
             return <DescriptionBlock
               key={JSON.stringify(m)}
               description={m.description}
-              imageSrc={m.image ? CMS.urlFor(m.image.asset._ref).width(800).url() : selectedVariant?.image?.url}
+              videoSrc={m.media ? CMS.urlForVideo(m.media.asset._ref).url() : undefined}
+              imageSrc={m.image ? CMS.urlForImg(m.image.asset._ref).width(800).url() : product.images.nodes[0].url}
               list={(m.list?.map((i) => ({
                 icon: i.icon,
                 title: i.title,
@@ -414,7 +418,7 @@ const PRODUCT_FRAGMENT = `#graphql
     selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions) {
       ...ProductVariant
     }
-    variants(first: 1) {
+    variants(first: 2) {
       nodes {
         ...ProductVariant
       }

@@ -6,6 +6,7 @@ import { Link } from "@remix-run/react"
 
 type Props = {
   products: Array<{
+    name: string;
     img: ComponentProps<typeof Card.Product>['img'];
     price: ComponentProps<typeof Card.Product>['price'];
     link: string;
@@ -26,7 +27,7 @@ export const CarouselProducts = ({ products }: Props) => {
         {products.map((product, i) => (
           <SwiperSlide key={i} className="!w-56 md:!w-auto pr-4 md:pr-8">
             <Link to={product.link} className="flex-row-center">
-              <Card.Product img={product.img} price={product.price} />
+              <Card.Product name={product.name} img={product.img} price={product.price} />
             </Link>
           </SwiperSlide>
         ))}

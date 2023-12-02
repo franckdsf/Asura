@@ -13,7 +13,7 @@ const ProductImage = ({ alt, ...props }: ImageProps) => {
     <Image {...props}
       alt={alt}
       className={trim(`w-full h-full transition-all duration-1000 self-center object-contain
-      ${isActive && 'rounded-none'} ${isPrev && 'max-lg:rounded-full delay-200'} ${isNext && 'max-lg:rounded-full delay-300'} ${!isAny && 'aspect-square'}`)}
+       ${!isAny && 'aspect-square'}`)}
     />
   )
 }
@@ -39,7 +39,7 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
         onInit={(s) => {
           swiper.current = s;
           getSwiper && getSwiper(s);
-          setTimeout(() => { s.slideToLoop(defaultIndex) }, 500)
+          setTimeout(() => { s.slideToLoop(defaultIndex, 0) }, 500)
         }}
         onSlideChange={(swiper) => setCurrentSlide(swiper.realIndex)}
         centeredSlides={true}
@@ -56,16 +56,18 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className={trim(`flex flex-row items-center ${images.length > 4 && 'max-sm:justify-start'} justify-center w-full px-4 py-4 pb-4 mt-4 overflow-auto overflow-y-hidden gap-x-4 lg:mt-8`)}>
-        {images.map((img, i) => (
-          <button
-            onClick={() => swiper.current?.slideToLoop(i)}
-            className={trim(`flex-shrink-0 w-16 h-16 ${currentSlide === i && 'opacity-25'}`)}
-            key={i}
-          >
-            <Image {...img} className="w-full h-full" />
-          </button>
-        ))}
+      <div className="max-w-full lg:max-w-xl 2xl:max-w-3xl">
+        <div className={trim(`flex flex-row items-center justify-start w-full px-4 py-4 pb-4 mt-4 overflow-auto overflow-y-hidden gap-x-4 lg:mt-8`)}>
+          {images.map((img, i) => (
+            <button
+              onClick={() => swiper.current?.slideToLoop(i)}
+              className={trim(`flex-shrink-0 w-16 h-16 ${currentSlide === i && 'opacity-25'}`)}
+              key={i}
+            >
+              <Image {...img} className="w-full h-full" />
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )

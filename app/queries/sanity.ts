@@ -1,11 +1,20 @@
 import groq from "groq"
-import { loadQuery, urlFor } from "sanity";
+import { DATASET, PROJECT_ID, loadQuery, urlFor } from "sanity";
 import type {
   ContentBigTitle, ContentMoreInformation, ContentDescription, ImageWithUrl,
   ActionBlock,
   HomePage,
   ProductPage
 } from "./sanity.types";
+
+const urlForVideo = (id: string) => {
+  // remove the first "file-" from the string
+  const idWithoutFile = id.startsWith("file-") ? id.substring(5) : id;
+  // replace last "-" with a "."
+  const idWithExtension = idWithoutFile.replaceAll("-", ".");
+
+  return { url: () => `https://cdn.sanity.io/files/${PROJECT_ID}/${DATASET}/${idWithExtension}` };
+}
 
 const parseActionBlock = (block: ActionBlock) => {
   const mainImageWithUrl: ImageWithUrl = {
@@ -87,5 +96,6 @@ const HOME_PAGE_QUERY = async () => {
 export const CMS = {
   PRODUCT_PAGE_QUERY,
   HOME_PAGE_QUERY,
-  urlFor
+  urlForImg: urlFor,
+  urlForVideo
 }

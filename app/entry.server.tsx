@@ -19,19 +19,19 @@ export default async function handleRequest(
       "https://pp-proxy.parcelpanel.com",
       "https://cdn.shopifycdn.net",
       "https://static.hotjar.com",
-      "https://loox.io",
-      "https://cdn.judge.me"
+      "https://cdn.judge.me",
+      "https://cache.judge.me/",
     ],
     connectSrc: [
       "'self'",
+      "https://cache.judge.me/",
       "https://cdn.judge.me",
       "https://pp-proxy.parcelpanel.com",
       "https://static.hotjar.com",
       // any other URLs your app needs to connect to
     ],
     frameAncestors: [
-      "'self'",
-      "https://loox.io"
+      "'self'"
     ]
   });
 

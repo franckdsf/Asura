@@ -22,6 +22,7 @@ export const GoogleTagManagerNoScript = ({ id }: { id: string }) => {
 export const GoogleTagManager = ({ id }: { id: string }) => {
   useEffect(() => {
     (function (w: Window, d: Document, s: string, l: string, i: string) {
+      // prevent from being instanciated twice
       const src = 'https://www.googletagmanager.com/gtm.js?id=';
       if (d.querySelector(`script[src^="${src}${i}"]`)) return;
       // @ts-ignore

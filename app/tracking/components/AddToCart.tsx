@@ -3,7 +3,7 @@ import {
   AnalyticsEventName, CartForm, getClientBrowserParameters, sendShopifyAnalytics,
   type ShopifyAddToCartPayload, type ShopifyAnalyticsProduct
 } from "@shopify/hydrogen";
-import { type CartLineInput } from "@shopify/hydrogen/storefront-api-types";
+import { type ProductVariant, type CartLineInput } from "@shopify/hydrogen/storefront-api-types";
 import { useEffect } from "react";
 import { usePageAnalytics } from "../pixels/Shopify";
 import { trim } from "~/ui/utils/trim";
@@ -55,15 +55,19 @@ function AddToCartAnalytics({
 
         sendAddToCartEvent({
           userId: addToCartPayload.visitToken,
-          transactionId: addToCartPayload.uniqueToken,
           payload: {
             cartId: fetcherData.cart.id,
             currency: addToCartPayload.currency,
             total: addToCartPayload.products?.reduce((a, n) => a + Number(n.price), 0) || 0,
             products: addToCartPayload.products?.map((p) => ({
+              sku: p.sku || undefined,
+              name: p.name,
+              brand: p.brand,
               productId: p.productGid,
               variantId: p.variantGid,
               price: p.price,
+              quantity: p.quantity,
+              discount: undefined,
               currency: addToCartPayload.currency
             })) || []
             ,
@@ -89,7 +93,7 @@ export function AddToCartButton({
   onClick,
 }: {
   className?: string;
-  product: Omit<ShopifyAnalyticsProduct, 'variantGid'> & { variantGid: string };
+  product: Omit<ShopifyAnalyticsProduct, 'variantGid'> & { variantGid: string; };
   children: React.ReactNode;
   disabled?: boolean;
   onClick?: () => void;

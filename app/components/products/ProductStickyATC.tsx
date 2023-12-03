@@ -5,7 +5,7 @@ import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
 import { useState } from "react";
 import { useBreakpoint, useClickOutside, useScrollDirection } from "@ui/hooks";
-import { AddToCartButton } from "../tracking";
+import { AddToCartButton } from "~/tracking/components";
 
 type DefaultProps = { className?: string }
 

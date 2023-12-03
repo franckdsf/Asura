@@ -1,4 +1,5 @@
-import { GoogleTagManagerNoScript, GoogleTagManager, Hotjar } from ".";
+import { GoogleTagManagerNoScript, GoogleTagManager } from "./GoogleTagManager";
+import { Hotjar } from "./Hotjar";
 
 const GOOGLE_TAG_MANAGER_ID = "GTM-PDR3G28M";
 const HOTJAR = { hjid: 3766033, hjsv: 6 }

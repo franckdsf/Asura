@@ -1,13 +1,13 @@
-import { useLoaderData, type FetcherWithComponents } from "@remix-run/react";
+import { type FetcherWithComponents } from "@remix-run/react";
 import {
   AnalyticsEventName, CartForm, getClientBrowserParameters, sendShopifyAnalytics,
   type ShopifyAddToCartPayload, type ShopifyAnalyticsProduct
 } from "@shopify/hydrogen";
 import { type CartLineInput } from "@shopify/hydrogen/storefront-api-types";
 import { useEffect } from "react";
-import { usePageAnalytics } from "~/pixels/Shopify";
+import { usePageAnalytics } from "../pixels/Shopify";
 import { trim } from "~/ui/utils/trim";
-import { useShopId } from "./useShopId";
+import { useGoogleEvents, useShopId } from "../hooks";
 
 function AddToCartAnalytics({
   fetcher,
@@ -23,6 +23,7 @@ function AddToCartAnalytics({
   // Data from loaders
   const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
 
+  const { sendAddToCartEvent } = useGoogleEvents();
   const shopId = useShopId();
 
   useEffect(() => {
@@ -52,13 +53,31 @@ function AddToCartAnalytics({
           shopId
         };
 
+        sendAddToCartEvent({
+          userId: addToCartPayload.visitToken,
+          transactionId: addToCartPayload.uniqueToken,
+          payload: {
+            cartId: fetcherData.cart.id,
+            currency: addToCartPayload.currency,
+            total: addToCartPayload.products?.reduce((a, n) => a + Number(n.price), 0) || 0,
+            products: addToCartPayload.products?.map((p) => ({
+              productId: p.productGid,
+              variantId: p.variantGid,
+              price: p.price,
+              currency: addToCartPayload.currency
+            })) || []
+            ,
+            rawData: addToCartPayload,
+          },
+        })
+
         sendShopifyAnalytics({
           eventName: AnalyticsEventName.ADD_TO_CART,
           payload: addToCartPayload,
         });
       }
     }
-  }, [fetcherData, formData, shopId, pageAnalytics]);
+  }, [sendAddToCartEvent, fetcherData, formData, shopId, pageAnalytics]);
   return <>{children}</>;
 }
 

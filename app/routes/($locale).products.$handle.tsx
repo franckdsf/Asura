@@ -20,7 +20,7 @@ import type {
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
 import { BigText, DeliveryDate, DescriptionBlock, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
-import { AddToCartButton } from '~/components/tracking';
+import { AddToCartButton } from '~/tracking/components';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
 import { Icon } from '~/ui/atoms';

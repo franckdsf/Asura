@@ -22,9 +22,8 @@ import { Layout } from '~/components/Layout';
 import tailwindCss from './styles/tailwind.css';
 /* @ts-ignore */
 import swiperCss from 'swiper/css';
-import { BodyPixel, HeadPixel } from './pixels';
-import { useShopifyPixel } from './pixels/Shopify';
-import { useShopId } from './components/tracking/useShopId';
+import { BodyPixel, useShopifyPixel, HeadPixel } from './tracking/pixels';
+import { useShopId } from './tracking/hooks';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({

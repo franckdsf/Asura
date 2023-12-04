@@ -32,24 +32,67 @@ type GoogleAdsItem = {
   brand?: string;
 }
 
+type ProductItem = {
+  productId: string,
+  variantId?: string,
+  sku?: string;
+  brand?: string;
+  name: string;
+  discount?: number | string;
+  quantity?: number;
+  price: number | string,
+  currency: string;
+}
+
 type AddToCartEvent = {
   cartId: string;
   total: number;
   currency: string;
-  products: Array<{
-    productId: string,
-    variantId?: string,
-    sku?: string;
-    brand?: string;
-    name: string;
-    discount?: number | string;
-    quantity?: number;
-    price: number | string,
-    currency: string;
-  }>,
+  products: Array<ProductItem>,
   rawData?: object,
 }
 
+type BeginCheckoutEvent = {
+  cartId: string;
+  total: number;
+  currency: string;
+  products: Array<ProductItem>;
+  rawData?: object;
+}
+
+const convertProductsToItems = (products: Array<ProductItem>): {
+  google_analytics_4: Array<GA4Item>,
+  google_ads: Array<GoogleAdsItem>
+} => {
+  /* Check this documentation for GA4 payload format :
+  https://developers.google.com/analytics/devguides/collection/ga4/ecommerce?hl=fr&client_type=gtag#add_or_remove_an_item_from_a_shopping_cart
+  */
+  const itemsGA4: Array<GA4Item> = products.map((p) => ({
+    item_id: p.productId,
+    item_name: p.name,
+    item_variant: p.variantId,
+    item_brand: p.brand,
+    price: Number(p.price) || undefined,
+    discount: Number(p.discount) || undefined,
+    quantity: p.quantity || 1,
+  }))
+
+  const itemsGoogleAds: Array<GoogleAdsItem> = products.map((p) => ({
+    id: p.productId,
+    brand: p.brand,
+    sku: p.sku,
+    name: p.name,
+    variant: p.variantId,
+    price: Number(p.price) || undefined,
+    discount: Number(p.discount) || undefined,
+    quantity: p.quantity || 1,
+  }))
+
+  return {
+    google_analytics_4: itemsGA4,
+    google_ads: itemsGoogleAds,
+  };
+}
 
 export const useGoogleEvents = () => {
   /**
@@ -73,43 +116,29 @@ export const useGoogleEvents = () => {
     return true;
   }, [])
 
-  const sendAddToCartEvent = useCallback(({ payload, transactionId }: EventWithPayloadWithoutName<AddToCartEvent>) => {
-    /* Check this documentation for GA4 payload format :
-    https://developers.google.com/analytics/devguides/collection/ga4/ecommerce?hl=fr&client_type=gtag#add_or_remove_an_item_from_a_shopping_cart
-    */
-    const itemsGA4: Array<GA4Item> = payload.products.map((p) => ({
-      item_id: p.productId,
-      item_name: p.name,
-      item_variant: p.variantId,
-      item_brand: p.brand,
-      price: Number(p.price) || undefined,
-      discount: Number(p.discount) || undefined,
-      quantity: p.quantity || 1,
-    }))
-
-    const itemsGoogleAds: Array<GoogleAdsItem> = payload.products.map((p) => ({
-      id: p.productId,
-      brand: p.brand,
-      sku: p.sku,
-      name: p.name,
-      variant: p.variantId,
-      price: Number(p.price) || undefined,
-      discount: Number(p.discount) || undefined,
-      quantity: p.quantity || 1,
-    }))
-
+  const sendBeginCheckout = useCallback(({ userId, transactionId, payload }: EventWithPayloadWithoutName<BeginCheckoutEvent>) => {
     sendEvent({
-      name: 'add_to_cart',
+      name: 'begin_checkout',
       transactionId,
+      userId,
       payload: {
         ...payload,
-        items: {
-          google_analytics_4: itemsGA4,
-          google_ads: itemsGoogleAds,
-        }
+        items: convertProductsToItems(payload.products)
       }
     })
   }, [sendEvent])
 
-  return { sendAddToCartEvent }
+  const sendAddToCartEvent = useCallback(({ userId, transactionId, payload }: EventWithPayloadWithoutName<AddToCartEvent>) => {
+    sendEvent({
+      name: 'add_to_cart',
+      transactionId,
+      userId,
+      payload: {
+        ...payload,
+        items: convertProductsToItems(payload.products)
+      }
+    })
+  }, [sendEvent])
+
+  return { sendBeginCheckout, sendAddToCartEvent }
 }

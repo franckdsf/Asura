@@ -3,11 +3,12 @@ import {
   AnalyticsEventName, CartForm, getClientBrowserParameters, sendShopifyAnalytics,
   type ShopifyAddToCartPayload, type ShopifyAnalyticsProduct
 } from "@shopify/hydrogen";
-import { type ProductVariant, type CartLineInput } from "@shopify/hydrogen/storefront-api-types";
+import { type CartLineInput } from "@shopify/hydrogen/storefront-api-types";
 import { useEffect } from "react";
 import { usePageAnalytics } from "../pixels/Shopify";
 import { trim } from "~/ui/utils/trim";
 import { useGoogleEvents, useShopId } from "../hooks";
+import { parseGid } from '@shopify/hydrogen';
 
 function AddToCartAnalytics({
   fetcher,
@@ -54,17 +55,17 @@ function AddToCartAnalytics({
         };
 
         sendAddToCartEvent({
-          userId: addToCartPayload.visitToken,
+          userId: addToCartPayload.uniqueToken,
           payload: {
-            cartId: fetcherData.cart.id,
+            cartId: parseGid(fetcherData.cart.id).id,
             currency: addToCartPayload.currency,
             total: addToCartPayload.products?.reduce((a, n) => a + Number(n.price), 0) || 0,
             products: addToCartPayload.products?.map((p) => ({
               sku: p.sku || undefined,
               name: p.name,
               brand: p.brand,
-              productId: p.productGid,
-              variantId: p.variantGid,
+              productId: parseGid(p.productGid).id,
+              variantId: parseGid(p.variantGid).id,
               price: p.price,
               quantity: p.quantity,
               discount: undefined,

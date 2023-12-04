@@ -5,6 +5,7 @@ import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
 import { Icon } from '~/ui/atoms';
 import { FreeItem } from './cart/FreeItem';
+import { CheckoutLink } from '~/tracking/components';
 
 type CartLine = CartApiQueryFragment['lines']['nodes'][0];
 
@@ -37,7 +38,7 @@ function CartDetails({ layout, cart }: CartMainProps) {
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
           {/* <CartDiscounts discountCodes={cart.discountCodes} /> */}
-          <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
+          <CartCheckoutActions cart={cart} />
         </CartSummary>
       )}
     </div>
@@ -119,15 +120,16 @@ function CartLineItem({
   );
 }
 
-function CartCheckoutActions({ checkoutUrl }: { checkoutUrl: string }) {
-  if (!checkoutUrl) return null;
+function CartCheckoutActions({ cart }: { cart: CartApiQueryFragment }) {
+  if (!cart.checkoutUrl) return null;
 
   return (
-    <div className="float-right w-full max-w-xl px-5 py-3 mb-5 text-center rounded-full bg-neutral-900">
-      <a href={checkoutUrl} target="_self">
-        <p className="text-sm uppercase text-neutral-50 lg:text-md">Passer à la caisse</p>
-      </a>
-    </div>
+    <CheckoutLink
+      cart={cart}
+      className="float-right w-full max-w-xl px-5 py-3 mb-5 text-center rounded-full bg-neutral-900"
+    >
+      <p className="text-sm uppercase text-neutral-50 lg:text-md">Passer à la caisse</p>
+    </CheckoutLink>
   );
 }
 

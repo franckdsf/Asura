@@ -80,10 +80,9 @@ type Props = {
 }
 
 export const DescriptionBlock = ({ imageSrc, videoSrc, description, list, className = "" }: Props) => {
-  const mediaBlockClass = "object-cover w-full h-64 rounded-full sm:h-128 md:w-96 lg:w-112 2xl:w-128 md:h-auto bg-container-light";
-
+  const mediaBlockClass = "object-cover w-full h-96 rounded-[128px] sm:rounded-full sm:h-128 md:w-128 2xl:w-144 md:h-auto bg-container-light";
   return (
-    <div className={trim(`px-4 md:px-10 flex flex-col md:flex-row justify-center items-center md:items-stretch gap-x-16 lg:gap-x-24 2xl:gap-x-40 ${className}`)}>
+    <div className={trim(`px-4 md:px-10 flex flex-col lg:flex-row justify-center items-center lg:items-stretch gap-x-16 lg:gap-x-24 2xl:gap-x-40 ${className}`)}>
       {!videoSrc && <img className={mediaBlockClass} alt="description cover" src={imageSrc} />}
       {videoSrc && <video src={videoSrc} className={mediaBlockClass} autoPlay={true} muted={true} loop={true} />}
       <div className="max-w-md mt-16 sm:mt-24 md:py-24">

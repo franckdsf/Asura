@@ -241,8 +241,8 @@ export default function Product() {
             return <DescriptionBlock
               key={JSON.stringify(m)}
               description={m.description}
-              videoSrc={m.media ? CMS.urlForVideo(m.media.asset._ref).url() : undefined}
-              imageSrc={m.image ? CMS.urlForImg(m.image.asset._ref).width(800).url() : product.images.nodes[0].url}
+              videoSrc={m.media?.video ? CMS.urlForVideo(m.media.video.asset._ref).url() : undefined}
+              imageSrc={m.media?.image ? CMS.urlForImg(m.media.image.asset._ref).width(800).url() : product.images.nodes[0].url}
               list={(m.list?.map((i) => ({
                 icon: i.icon,
                 title: i.title,
@@ -266,8 +266,8 @@ export default function Product() {
               catchPhrase={m.catchPhrase}
               title={m.title}
               content={m.content}
-              mainImageSrc={m.mainImage.url}
-              additionalImageSrc={m.additionalImage?.url}
+              mainMedia={{ imageSrc: m.mainMedia.image?.url, videoSrc: m.mainMedia.video?.url }}
+              additionalMedia={m.additionalMedia ? { imageSrc: m.additionalMedia.image?.url, videoSrc: m.additionalMedia.video?.url } : undefined}
               cta={m.cta ? { link: m.cta.link, text: m.cta.text } : undefined}
             />
           default:

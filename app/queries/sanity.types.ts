@@ -16,6 +16,18 @@ export type ImageWithUrl = Image & {
   url: string;
 }
 
+export type Media = {
+  _type: 'media';
+  image?: Image;
+  video?: File;
+}
+
+export type MediaWithUrl = {
+  _type: 'media';
+  image?: ImageWithUrl;
+  video?: File & { url: string };
+}
+
 export type Block = {
   _type: 'block';
   children: Array<{
@@ -26,8 +38,7 @@ export type Block = {
 export type ContentDescription = {
   _type: 'module.content.description';
   description: Array<Block>;
-  image?: Image;
-  media?: File;
+  media?: Media;
   list?: Array<{
     title: string;
     description: string;
@@ -54,8 +65,8 @@ export type ActionBlock = {
   catchPhrase: string;
   title: string;
   content: string;
-  mainImage: Image;
-  additionalImage: Image;
+  mainMedia: Media;
+  additionalMedia?: Media;
   cta: {
     text: string;
     link: string;

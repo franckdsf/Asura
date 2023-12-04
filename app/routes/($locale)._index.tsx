@@ -76,8 +76,8 @@ export default function Homepage() {
         catchPhrase={offer.catchPhrase}
         title={offer.title}
         content={offer.content}
-        mainImageSrc={offer.mainImage.url}
-        additionalImageSrc={offer.additionalImage?.url}
+        mainMedia={{ imageSrc: offer.mainMedia.image?.url, videoSrc: offer.mainMedia.video?.url }}
+        additionalMedia={offer.additionalMedia ? { imageSrc: offer.additionalMedia.image?.url, videoSrc: offer.additionalMedia.video?.url } : undefined}
         cta={{ link: offer.cta.link, text: offer.cta.text }}
       />}
       <ProductsSpotlight

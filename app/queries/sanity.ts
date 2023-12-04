@@ -4,7 +4,8 @@ import type {
   ContentBigTitle, ContentMoreInformation, ContentDescription, ImageWithUrl,
   ActionBlock,
   HomePage,
-  ProductPage
+  ProductPage,
+  MediaWithUrl
 } from "./sanity.types";
 
 const urlForVideo = (id: string) => {
@@ -17,20 +18,34 @@ const urlForVideo = (id: string) => {
 }
 
 const parseActionBlock = (block: ActionBlock) => {
-  const mainImageWithUrl: ImageWithUrl = {
-    ...block.mainImage,
-    url: urlFor(block.mainImage.asset._ref).width(800).url() as string
-  };
-  const additionalImageWithUrl: ImageWithUrl | null = block.additionalImage ? {
-    ...block.additionalImage,
-    url: urlFor(block.additionalImage.asset._ref).width(200).url() as string
-  } : null;
+  const mainMediaWithUrl: MediaWithUrl = {
+    ...block.mainMedia,
+    image: block.mainMedia.image ? {
+      ...block.mainMedia.image,
+      url: urlFor(block.mainMedia.image.asset._ref).width(800).url()
+    } : undefined,
+    video: block.mainMedia.video ? {
+      ...block.mainMedia.video,
+      url: urlForVideo(block.mainMedia.video.asset._ref).url()
+    } : undefined,
+  }
 
+  const additionalMediaWithUrl: MediaWithUrl | null = block.additionalMedia ? {
+    ...block.additionalMedia,
+    image: block.additionalMedia.image ? {
+      ...block.additionalMedia.image,
+      url: urlFor(block.additionalMedia.image.asset._ref).width(800).url()
+    } : undefined,
+    video: block.additionalMedia.video ? {
+      ...block.additionalMedia.video,
+      url: urlForVideo(block.additionalMedia.video.asset._ref).url()
+    } : undefined,
+  } : null;
 
   return {
     ...block,
-    mainImage: mainImageWithUrl,
-    additionalImage: additionalImageWithUrl
+    mainMedia: mainMediaWithUrl,
+    additionalMedia: additionalMediaWithUrl
   }
 }
 

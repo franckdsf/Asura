@@ -55,7 +55,7 @@ const Element = ({ icon, title, content }: ElementProps) => {
   }, [icon])
 
   return (
-    <div className="flex flex-row items-start justify-start pl-10 pr-6 md:pr-10">
+    <div className="flex flex-row items-start justify-start pl-6 pr-4 md:pl-10 md:pr-10">
       <div className="icon-md rounded-full border-neutral-500 text-neutral-600 border p-2.5">
         {iconComponent}
       </div>

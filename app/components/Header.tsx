@@ -71,7 +71,7 @@ export function HeaderMenu({
           return (
             <div key={element.id}>
               <NavLink
-                className={`uppercase header-menu-item text-md flex flex-row justify-start items-center`}
+                className={`uppercase header-menu-item text-sm 2xl:text-md flex flex-row justify-start items-center`}
                 end
                 onClick={closeAside}
                 prefetch="intent"
@@ -127,7 +127,7 @@ function HeaderCtas({
         prefetch="intent"
         style={activeLinkStyle}
         to="/pages/nous-contacter"
-        className="mr-6 uppercase max-lg:hidden header-menu-item text-md"
+        className="mr-6 text-sm uppercase max-lg:hidden header-menu-item 2xl:text-md"
       >
         nous contacter
       </NavLink>
@@ -136,7 +136,7 @@ function HeaderCtas({
         prefetch="intent"
         style={activeLinkStyle}
         to="/apps/parcelpanel"
-        className="mr-6 uppercase max-lg:hidden header-menu-item text-md"
+        className="mr-6 text-sm uppercase max-lg:hidden header-menu-item 2xl:text-md"
       >
         ma commande
       </NavLink>

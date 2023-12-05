@@ -79,7 +79,13 @@ export type ProductPage = {
   defaultInformation: {
     delivery: Array<Block>;
     guaranty: Array<Block>;
-  }
+  },
+  pins: Array<{
+    name: string;
+    icon?: string;
+    details?: string;
+    linkedProducts: Array<string>
+  }> | undefined;
 }
 
 export type HomePage = {

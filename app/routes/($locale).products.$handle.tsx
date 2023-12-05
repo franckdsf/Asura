@@ -27,6 +27,7 @@ import { Icon } from '~/ui/atoms';
 import { type SwiperClass } from 'swiper/react';
 import { CMS, COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
+import { Pin } from '~/ui/molecules';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   const siteName = 'Asura';
@@ -225,6 +226,7 @@ export default function Product() {
           selectedVariant={selectedVariant}
           product={product}
           variants={variants}
+          pins={productPage?.pins}
         />
       </div>
       {modules.map((m) => {
@@ -304,11 +306,13 @@ function ProductMain({
   selectedVariant,
   product,
   variants,
+  pins
 }: {
   className?: string,
   product: ProductFragment;
   selectedVariant: ProductFragment['selectedVariant'];
   variants: Promise<ProductVariantsQuery>;
+  pins: Array<{ name: string, icon?: string }> | undefined;
 }) {
   const { title, descriptionHtml } = product;
   return (
@@ -321,10 +325,9 @@ function ProductMain({
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="text-md" />
-      <div className="inline-flex px-4 py-2 mt-6 uppercase rounded-full bg-neutral-600 text-neutral-50 align-center gap-x-2">
-        <Icon.Book />
-        <span className="text-xs">ebook offert</span>
-      </div>
+      {pins && <div className="flex flex-row items-center justify-start gap-x-2">
+        {pins.map((p) => <Pin title={p.name} icon={p.icon} key={p.name} />)}
+      </div>}
       <AddToCartButton
         className="w-full lg:max-w-lg !py-4 mt-4 lg:mt-12"
         disabled={!selectedVariant || !selectedVariant.availableForSale}

@@ -1,6 +1,6 @@
-import { Icon } from "@ui/atoms"
+import { IconFromStr } from "@ui/atoms"
 import { trim } from "@ui/utils/trim"
-import { type ComponentProps, useMemo } from "react";
+import { type ComponentProps } from "react";
 import { PortableText } from '@portabletext/react';
 type ElementProps = {
   icon?: string;
@@ -8,56 +8,12 @@ type ElementProps = {
   content: string;
 }
 const Element = ({ icon, title, content }: ElementProps) => {
-  const iconComponent = useMemo(() => {
-    const iconLower = icon?.toLowerCase();
 
-    switch (iconLower) {
-      case 'leaf':
-        return <Icon.Leaf />
-      case 'pencil':
-        return <Icon.Pencil />
-      case 'tree':
-        return <Icon.Tree />
-      case 'thumbup':
-        return <Icon.ThumbsUp />
-      case 'batterychargingvertical':
-        return <Icon.BatteryChargingVertical />
-      case 'chatcircledots':
-        return <Icon.ChatCircleDots />
-      case 'circlesthree':
-        return <Icon.CirclesThree />
-      case 'clock':
-        return <Icon.Clock />
-      case 'drop':
-        return <Icon.Drop />
-      case 'eyeclosed':
-        return <Icon.EyeClosed />
-      case 'eyedropper':
-        return <Icon.Eyedropper />
-      case 'flowertulip':
-        return <Icon.FlowerTulip />
-      case 'heart':
-        return <Icon.Heart />
-      case 'maskhappy':
-        return <Icon.MaskHappy />
-      case 'palette':
-        return <Icon.Palette />
-      case 'shieldcheck':
-        return <Icon.ShieldCheck />
-      case 'smiley':
-        return <Icon.Smiley />
-      case 'sparkle':
-        return <Icon.Sparkle />
-      default:
-        return <Icon.Pencil />
-    }
-
-  }, [icon])
 
   return (
     <div className="flex flex-row items-start justify-start pl-6 pr-4 md:pl-10 md:pr-10">
       <div className="icon-md rounded-full border-neutral-500 text-neutral-600 border p-2.5">
-        {iconComponent}
+        <IconFromStr icon={icon} />
       </div>
       <div className="ml-5">
         <h6 className="uppercase text-md-semibold">

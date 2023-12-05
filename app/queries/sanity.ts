@@ -53,23 +53,39 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
   const query: Array<{
     store: {
       slug: string,
+      id: string,
     },
     modules: Array<ContentDescription | ContentBigTitle | ContentMoreInformation | ActionBlock>,
     page: ProductPage[] | null
   }> = await loadQuery(groq`*[_type == "product" && store.slug.current == "${slug}" ] {
     store {
-      slug
+      slug,
+      id
     },
     modules,
-    "page": *[_type == "productPage"]
+    "page": *[_type == "productPage"] {
+    defaultInformation,
+    bigTitle,
+    "pins": pins[]{
+      details,
+      name,
+      icon,
+     "linkedProducts": linkedProducts[]->store.id
+    }
+  }
   }
   `);
 
   if (query.length === 0) return null;
+
+  // parse pins
+  const pins = query[0].page?.[0].pins || [];
+
   return {
     ...query[0],
     modules: query[0].modules?.map((m) => m._type === "actionBlock" ? parseActionBlock(m) : m),
     page: query[0].page?.[0] || null,
+    pins: pins.filter((p) => p.linkedProducts.includes(query[0].store.id))
   };
 }
 

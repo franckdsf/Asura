@@ -51,7 +51,6 @@ export default async function handleRequest(
   if (isbot(request.headers.get('user-agent'))) {
     await body.allReady;
   }
-  console.log(header);
 
   responseHeaders.set('Content-Type', 'text/html');
   responseHeaders.set('Content-Security-Policy', header);

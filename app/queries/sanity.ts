@@ -22,7 +22,7 @@ const parseActionBlock = (block: ActionBlock) => {
     ...block.mainMedia,
     image: block.mainMedia.image ? {
       ...block.mainMedia.image,
-      url: urlFor(block.mainMedia.image.asset._ref).width(800).url()
+      url: urlFor(block.mainMedia.image.asset._ref).width(1200).url()
     } : undefined,
     video: block.mainMedia.video ? {
       ...block.mainMedia.video,
@@ -34,7 +34,7 @@ const parseActionBlock = (block: ActionBlock) => {
     ...block.additionalMedia,
     image: block.additionalMedia.image ? {
       ...block.additionalMedia.image,
-      url: urlFor(block.additionalMedia.image.asset._ref).width(800).url()
+      url: urlFor(block.additionalMedia.image.asset._ref).width(1200).url()
     } : undefined,
     video: block.additionalMedia.video ? {
       ...block.additionalMedia.video,

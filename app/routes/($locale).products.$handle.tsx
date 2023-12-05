@@ -268,7 +268,21 @@ export default function Product() {
               content={m.content}
               mainMedia={{ imageSrc: m.mainMedia.image?.url, videoSrc: m.mainMedia.video?.url }}
               additionalMedia={m.additionalMedia ? { imageSrc: m.additionalMedia.image?.url, videoSrc: m.additionalMedia.video?.url } : undefined}
-              cta={m.cta ? { link: m.cta.link, text: m.cta.text } : undefined}
+              cta={m.cta && m.cta.link ? { link: m.cta.link, text: m.cta.text } : (m.cta ?
+                <AddToCartButton
+                  openCart={true}
+                  disabled={!selectedVariant || !selectedVariant.availableForSale}
+                  product={{
+                    ...product,
+                    name: product.title,
+                    brand: product.vendor,
+                    price: selectedVariant!.price.amount,
+                    productGid: product.id,
+                    variantGid: selectedVariant!.id
+                  }}>
+                  {selectedVariant?.availableForSale ? m.cta.text : 'Rupture de stock'}
+                </AddToCartButton>
+                : undefined)}
             />
           default:
             return null;
@@ -314,9 +328,7 @@ function ProductMain({
       <AddToCartButton
         className="w-full lg:max-w-lg !py-4 mt-4 lg:mt-12"
         disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          window.location.href = window.location.href + '#cart-aside';
-        }}
+        openCart={true}
         product={{
           ...product,
           name: product.title,

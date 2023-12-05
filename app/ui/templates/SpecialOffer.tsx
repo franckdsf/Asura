@@ -1,6 +1,8 @@
+import { type ReactNode } from "react";
 import { Link } from "../atoms";
 import { trim } from "../utils/trim";
 
+type CTA = { text: string, link: string }
 type Props = {
   className?: string,
   type?: 'center' | 'right',
@@ -16,10 +18,7 @@ type Props = {
     imageSrc?: string;
     videoSrc?: string;
   };
-  cta?: {
-    text: string,
-    link: string,
-  }
+  cta?: ReactNode | CTA;
 }
 export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additionalMedia, cta, showSectionTitle = true, className = "", type = "center" }: Props) => (
   <div className={trim(`text-center mb-32 sm:mb-48 relative ${className}`)} >
@@ -33,7 +32,7 @@ export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additiona
           <video src={mainMedia.videoSrc} className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} autoPlay muted loop />)}
       {type === "right" && (mainMedia.videoSrc ?
         <video className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[7/10] lg:aspect-[8/9] 2xl:aspect-[5/4]"
-          autoPlay muted loop />
+          autoPlay muted loop src={mainMedia.videoSrc} />
         :
         <img src={mainMedia.imageSrc} alt="special offer" className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[7/10] lg:aspect-[8/9] 2xl:aspect-[5/4]" />)}
       <div className={trim(`max-w-lg text-left px-4 pr-6 max-md:mt-16 ${type === 'right' && 'md:order-1 max-md:self-start'}`)}>
@@ -49,9 +48,9 @@ export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additiona
         <p className="max-w-xs text-lg mb-9">
           {content}
         </p>
-        {cta && <Link href={cta.link} className="uppercase text-md-semibold" underline>
-          {cta.text}
-        </Link>}
+        {cta && ((cta as CTA).link ? <Link href={(cta as CTA).link} className="uppercase text-md-semibold" underline>
+          {(cta as CTA).text}
+        </Link> : (cta as ReactNode))}
       </div>
     </div>
     {additionalMedia &&

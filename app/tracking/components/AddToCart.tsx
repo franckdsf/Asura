@@ -91,12 +91,14 @@ export function AddToCartButton({
   children,
   disabled,
   className = "",
+  openCart = false,
   onClick,
 }: {
   className?: string;
   product: Omit<ShopifyAnalyticsProduct, 'variantGid'> & { variantGid: string; };
   children: React.ReactNode;
   disabled?: boolean;
+  openCart?: boolean;
   onClick?: () => void;
 }) {
   const analytics = { products: [product] };
@@ -116,7 +118,7 @@ export function AddToCartButton({
           />
           <button
             type="submit"
-            onClick={onClick}
+            onClick={() => { if (onClick) onClick(); if (openCart) window.location.href = window.location.href + '#cart-aside'; }}
             disabled={disabled ?? fetcher.state !== 'idle'}
             className={trim(`text-xs md:text-md px-6 md:px-8 py-3 rounded-full bg-neutral-900 text-neutral-50 uppercase ${className}`)}
           >

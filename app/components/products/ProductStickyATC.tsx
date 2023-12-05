@@ -134,9 +134,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
           <ProductPrice selectedVariant={selectedVariant} />
           <AddToCartButton
             disabled={!selectedVariant || !selectedVariant.availableForSale}
-            onClick={() => {
-              window.location.href = window.location.href + '#cart-aside';
-            }}
+            openCart={true}
             product={{
               ...product,
               name: product.title,

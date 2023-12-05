@@ -215,7 +215,7 @@ export default function Product() {
       <div className="flex-row items-center justify-between lg:h-screen-w-header lg:border-b border-neutral-300 lg:flex">
         {selectedVariant?.image && <CarouselProductImages
           defaultIndex={defaultCarouselIndex}
-          className="pt-4 lg:pt-10 lg:pb-[15vh] border-r border-neutral-300"
+          className="pt-4 lg:pt-6 xl:pt-10 lg:pb-[15vh] xl:pb-[13vh] border-r border-neutral-300"
           getSwiper={(s) => swiper.current = s}
           images={images}
         />}

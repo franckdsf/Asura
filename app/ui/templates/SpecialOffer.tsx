@@ -31,10 +31,10 @@ export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additiona
         (mainMedia.imageSrc ? <img src={mainMedia.imageSrc} className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} alt="special offer" /> :
           <video src={mainMedia.videoSrc} className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} autoPlay muted loop />)}
       {type === "right" && (mainMedia.videoSrc ?
-        <video className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[7/10] lg:aspect-[8/9] 2xl:aspect-[5/4]"
+        <video className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[10/9]  2xl:aspect-[5/4]"
           autoPlay muted loop src={mainMedia.videoSrc} />
         :
-        <img src={mainMedia.imageSrc} alt="special offer" className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[7/10] lg:aspect-[8/9] 2xl:aspect-[5/4]" />)}
+        <img src={mainMedia.imageSrc} alt="special offer" className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[10/9]  2xl:aspect-[5/4]" />)}
       <div className={trim(`max-w-lg text-left px-4 pr-6 max-md:mt-16 ${type === 'right' && 'md:order-1 max-md:self-start'}`)}>
         <div className="flex flex-row items-center justify-start">
           <span className="text-lg uppercase text-neutral-600">

@@ -97,6 +97,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
   return defer(
     {
       meta: [{ title: header.shop.name },
+      { description: header.shop.description },
       { property: "og:site_name", content: header.shop.name },
       { property: "og:url", content: publicStoreDomain },
       { property: "og:title", content: header.shop.name },

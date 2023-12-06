@@ -229,7 +229,7 @@ export default function Product() {
           pins={productPage?.pins}
         />
       </div>
-      {modules.map((m) => {
+      {modules.map((m, i) => {
         switch (m._type) {
           case "module.content.bigTitle":
             return <BigText
@@ -237,6 +237,7 @@ export default function Product() {
               title={m.title}
               bigTitle={m.bigTitle}
               imageSrc={CMS.urlForImg(m.sideImage.asset._ref).width(200).url()}
+              showDesktopImage={i === modules.length - 1}
               className="px-4 my-24 md:my-48 md:px-10"
             />
           case "module.content.description":

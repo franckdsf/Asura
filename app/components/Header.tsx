@@ -147,7 +147,9 @@ function HeaderCtas({
 
 function HeaderMenuMobileToggle() {
   return (
-    <a className="p-2 border rounded-full lg:p-3 header-menu-mobile-toggle gap-x-2 border-neutral-300" href="#mobile-menu-aside" >
+    <a className="p-2 border rounded-full lg:p-3 header-menu-mobile-toggle gap-x-2 border-neutral-300" href="#mobile-menu-aside"
+      aria-label="menu toggle"
+    >
       <h3><Icon.List className="icon-md lg:icon-lg" /></h3>
     </a>
   );

@@ -60,13 +60,15 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
         {images.map((img, i) => (
           // eslint-disable-next-line react/no-array-index-key
           <SwiperSlide className={`!w-5/6 h-full !flex-row-center`} key={`${img.src}${i}`} style={{ maxWidth: 800 }}>
-            <ProductImage {...img} />
+            <ProductImage {...img} loading={i === defaultIndex ? "eager" : "lazy"} />
           </SwiperSlide>
         ))}
       </Swiper>
       <div className="max-w-full lg:max-w-xl 2xl:max-w-3xl">
         <div className={trim(`flex flex-row items-center justify-start w-full px-4 py-4 pb-4 mt-4 overflow-auto overflow-y-hidden gap-x-4 lg:mt-8`)}>
-          <button onClick={() => setSlide(currentSlide - 1)} className="p-2 border rounded-full border-neutral-300">
+          <button onClick={() => setSlide(currentSlide - 1)} className="p-2 border rounded-full border-neutral-300"
+            aria-label="previous image"
+          >
             <Icon.ArrowLeft />
           </button>
           <Swiper className="w-full"
@@ -80,6 +82,7 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
               <SwiperSlide key={`${img.src}${i}`} className="!w-16 !h-16">
                 <button
                   onClick={() => setSlide(i)}
+                  aria-label={`image ${i}`}
                   className={trim(`flex-shrink-0 w-full h-full ${currentSlide === i && 'opacity-25'}`)}
                 >
                   <Image {...img} className="w-full h-full" />
@@ -87,7 +90,9 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
               </SwiperSlide>
             ))}
           </Swiper>
-          <button onClick={() => setSlide(currentSlide + 1)} className="p-2 border rounded-full border-neutral-300">
+          <button onClick={() => setSlide(currentSlide + 1)} className="p-2 border rounded-full border-neutral-300"
+            aria-label="previous image"
+          >
             <Icon.ArrowRight />
           </button>
         </div>

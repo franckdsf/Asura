@@ -19,8 +19,8 @@ export const ProductsSpotlight = ({ products }: Props) => {
   return (
     <div className="mb-32 lg:mb-48">
       <div className="text-center">
-        <h3 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent -ml-[10vw]">spotlight</h3>
-        <h3 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent mt-3 lg:my-5 ml-[10vw]">produits</h3>
+        <h1 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent -ml-[10vw]">spotlight</h1>
+        <h1 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent mt-3 lg:my-5 ml-[10vw]">produits</h1>
       </div>
       <div className="flex flex-col justify-start mt-16 sm:flex-row sm:items-center lg:mt-32">
         <img
@@ -44,15 +44,20 @@ export const ProductsSpotlight = ({ products }: Props) => {
           <div className="flex flex-row items-center justify-start mt-8 gap-x-4 sm:gap-x-6">
             {products.map((p, i) => (
               <button onClick={() => setSelectedIndex(i)} key={p.imageSrc} className={i === selectedIndex ? "opacity-25" : ""}>
-                <img src={p.imageSrc} className="object-cover w-16 rounded-full sm:w-20 aspect-square bg-container-light" alt={p.title} />
+                <img src={p.imageSrc} loading="lazy" width={80} height={80}
+                  className="object-cover w-16 rounded-full sm:w-20 aspect-square bg-container-light" alt={p.title} />
               </button>
             ))}
           </div>
           <div className="flex flex-row items-center justify-start mt-8 gap-x-4">
-            <button className="p-3 border rounded-full border-neutral-300" onClick={() => setSelectedIndex((i) => i < 1 ? products.length - 1 : i - 1)}>
+            <button className="p-3 border rounded-full border-neutral-300" onClick={() => setSelectedIndex((i) => i < 1 ? products.length - 1 : i - 1)}
+              aria-label="carousel arrow left"
+            >
               <Icon.ArrowLeft className="icon-sm lg:icon-lg" />
             </button>
-            <button className="p-3 border rounded-full border-neutral-300" onClick={() => setSelectedIndex((i) => i >= products.length - 1 ? 0 : i + 1)}>
+            <button className="p-3 border rounded-full border-neutral-300" onClick={() => setSelectedIndex((i) => i >= products.length - 1 ? 0 : i + 1)}
+              aria-label="carousel arrow right"
+            >
               <Icon.ArrowRight className="icon-sm lg:icon-lg" />
             </button>
           </div>

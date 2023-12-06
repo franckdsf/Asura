@@ -40,7 +40,7 @@ export const DescriptionBlock = ({ imageSrc, videoSrc, description, list, classN
   return (
     <div className={trim(`px-4 md:px-10 flex flex-col lg:flex-row justify-center items-center lg:items-stretch gap-x-16 lg:gap-x-24 2xl:gap-x-40 ${className}`)}>
       {!videoSrc && <img className={mediaBlockClass} alt="description cover" src={imageSrc} />}
-      {videoSrc && <video src={videoSrc} className={mediaBlockClass} autoPlay={true} muted={true} loop={true} />}
+      {videoSrc && <video preload="none" src={videoSrc} className={mediaBlockClass} autoPlay={true} muted={true} loop={true} />}
       <div className="max-w-md mt-16 sm:mt-24 md:py-24">
         <h3 className="text-2xl uppercase font-accent text-neutral-600">Description</h3>
         <div className="mt-10 text-sm md:w-11/12 md:text-md">

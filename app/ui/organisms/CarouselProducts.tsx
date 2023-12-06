@@ -33,10 +33,14 @@ export const CarouselProducts = ({ products }: Props) => {
         ))}
       </Swiper>
       <div className="mt-8 flex-row-center gap-x-4">
-        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slidePrev()}>
+        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slidePrev()}
+          aria-label="previous product"
+        >
           <Icon.ArrowLeft className="icon-sm lg:icon-lg" />
         </button>
-        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slideNext()}>
+        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slideNext()}
+          aria-label="next product"
+        >
           <Icon.ArrowRight className="icon-sm lg:icon-lg" />
         </button>
       </div>

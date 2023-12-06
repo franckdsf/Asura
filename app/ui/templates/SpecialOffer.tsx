@@ -23,18 +23,18 @@ type Props = {
 export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additionalMedia, cta, showSectionTitle = true, className = "", type = "center" }: Props) => (
   <div className={trim(`text-center mb-32 sm:mb-48 relative ${className}`)} >
     {showSectionTitle && <>
-      <h3 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent -ml-[20vw]">offre</h3>
-      <h3 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent my-5 ml-[10vw]">spéciale</h3>
+      <h1 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent -ml-[20vw]">offre</h1>
+      <h1 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent my-5 ml-[10vw]">spéciale</h1>
     </>}
     <div className={trim(`sm:pl-8 flex flex-col md:flex-row ${type === "right" ? "gap-x-8 2xl:gap-x-32 justify-end items-end md:items-center" : "gap-x-16 xl:gap-x-32 justify-center items-center"} mt-24 xl:mt-32`)}>
       {type === "center" &&
-        (mainMedia.imageSrc ? <img src={mainMedia.imageSrc} className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} alt="special offer" /> :
-          <video src={mainMedia.videoSrc} className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} autoPlay muted loop />)}
+        (mainMedia.imageSrc ? <img loading="lazy" src={mainMedia.imageSrc} className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} alt="special offer" /> :
+          <video src={mainMedia.videoSrc} preload="none" className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} autoPlay muted loop />)}
       {type === "right" && (mainMedia.videoSrc ?
         <video className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[10/9]  2xl:aspect-[5/4]"
-          autoPlay muted loop src={mainMedia.videoSrc} />
+          autoPlay muted loop src={mainMedia.videoSrc} preload="none" />
         :
-        <img src={mainMedia.imageSrc} alt="special offer" className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[10/9]  2xl:aspect-[5/4]" />)}
+        <img loading="lazy" src={mainMedia.imageSrc} alt="special offer" className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[10/9]  2xl:aspect-[5/4]" />)}
       <div className={trim(`max-w-lg text-left px-4 pr-6 max-md:mt-16 ${type === 'right' && 'md:order-1 max-md:self-start'}`)}>
         <div className="flex flex-row items-center justify-start">
           <span className="text-lg uppercase text-neutral-600">
@@ -54,8 +54,8 @@ export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additiona
       </div>
     </div>
     {additionalMedia &&
-      (additionalMedia.imageSrc ? <img src={additionalMedia.imageSrc} className="object-cover w-48 h-24 mt-12 ml-8 rounded-full bg-container-light sm:absolute right-32 -bottom-12" alt="additional visual" />
-        : <video src={additionalMedia.videoSrc} className="object-cover w-48 h-24 mt-12 ml-8 rounded-full bg-container-light sm:absolute right-32 -bottom-12" autoPlay muted loop />)
+      (additionalMedia.imageSrc ? <img loading="lazy" src={additionalMedia.imageSrc} className="object-cover w-48 h-24 mt-12 ml-8 rounded-full bg-container-light sm:absolute right-32 -bottom-12" alt="additional visual" />
+        : <video preload="none" src={additionalMedia.videoSrc} className="object-cover w-48 h-24 mt-12 ml-8 rounded-full bg-container-light sm:absolute right-32 -bottom-12" autoPlay muted loop />)
     }
   </div >
 )

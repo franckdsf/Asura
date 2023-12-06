@@ -36,7 +36,7 @@ export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
 
   return [
     { title },
-    { description },
+    { name: "description", content: description },
     { property: 'og:site_name', content: siteName },
     { property: 'og:url', content: location },
     { property: 'og:title', content: title },

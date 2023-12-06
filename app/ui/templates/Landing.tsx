@@ -2,8 +2,10 @@ import { trim } from '../utils/trim';
 import { Icon, Link } from '../atoms';
 import { Swiper, type SwiperClass, SwiperSlide, useSwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from '../motion';
+
+const DEFAULT_INDEX = 1;
 
 type DefaultProps = {
   className?: string;
@@ -12,18 +14,19 @@ type DefaultProps = {
 type CarouseImageProps = DefaultProps & {
   src: string;
   className?: string;
+  loading?: 'lazy' | 'eager';
   position: 'odd' | 'even';
 }
-const CarouselImage = ({ src, position }: CarouseImageProps) => {
+const CarouselImage = ({ src, position, loading = 'lazy' }: CarouseImageProps) => {
   const e = useSwiperSlide();
 
   const isDefault = !(e.isActive || e.isNext || e.isPrev);
   const rotation = isDefault ? (position === 'even' ? 'rotate-[17deg]' : '-rotate-[13deg]') : ((e.isNext || e.isPrev) ? '-rotate-[17deg]' : 'rotate-[13deg]');
 
   return (
-    <img src={src} alt="carousel item"
+    <img src={src} alt="carousel item" width={600} height={900} loading={loading}
       className={trim(`object-cover rounded-none ${isDefault && 'w-5/6 h-5/6'} ${e.isActive && 'w-full h-full scale-110'} ${(e.isNext || e.isPrev) && 'w-11/12 h-11/12'}
-      aspect-product transition-all delay-200 ${rotation}`)}
+      aspect-product transition-all delay-200 bg-contain ${rotation}`)}
     />
   )
 }
@@ -64,7 +67,7 @@ const ImagesCarousel = ({ images, className, onSlideChange, updateSwiper }: Imag
       {images.map((src, i) => (
         // eslint-disable-next-line react/no-array-index-key
         <SwiperSlide className={trim(`!flex-row-center w-114 h-128 py-16`)} key={`${src}${i}`}>
-          <CarouselImage position={i % 2 === 0 ? 'even' : 'odd'} src={src} />
+          <CarouselImage position={i % 2 === 0 ? 'even' : 'odd'} src={src} loading={i === DEFAULT_INDEX ? 'eager' : 'lazy'} />
         </SwiperSlide>
       ))}
     </Swiper>
@@ -74,7 +77,10 @@ const ImagesCarousel = ({ images, className, onSlideChange, updateSwiper }: Imag
 type CarouselButtonProps = DefaultProps & { arrow: 'left' | 'right', onClick: () => void };
 const CarouselButton = ({ className, arrow, onClick }: CarouselButtonProps) => {
   return (
-    <button className={trim(`${className} p-3 rounded-full border border-neutral-300`)} onClick={onClick}>
+    <button onClick={onClick}
+      className={trim(`${className} p-3 rounded-full border border-neutral-300`)}
+      aria-label={arrow === "left" ? 'left carousel button' : 'right carousel button'}
+    >
       {arrow === "left" ? <Icon.ArrowLeft className="icon-xl" /> : <Icon.ArrowRight className="icon-xl" />}
     </button>
   )
@@ -88,7 +94,7 @@ type Props = {
   }
 }
 export const Landing = ({ carousel, cta }: Props) => {
-  const [currentSlide, setCurrentSlide] = useState(1);
+  const [currentSlide, setCurrentSlide] = useState(DEFAULT_INDEX);
   const swiper = useRef<SwiperClass>();
 
   const updateSwiper = (newSwiper: SwiperClass) => swiper.current = newSwiper;

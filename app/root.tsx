@@ -24,6 +24,7 @@ import tailwindCss from './styles/tailwind.css';
 import swiperCss from 'swiper/css';
 import { BodyPixel, useShopifyPixel, HeadPixel } from './tracking/pixels';
 import { useShopId } from './tracking/hooks';
+import { CMS } from './queries';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -92,7 +93,11 @@ export async function loader({ context }: LoaderFunctionArgs) {
     },
   });
 
+  const global = await CMS.GLOBAL_QUERY();
+
   const header = await headerPromise;
+
+  const NODE_ENV: 'production' | 'development' = (context.env as any).NODE_ENV || 'production';
 
   return defer(
     {
@@ -105,9 +110,11 @@ export async function loader({ context }: LoaderFunctionArgs) {
       { property: "og:image:secure_url", content: header.shop.brand?.logo?.image?.url },
       { property: "og:image:width", content: "836" },
       { property: "og:image:height", content: "175" }],
+      NODE_ENV,
       cart: cartPromise,
       footer: footerPromise,
-      header,
+      global,
+      header: { ...header, ...global },
       shopId: header.shop.id,
       isLoggedIn,
       publicStoreDomain,
@@ -132,7 +139,7 @@ export default function App() {
   return (
     <html lang="en">
       <head>
-        <HeadPixel />
+        {data.NODE_ENV === "production" && <HeadPixel />}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="google-site-verification" content="tC-eTfj_wAb60oZ3b2Trc4yiR1PiK5p3hS0kjv3V8Ks" />
@@ -140,7 +147,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <BodyPixel />
+        {data.NODE_ENV === "production" && <BodyPixel />}
         <Layout {...data}>
           <Outlet />
         </Layout>

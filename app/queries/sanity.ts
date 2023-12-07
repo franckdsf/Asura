@@ -1,7 +1,7 @@
 import groq from "groq"
 import { DATASET, PROJECT_ID, loadQuery, urlFor } from "sanity";
 import type {
-  ContentBigTitle, ContentMoreInformation, ContentDescription, ImageWithUrl,
+  ContentBigTitle, ContentMoreInformation, ContentDescription, ImageWithUrl, Global,
   ActionBlock,
   HomePage,
   ProductPage,
@@ -89,6 +89,14 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
   };
 }
 
+const GLOBAL_QUERY = async () => {
+  const query: Array<Global> = await loadQuery(groq`*[_type == "global"]`);
+
+  if (query.length === 0) return null;
+
+  return query[0];
+}
+
 const HOME_PAGE_QUERY = async () => {
   const query: Array<HomePage> = await loadQuery(groq`*[_type == "home"]{
     hero {
@@ -126,6 +134,7 @@ const HOME_PAGE_QUERY = async () => {
 
 export const CMS = {
   PRODUCT_PAGE_QUERY,
+  GLOBAL_QUERY,
   HOME_PAGE_QUERY,
   urlForImg: urlFor,
   urlForVideo

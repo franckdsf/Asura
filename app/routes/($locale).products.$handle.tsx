@@ -3,6 +3,7 @@ import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import {
   useLoaderData,
   type MetaFunction,
+  useRouteLoaderData,
 } from '@remix-run/react';
 import type {
   ProductFragment,
@@ -28,6 +29,7 @@ import { type SwiperClass } from 'swiper/react';
 import { CMS, COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
 import { Pin } from '~/ui/molecules';
+import { type rootLoader } from '~/root';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   const siteName = 'Asura';
@@ -159,6 +161,7 @@ type ImageStructure = { src: string, alt: string, width: number, height: number 
 export default function Product() {
   const swiper = useRef<SwiperClass>();
   const { productPage, product, variants, recommendedProducts } = useLoaderData<typeof loader>();
+  const rootLoader = useRouteLoaderData<rootLoader>('root');
   const { selectedVariant } = product;
 
   useEffect(() => {
@@ -291,13 +294,14 @@ export default function Product() {
             return null;
         }
       })}
-      {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
       <ProductStickyATC
-        className="mt-12"
+        className="mb-12"
         selectedVariant={selectedVariant}
         product={product}
         variants={variants}
+        promotion={rootLoader?.global?.enablePromotion ? rootLoader?.global?.promotion?.name : undefined}
       />
+      {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
     </div>
   );
 }

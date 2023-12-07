@@ -104,3 +104,16 @@ export type HomePage = {
     }
   }>
 }
+
+export type Global = {
+  _type: 'global',
+  enablePromotion: boolean,
+  promotion?: {
+    name?: string;
+    header?: {
+      backgroundColor?: { hex: string };
+      text?: string;
+      link?: string;
+    }
+  }
+}

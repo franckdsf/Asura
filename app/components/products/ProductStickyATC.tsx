@@ -3,7 +3,7 @@ import { Money, type VariantOption, VariantSelector, type ShopifyAnalyticsProduc
 import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { useBreakpoint, useClickOutside, useScrollDirection } from "@ui/hooks";
 import { AddToCartButton } from "~/tracking/components";
 
@@ -53,8 +53,10 @@ export function ProductOptions({ option, defaultOpen = false }: { option: Varian
 
 function ProductPrice({
   selectedVariant,
+  promotion,
 }: {
   selectedVariant: ProductFragment['selectedVariant'];
+  promotion?: string;
 }) {
   return (
     <div className="text-md-medium lg:text-lg-semibold">
@@ -65,7 +67,7 @@ function ProductPrice({
             <s className="mr-1 lg:font-regular">
               <Money data={selectedVariant.compareAtPrice} />
             </s>
-            <PromotionTag className="max-lg:hidden" />
+            {promotion && <PromotionTag className="max-lg:hidden">{promotion}</PromotionTag>}
           </div>
         </>
       ) : (
@@ -76,10 +78,10 @@ function ProductPrice({
 }
 
 
-const PromotionTag = ({ className }: DefaultProps) => (
+const PromotionTag = ({ className, children }: DefaultProps & { children: ReactNode }) => (
   <div className={trim(`text-neutral-600 flex-row-center gap-x-1 ${className}`)}>
     <Icon.SketchLogo className="icon-md" />
-    <span className="uppercase text-2xs lg:text-xs">BLACK FRIDAY</span>
+    <span className="uppercase text-2xs lg:text-xs">{children}</span>
   </div>
 )
 
@@ -87,9 +89,10 @@ type Props = {
   product: ProductFragment;
   selectedVariant: ProductFragment['selectedVariant'];
   variants: Promise<ProductVariantsQuery>;
+  promotion?: string;
   className?: string;
 }
-export const ProductStickyATC = ({ className = "", selectedVariant, variants, product }: Props) => {
+export const ProductStickyATC = ({ className = "", selectedVariant, variants, product, promotion }: Props) => {
   const { scrolled, direction } = useScrollDirection();
   const { isGreater } = useBreakpoint(768);
 
@@ -121,7 +124,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
           )}
         </Await>
         {showExtra && <div className="w-full px-4 mb-2 flex-row-between lg:hidden lg:px-10">
-          <PromotionTag />
+          {selectedVariant?.compareAtPrice && promotion && <PromotionTag>{promotion}</PromotionTag>}
           <div className="flex-row-center">
             {/* eslint-disable-next-line react/no-array-index-key */}
             {Array(5).fill(0).map((_, i) => <Icon.Star className="icon-xs text-[#FBC400]" weight="fill" key={i} />)}
@@ -131,7 +134,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
           <div className="absolute h-16 mr-16 -top-6 w-1px bg-neutral-300" />
         </div>
         <div className="flex flex-row items-center justify-between w-full max-lg:px-4">
-          <ProductPrice selectedVariant={selectedVariant} />
+          <ProductPrice selectedVariant={selectedVariant} promotion={promotion} />
           <AddToCartButton
             disabled={!selectedVariant || !selectedVariant.availableForSale}
             openCart={true}

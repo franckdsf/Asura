@@ -1,23 +1,29 @@
 import { Await, NavLink, useMatches } from '@remix-run/react';
 import { Suspense } from 'react';
 import type { LayoutProps } from './Layout';
-import { Icon } from '@ui/atoms';
+import { Icon, Link } from '@ui/atoms';
 import logo from '../../public/assets/logo.png';
 import { trim } from '@ui/utils/trim';
+import { type Global } from '~/queries/sanity.types';
 
-type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>;
+type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'> & { promotion?: { backgroundColor?: { hex: string }; text?: string; link?: string; } };
 
 type Viewport = 'desktop' | 'mobile';
 
-export function Header({ header, isLoggedIn, cart }: HeaderProps) {
+export function Header({ header, isLoggedIn, promotion, cart }: HeaderProps) {
   const { shop, menu } = header;
 
   return (
-    <header className={trim(`bg-white sticky flex flex-row items-center justify-between px-4 sm:px-10 header lg:border-b border-neutral-300`)}>
-      <HeaderMenuMobileToggle />
-      <HeaderMenu menu={menu} viewport="desktop" />
-      <NavLink to="/"><img src={logo} alt="logo" className="absolute h-6 lg:h-10 inset-center" width="auto" /></NavLink>
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+    <header className={trim(`bg-white sticky top-0 lg:border-b border-neutral-300 header-container`)}>
+      {promotion && <div className="px-4 py-2 text-xs font-medium text-center text-white uppercase" style={{ backgroundColor: promotion.backgroundColor?.hex }}>
+        {promotion.link ? <Link href={promotion.link} className="text-white flex-row-center">{promotion.text}<Icon.ArrowRight className="ml-4" /></Link> : <p>{promotion.text}</p>}
+      </div>}
+      <div className="relative flex flex-row items-center justify-between px-4 sm:px-10 header">
+        <HeaderMenuMobileToggle />
+        <HeaderMenu menu={menu} viewport="desktop" />
+        <NavLink to="/"><img src={logo} alt="logo" className="absolute h-6 lg:h-10 inset-center" width="auto" /></NavLink>
+        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      </div>
     </header>
   );
 }

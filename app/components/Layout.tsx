@@ -13,11 +13,13 @@ import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
+import { type CMS } from '~/queries';
 
 export type LayoutProps = {
   cart: Promise<CartApiQueryFragment | null>;
   children?: React.ReactNode;
   footer: Promise<FooterQuery>;
+  global: Awaited<ReturnType<typeof CMS.GLOBAL_QUERY>>;
   header: HeaderQuery;
   isLoggedIn: boolean;
 };
@@ -26,6 +28,7 @@ export function Layout({
   cart,
   children = null,
   footer,
+  global,
   header,
   isLoggedIn,
 }: LayoutProps) {
@@ -34,7 +37,7 @@ export function Layout({
       <CartAside cart={cart} />
       <SearchAside />
       <MobileMenuAside menu={header.menu} />
-      <Header header={header} cart={cart} isLoggedIn={isLoggedIn} />
+      <Header header={header} cart={cart} isLoggedIn={isLoggedIn} promotion={global?.enablePromotion ? global.promotion?.header : undefined} />
       <main>{children}</main>
       <Suspense>
         <Await resolve={footer}>

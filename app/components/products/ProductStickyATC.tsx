@@ -3,8 +3,8 @@ import { Money, type VariantOption, VariantSelector, type ShopifyAnalyticsProduc
 import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
-import { type ReactNode, useState } from "react";
-import { useBreakpoint, useClickOutside, useScrollDirection } from "@ui/hooks";
+import { type ReactNode, useState, useRef } from "react";
+import { useBreakpoint, useClickOutside, useScrollDirection, useSticky } from "@ui/hooks";
 import { AddToCartButton } from "~/tracking/components";
 
 type DefaultProps = { className?: string }
@@ -93,13 +93,15 @@ type Props = {
   className?: string;
 }
 export const ProductStickyATC = ({ className = "", selectedVariant, variants, product, promotion }: Props) => {
-  const { scrolled, direction } = useScrollDirection();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrolled, scrollPourcent, direction } = useScrollDirection();
   const { isGreater } = useBreakpoint(768);
+  const { isSticky } = useSticky(ref);
 
   const showExtra = (!isGreater && scrolled && direction === "up") || isGreater || !scrolled;
 
   return (
-    <div className={trim(`z-50 sticky bottom-0 w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>
+    <div ref={ref} className={trim(`${scrollPourcent === 100 ? "translate-y-full" : "bottom-0"} z-50 fixed w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>
       <div className="flex flex-col items-stretch justify-between lg:flex-row">
         <Await
           errorElement="There was a problem loading product variants"

@@ -56,7 +56,7 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
       slug: string,
       id: string,
     },
-    faq: Array<{ question: string, answer: Array<Block> }>;
+    faq?: Array<{ question: string, answer: Array<Block> }>;
     modules: Array<ContentDescription | ContentBigTitle | ContentMoreInformation | ActionBlock>,
     page: ProductPage[] | null
   }> = await loadQuery(groq`*[_type == "product" && store.slug.current == "${slug}" ] {
@@ -87,6 +87,7 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
   return {
     ...query[0],
     modules: query[0].modules?.map((m) => m._type === "actionBlock" ? parseActionBlock(m) : m),
+    faq: query[0].faq || [],
     page: query[0].page?.[0] || null,
     pins: pins.filter((p) => p.linkedProducts.includes(query[0].store.id))
   };

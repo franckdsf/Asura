@@ -294,7 +294,7 @@ export default function Product() {
             return null;
         }
       })}
-      <div className="px-4 mx-auto mb-12 sm:px-10 max-w-8xl sm:mb-24">
+      {(productPage?.faq.length || 0) > 0 && <div className="px-4 mx-auto mb-12 sm:px-10 max-w-8xl sm:mb-24">
         <h1 className="text-2xl text-center uppercase sm:text-6xl font-accent">Questions fréquentes</h1>
         <div className="p-8 pt-3 mt-12 border sm:mt-24 border-neutral-300">
           {productPage?.faq.map((f) => (
@@ -306,9 +306,9 @@ export default function Product() {
             />
           ))}
         </div>
-      </div>
+      </div>}
       <ProductStickyATC
-        className="mb-12 md:mb-24"
+        // className="mb-12 md:mb-24"
         selectedVariant={selectedVariant}
         product={product}
         variants={variants}

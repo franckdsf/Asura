@@ -28,7 +28,7 @@ import { Icon } from '~/ui/atoms';
 import { type SwiperClass } from 'swiper/react';
 import { CMS, COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
-import { Pin } from '~/ui/molecules';
+import { Accordion, Pin } from '~/ui/molecules';
 import { type rootLoader } from '~/root';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
@@ -294,8 +294,21 @@ export default function Product() {
             return null;
         }
       })}
+      <div className="px-4 mx-auto mb-12 sm:px-10 max-w-8xl sm:mb-24">
+        <h1 className="text-2xl text-center uppercase sm:text-6xl font-accent">Questions fréquentes</h1>
+        <div className="p-8 pt-3 mt-12 border sm:mt-24 border-neutral-300">
+          {productPage?.faq.map((f) => (
+            <Accordion
+              key={f.question}
+              className="mt-8"
+              title={f.question}
+              content={f.answer}
+            />
+          ))}
+        </div>
+      </div>
       <ProductStickyATC
-        className="mb-12"
+        className="mb-12 md:mb-24"
         selectedVariant={selectedVariant}
         product={product}
         variants={variants}

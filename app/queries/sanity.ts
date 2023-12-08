@@ -5,7 +5,8 @@ import type {
   ActionBlock,
   HomePage,
   ProductPage,
-  MediaWithUrl
+  MediaWithUrl,
+  Block
 } from "./sanity.types";
 
 const urlForVideo = (id: string) => {
@@ -55,6 +56,7 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
       slug: string,
       id: string,
     },
+    faq: Array<{ question: string, answer: Array<Block> }>;
     modules: Array<ContentDescription | ContentBigTitle | ContentMoreInformation | ActionBlock>,
     page: ProductPage[] | null
   }> = await loadQuery(groq`*[_type == "product" && store.slug.current == "${slug}" ] {
@@ -63,6 +65,7 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
       id
     },
     modules,
+    faq,
     "page": *[_type == "productPage"] {
     defaultInformation,
     bigTitle,

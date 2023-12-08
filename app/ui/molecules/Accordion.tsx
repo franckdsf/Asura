@@ -10,16 +10,17 @@ type Props = {
   title: string,
   content: string | string[] | PortableTextProp,
   className?: string
+  showBorder?: boolean
 }
-export const Accordion = ({ title, className, content }: Props) => {
+export const Accordion = ({ showBorder = true, title, className, content }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => setExpanded((current) => !current);
 
   const basicFormat = typeof content === "string" || typeof content !== "object" && typeof content[0] === "string";
 
   return (
-    <button className={trim(`w-full my-2 border-b cursor-pointer sm:my-4 md:my-6 border-neutral-600 ${className}`)} onClick={toggleExpanded}>
-      <div className="flex flex-row items-center justify-between px-6 text-left select-none h-14">
+    <button className={trim(`w-full my-2 cursor-pointer sm:my-4 md:my-6 ${showBorder && 'border-b'} border-neutral-600 ${className}`)} onClick={toggleExpanded}>
+      <div className="flex flex-row items-center justify-between h-16 px-6 pb-4 text-left select-none">
         <h5 className="flex-1 uppercase text-md-semibold md:text-lg-semibold">
           {title}
         </h5>

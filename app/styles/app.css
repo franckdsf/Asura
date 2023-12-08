@@ -147,7 +147,7 @@ aside li {
 * --------------------------------------------------
 */
 .header-container {
-  z-index: 100;
+  z-index: 75;
 }
 
 .header {

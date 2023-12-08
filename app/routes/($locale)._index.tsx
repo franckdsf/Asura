@@ -67,7 +67,7 @@ export default function Homepage() {
         <h1 className="px-8 mb-24 text-3xl text-center uppercase lg:text-6xl font-accent">nos produits</h1>
         <ul className="flex flex-row flex-wrap items-start justify-center w-11/12 gap-8 mx-auto sm:gap-x-16 2xl:gap-x-32 gap-y-16 max-w-7xl">
           <ExtractCollection collections={data.collections.nodes} filter="nos kits" />
-          <ExtractCollection collections={data.collections.nodes} filter="gels" />
+          <ExtractCollection collections={data.collections.nodes} filter="coiffure & cheveux" />
           <ExtractCollection collections={data.collections.nodes} filter="accessoires" />
           <ExtractCollection collections={data.collections.nodes} filter="tout voir" />
         </ul>

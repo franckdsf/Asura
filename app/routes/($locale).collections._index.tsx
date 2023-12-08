@@ -35,7 +35,7 @@ export default function Collections() {
           {({ nodes, isLoading, PreviousLink, NextLink }) => (
             <ul className="flex flex-row flex-wrap items-start justify-center w-11/12 gap-8 mx-auto sm:gap-x-16 2xl:gap-x-32 gap-y-16 max-w-7xl">
               <ExtractCollection collections={nodes} filter="nos kits" />
-              <ExtractCollection collections={nodes} filter="gels" />
+              <ExtractCollection collections={nodes} filter="coiffure & cheveux" />
               <ExtractCollection collections={nodes} filter="accessoires" />
               <ExtractCollection collections={nodes} filter="tout voir" />
             </ul>

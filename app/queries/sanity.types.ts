@@ -64,7 +64,7 @@ export type ActionBlock = {
   _type: 'actionBlock';
   catchPhrase: string;
   title: string;
-  content: string;
+  content: Block;
   mainMedia: Media;
   additionalMedia?: Media;
   cta: {

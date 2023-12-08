@@ -1,6 +1,7 @@
-import { type ReactNode } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 import { Link } from "../atoms";
 import { trim } from "../utils/trim";
+import { PortableText } from "@portabletext/react";
 
 type CTA = { text: string, link: string }
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
   showSectionTitle?: boolean,
   catchPhrase: string;
   title: string;
-  content: string;
+  content: ComponentProps<typeof PortableText>['value'];
   mainMedia: {
     imageSrc?: string;
     videoSrc?: string;
@@ -45,9 +46,9 @@ export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additiona
         <h4 className="text-3xl uppercase sm:text-4xl font-accent my-9">
           {title}
         </h4>
-        <p className="max-w-xs text-lg mb-9">
-          {content}
-        </p>
+        <div className="max-w-xs text-lg mb-9 [&>p]:mb-2">
+          <PortableText value={content} />
+        </div>
         {cta && ((cta as CTA).link ? <Link href={(cta as CTA).link} className="uppercase text-md-semibold" underline>
           {(cta as CTA).text}
         </Link> : (cta as ReactNode))}

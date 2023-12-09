@@ -83,6 +83,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       !option.name.startsWith('utm_source') &&
       !option.name.startsWith('utm_campaign') &&
       !option.name.startsWith('currency') &&
+      !option.name.startsWith('variant') &&
       !option.name.startsWith('stkn')
   );
 

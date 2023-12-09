@@ -60,7 +60,7 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
         {images.map((img, i) => (
           // eslint-disable-next-line react/no-array-index-key
           <SwiperSlide className={`!w-5/6 h-full !flex-row-center`} key={`${img.src}${i}`} style={{ maxWidth: 800 }}>
-            <ProductImage {...img} loading={i === defaultIndex ? "eager" : "lazy"} />
+            <ProductImage {...img} loading={[defaultIndex, 0].includes(i) ? "eager" : "lazy"} />
           </SwiperSlide>
         ))}
       </Swiper>

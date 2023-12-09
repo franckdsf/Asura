@@ -28,7 +28,7 @@ export const DeliveryDate = ({ className = "" }: Props) => {
 
   return (
     <p className={`text-xs lg:text-sm uppercase text-neutral-600 ${className}`}>
-      EN STOCK, LIVRE ENTRE LE {fourDaysAfter} - {tenDaysAfter}
+      en stock, livré entre le {fourDaysAfter} - {tenDaysAfter}
     </p>
   )
 }

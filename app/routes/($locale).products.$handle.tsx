@@ -239,7 +239,7 @@ export default function Product() {
               key={JSON.stringify(m)}
               title={m.title}
               bigTitle={m.bigTitle}
-              imageSrc={CMS.urlForImg(m.sideImage.asset._ref).width(200).url()}
+              imageSrc={CMS.urlForImg(m.sideImage.asset._ref).width(400).url()}
               showDesktopImage={i === modules.length - 1}
               className="px-4 my-24 md:my-48 md:px-10"
             />
@@ -296,7 +296,7 @@ export default function Product() {
       })}
       {(productPage?.faq.length || 0) > 0 && <div className="px-4 mx-auto mb-12 sm:px-10 max-w-8xl sm:mb-24">
         <h1 className="text-2xl text-center uppercase sm:text-6xl font-accent">Questions fréquentes</h1>
-        <div className="p-8 pt-3 mt-12 border sm:mt-24 border-neutral-300">
+        <div className="p-4 pt-3 mt-12 border sm:p-8 sm:mt-24 border-neutral-300">
           {productPage?.faq.map((f) => (
             <Accordion
               key={f.question}
@@ -307,8 +307,7 @@ export default function Product() {
           ))}
         </div>
       </div>}
-      <JudgeMeReviews productId={product.id} className="mb-12 md:mb-24 max-w-7xl" />
-      {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
+      <JudgeMeReviews productId={product.id} className="px-4 mb-12 md:mb-24 max-w-7xl" />
       <ProductStickyATC
         // className="mb-12 md:mb-24"
         selectedVariant={selectedVariant}
@@ -337,7 +336,7 @@ function ProductMain({
   const { title, descriptionHtml } = product;
   return (
     <div className={trim(`px-4 mt-6 ${className}`)}>
-      <div className="flex mb-3 max-lg:hidden">
+      <div className="flex mb-3">
         {/* eslint-disable-next-line react/no-array-index-key */}
         {Array(5).fill(0).map((_, i) => <Icon.Star className="icon-xs text-[#FBC400]" weight="fill" key={i} />)}
       </div>
@@ -349,7 +348,7 @@ function ProductMain({
         {pins.map((p) => <Pin title={p.name} icon={p.icon} key={p.name} />)}
       </div>}
       <AddToCartButton
-        className="w-full lg:max-w-lg !py-4 mt-4 lg:mt-12"
+        className={trim(`w-full lg:max-w-lg !py-4 ${pins ? 'mt-4' : 'mt-6'} lg:mt-12`)}
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         openCart={true}
         product={{

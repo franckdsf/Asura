@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const useScrollDirection = () => {
-  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const lastScrollTop = useRef<number>(0);
   const [scrollPourcent, setScrollPourcent] = useState(0);
   const [scrollDirection, setScrollDirection] = useState('up');
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -9,23 +9,24 @@ const useScrollDirection = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const lastScroll = lastScrollTop.current;
 
       if (currentScrollTop > 0) setHasScrolled(true);
 
-      if (currentScrollTop > lastScrollTop) {
+      if (currentScrollTop > lastScroll) {
         setScrollDirection('down');
-      } else if (currentScrollTop < lastScrollTop) {
+      } else if (currentScrollTop < lastScroll) {
         setScrollDirection('up');
       }
-      setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
+      lastScrollTop.current = (currentScrollTop <= 0 ? 0 : currentScrollTop);
       setScrollPourcent(Math.round((currentScrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight)) * 100));
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollTop]);
+  }, []);
 
-  return { scrollPourcent, scrolled: hasScrolled, direction: scrollDirection, scrollPosition: lastScrollTop };
+  return { scrollPourcent, scrolled: hasScrolled, direction: scrollDirection };
 };
 
 export default useScrollDirection;

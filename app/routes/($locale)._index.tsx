@@ -8,7 +8,7 @@ import { AnalyticsPageType, getPaginationVariables, Image } from '@shopify/hydro
 import type { FeaturedCollectionFragment, } from 'storefrontapi.generated';
 import { Landing, ProductsSpotlight, SpecialOffer } from '@ui/templates';
 import { CMS, COLLECTION_QUERY, COLLECTIONS_QUERY } from '../queries';
-import { RecommendedProducts } from '~/components/products';
+import { RecommendedProducts, useJudgeMe } from '~/components/products';
 import { ExtractCollection } from '~/components/collections';
 import { type rootLoader } from '~/root';
 
@@ -56,6 +56,8 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   const offer = data.homePage?.cta;
+
+  useJudgeMe();
 
   return (
     <div className="home">

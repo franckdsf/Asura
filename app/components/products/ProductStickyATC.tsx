@@ -3,7 +3,7 @@ import { Money, type VariantOption, VariantSelector, type ShopifyAnalyticsProduc
 import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
-import { type ReactNode, useState, useRef } from "react";
+import { type ReactNode, useState, useRef, useMemo } from "react";
 import { useBreakpoint, useClickOutside, useScrollDirection, useSticky } from "@ui/hooks";
 import { AddToCartButton } from "~/tracking/components";
 import { JudgeMeReviewStars } from ".";
@@ -98,7 +98,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
   const { scrolled, scrollPourcent, direction } = useScrollDirection();
   const { isGreater } = useBreakpoint(768);
 
-  const showExtra = (!isGreater && scrolled && direction === "up") || isGreater || !scrolled;
+  const showExtra = useMemo(() => (!isGreater && scrolled && direction === "up") || isGreater || !scrolled, [scrolled, isGreater, direction]);
 
   return (
     <div ref={ref} className={trim(`${scrollPourcent === 100 ? "translate-y-full" : "bottom-0"} z-50 fixed w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>

@@ -20,7 +20,7 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { BigText, DeliveryDate, DescriptionBlock, JudgeMeReviewStars, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
+import { BigText, DeliveryDate, DescriptionBlock, JudgeMeReviewStars, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts, useJudgeMe } from '~/components/products';
 import { AddToCartButton } from '~/tracking/components';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
@@ -170,6 +170,8 @@ export default function Product() {
   const { productPage, product, variants, recommendedProducts } = useLoaderData<typeof loader>();
   const rootLoader = useRouteLoaderData<rootLoader>('root');
   const { selectedVariant } = product;
+
+  useJudgeMe();
 
   useEffect(() => {
     if (swiper.current)

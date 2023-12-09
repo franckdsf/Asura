@@ -5,14 +5,17 @@ import { Icon } from '~/ui/atoms'
 import { DelayHeight } from '~/ui/wrappers'
 import { parseGid } from '@shopify/hydrogen'
 
-export const JudgeMeReviews = ({ productId, className }: { className?: string, productId: string }) => {
+/** Use this at the top of the page to activate the judgeMe widgets */
+export const useJudgeMe = () => {
   useJudgeme({
     shopDomain: 'f22921-2.myshopify.com',
     publicToken: 'HfCllSLXKeBh1Lf2noMU10gI7j4',
     cdnHost: 'https://cdn.judge.me',
     delay: 500
-  })
+  });
+}
 
+export const JudgeMeReviews = ({ productId, className }: { className?: string, productId: string }) => {
   return (
     <div className={trim(`mx-auto ${className}`)}>
       <DelayHeight>
@@ -25,13 +28,13 @@ export const JudgeMeReviews = ({ productId, className }: { className?: string, p
 }
 
 const TIMER = 500;
-const FakeStarsComponent = ({ parent, id }: { id?: string, parent: RefObject<HTMLDivElement> }) => {
+const FakeStarsComponent = ({ parent, id }: { id?: string, parent?: RefObject<HTMLDivElement> }) => {
   const [reviewsCount, setReviewsCount] = useState<number>(0);
 
   useEffect(() => {
     const lookForParentReviews = () => {
       // get the value of the attribute data-number-of-reviews
-      const numberOfReviews = parent.current?.querySelector('[data-number-of-reviews]')?.getAttribute('data-number-of-reviews');
+      const numberOfReviews = parent?.current?.querySelector('[data-number-of-reviews]')?.getAttribute('data-number-of-reviews');
       if ((Number(numberOfReviews) || 0) === 0) { setReviewsCount(0) }
       else { setReviewsCount(Number(numberOfReviews)) }
     }
@@ -62,15 +65,6 @@ const FakeStarsComponent = ({ parent, id }: { id?: string, parent: RefObject<HTM
 export const JudgeMeReviewStars = ({ productId, className }: { className?: string, productId: string }) => {
   const div = useRef<HTMLDivElement>(null);
 
-  useJudgeme({
-    shopDomain: 'f22921-2.myshopify.com',
-    publicToken: 'HfCllSLXKeBh1Lf2noMU10gI7j4',
-    cdnHost: 'https://cdn.judge.me',
-    delay: TIMER
-  })
-
-
-
   return (
     <div className={trim(`h-4 ${className}`)} ref={div}>
       <style>
@@ -85,5 +79,4 @@ export const JudgeMeReviewStars = ({ productId, className }: { className?: strin
       <JudgemePreviewBadge id={productId} template="product" />
     </div>
   )
-
 }

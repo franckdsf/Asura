@@ -11,6 +11,7 @@ import type { ProductItemFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
 import { Collection as CollectionTemplate } from '@ui/templates';
 import { type rootLoader } from '~/root';
+import { JudgeMeReviewStars } from '~/components/products';
 
 export const meta: MetaFunction<typeof loader, { 'root': rootLoader }> = ({ data, matches }) => {
   const rootData = matches.find((m) => m.id === "root");

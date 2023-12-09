@@ -6,6 +6,7 @@ import { Icon } from "@ui/atoms";
 import { type ReactNode, useState, useRef } from "react";
 import { useBreakpoint, useClickOutside, useScrollDirection, useSticky } from "@ui/hooks";
 import { AddToCartButton } from "~/tracking/components";
+import { JudgeMeReviewStars } from ".";
 
 type DefaultProps = { className?: string }
 
@@ -96,7 +97,6 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
   const ref = useRef<HTMLDivElement>(null);
   const { scrolled, scrollPourcent, direction } = useScrollDirection();
   const { isGreater } = useBreakpoint(768);
-  const { isSticky } = useSticky(ref);
 
   const showExtra = (!isGreater && scrolled && direction === "up") || isGreater || !scrolled;
 
@@ -125,12 +125,9 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
                 </div>)
           )}
         </Await>
-        {showExtra && <div className="w-full px-4 mb-2 flex-row-between lg:hidden lg:px-10">
+        {!isGreater && <div className={trim(`w-full px-4 mb-2 flex-row-between ${!showExtra && 'hidden'} lg:hidden lg:px-10`)}>
           {selectedVariant?.compareAtPrice && promotion && <PromotionTag>{promotion}</PromotionTag>}
-          <div className="flex-row-center">
-            {/* eslint-disable-next-line react/no-array-index-key */}
-            {Array(5).fill(0).map((_, i) => <Icon.Star className="icon-xs text-[#FBC400]" weight="fill" key={i} />)}
-          </div>
+          <JudgeMeReviewStars productId={product.id} />
         </div>}
         <div className="relative h-full mr-16 max-lg:hidden">
           <div className="absolute h-16 mr-16 -top-6 w-1px bg-neutral-300" />

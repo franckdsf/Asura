@@ -20,7 +20,7 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { BigText, DeliveryDate, DescriptionBlock, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
+import { BigText, DeliveryDate, DescriptionBlock, JudgeMeReviewStars, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
 import { AddToCartButton } from '~/tracking/components';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
@@ -294,6 +294,12 @@ export default function Product() {
             return null;
         }
       })}
+      {recommendedProducts && <RecommendedProducts
+        collection={recommendedProducts}
+        title={{ class: "text-neutral-600" }}
+        className="mb-12"
+      />}
+      <JudgeMeReviews productId={product.id} className="px-4 mb-12 md:mb-24 max-w-7xl" />
       {(productPage?.faq.length || 0) > 0 && <div className="px-4 mx-auto mb-12 sm:px-10 max-w-8xl sm:mb-24">
         <h1 className="text-2xl text-center uppercase sm:text-6xl font-accent">Questions fréquentes</h1>
         <div className="p-4 pt-3 mt-12 border sm:p-8 sm:mt-24 border-neutral-300">
@@ -307,7 +313,6 @@ export default function Product() {
           ))}
         </div>
       </div>}
-      <JudgeMeReviews productId={product.id} className="px-4 mb-12 md:mb-24 max-w-7xl" />
       <ProductStickyATC
         // className="mb-12 md:mb-24"
         selectedVariant={selectedVariant}
@@ -315,7 +320,6 @@ export default function Product() {
         variants={variants}
         promotion={rootLoader?.global?.enablePromotion ? rootLoader?.global?.promotion?.name : undefined}
       />
-      {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
     </div>
   );
 }
@@ -336,10 +340,7 @@ function ProductMain({
   const { title, descriptionHtml } = product;
   return (
     <div className={trim(`px-4 mt-6 ${className}`)}>
-      <div className="flex mb-3">
-        {/* eslint-disable-next-line react/no-array-index-key */}
-        {Array(5).fill(0).map((_, i) => <Icon.Star className="icon-xs text-[#FBC400]" weight="fill" key={i} />)}
-      </div>
+      <JudgeMeReviewStars productId={product.id} className="mb-3" />
       <ProductPrice selectedVariant={selectedVariant} className="mb-2 max-lg:hidden" />
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" />

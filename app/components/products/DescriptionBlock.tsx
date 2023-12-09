@@ -1,6 +1,6 @@
-import { Icon } from "@ui/atoms"
+import { IconFromStr } from "@ui/atoms"
 import { trim } from "@ui/utils/trim"
-import { type ComponentProps, useMemo } from "react";
+import { type ComponentProps } from "react";
 import { PortableText } from '@portabletext/react';
 type ElementProps = {
   icon?: string;
@@ -8,28 +8,12 @@ type ElementProps = {
   content: string;
 }
 const Element = ({ icon, title, content }: ElementProps) => {
-  const iconComponent = useMemo(() => {
-    const iconLower = icon?.toLowerCase();
 
-    switch (iconLower) {
-      case 'leaf':
-        return <Icon.Leaf />
-      case 'pencil':
-        return <Icon.Pencil />
-      case 'tree':
-        return <Icon.Tree />
-      case 'thumbup':
-        return <Icon.ThumbsUp />
-      default:
-        return <Icon.Pencil />
-    }
-
-  }, [icon])
 
   return (
-    <div className="flex flex-row items-start justify-start pl-10 pr-6 md:pr-10">
+    <div className="flex flex-row items-start justify-start pl-6 pr-4 md:pl-10 md:pr-10">
       <div className="icon-md rounded-full border-neutral-500 text-neutral-600 border p-2.5">
-        {iconComponent}
+        <IconFromStr icon={icon} />
       </div>
       <div className="ml-5">
         <h6 className="uppercase text-md-semibold">
@@ -46,17 +30,17 @@ const Element = ({ icon, title, content }: ElementProps) => {
 type Props = {
   className?: string;
   imageSrc?: string;
+  videoSrc?: string;
   description: string | ComponentProps<typeof PortableText>['value'];
   list: Array<ElementProps>
 }
-export const DescriptionBlock = ({ imageSrc, description, list, className = "" }: Props) => {
+
+export const DescriptionBlock = ({ imageSrc, videoSrc, description, list, className = "" }: Props) => {
+  const mediaBlockClass = "object-cover w-full h-96 rounded-[128px] sm:rounded-full sm:h-128 md:w-128 2xl:w-144 md:h-auto bg-container-light";
   return (
-    <div className={trim(`px-4 md:px-10 flex flex-col md:flex-row justify-center items-center md:items-stretch gap-x-16 lg:gap-x-24 2xl:gap-x-40 ${className}`)}>
-      <img
-        className="object-cover w-full h-64 rounded-full sm:h-128 md:w-96 lg:w-112 2xl:w-128 md:h-auto bg-container-light"
-        alt="description cover"
-        src={imageSrc}
-      />
+    <div className={trim(`px-4 md:px-10 flex flex-col lg:flex-row justify-center items-center lg:items-stretch gap-x-16 lg:gap-x-24 2xl:gap-x-40 ${className}`)}>
+      {!videoSrc && <img className={mediaBlockClass} alt="description cover" src={imageSrc} />}
+      {videoSrc && <video preload="none" src={videoSrc} className={mediaBlockClass} autoPlay={true} muted={true} loop={true} />}
       <div className="max-w-md mt-16 sm:mt-24 md:py-24">
         <h3 className="text-2xl uppercase font-accent text-neutral-600">Description</h3>
         <div className="mt-10 text-sm md:w-11/12 md:text-md">

@@ -5,9 +5,10 @@ import { useRandomSeed } from "../hooks";
 import type { ProductItemFragment } from 'storefrontapi.generated';
 import { Link } from "../atoms";
 import { useVariantUrl } from "~/utils";
+import { JudgeMeReviewStars } from "~/components/products";
 
 type ProductProps = ProductItemFragment;
-export const Product = ({ handle, priceRange, variants, featuredImage, title }: ProductProps) => {
+export const Product = ({ handle, priceRange, variants, featuredImage, id, title }: ProductProps) => {
   const variant = variants.nodes[0];
   const variantUrl = useVariantUrl(handle, variant.selectedOptions);
 
@@ -19,7 +20,8 @@ export const Product = ({ handle, priceRange, variants, featuredImage, title }: 
         href={variantUrl}
       >
         {featuredImage && <Image data={featuredImage} className="object-cover w-full aspect-square bg-container-light" sizes="33vw" />}
-        <span className="mt-2 uppercase text-2xs lg:text-md-semibold line-clamp-1 lg:mt-4">{title}</span>
+        <JudgeMeReviewStars className="mt-2 lg:mt-4" productId={id} />
+        <span className="mt-2 uppercase text-2xs lg:text-md-semibold line-clamp-1">{title}</span>
         <Money className="mt-1 text-2xs lg:text-xs line-clamp-1" data={priceRange.minVariantPrice} />
       </Link>
     </div>

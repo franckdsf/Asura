@@ -3,6 +3,15 @@ import { RemixServer } from '@remix-run/react';
 import isbot from 'isbot';
 import { renderToReadableStream } from 'react-dom/server';
 import { createContentSecurityPolicy } from '@shopify/hydrogen';
+import { securityPolicies } from './tracking/securityPolicies';
+
+const BASIC_SECURITY_POLICIES = [
+  "'self'",
+  'https://cdn.shopify.com',
+  'https://shopify.com',
+  "https://cdn.shopifycdn.net",
+  "https://*.shopifysvc.com"
+]
 
 export default async function handleRequest(
   request: Request,
@@ -12,26 +21,31 @@ export default async function handleRequest(
 ) {
   const { nonce, header, NonceProvider } = createContentSecurityPolicy({
     defaultSrc: [
-      "'self'",
-      'https://cdn.shopify.com',
-      'https://shopify.com',
-      'https://cdn.sanity.io',
+      ...BASIC_SECURITY_POLICIES,
+      // apps
       "https://pp-proxy.parcelpanel.com",
-      "https://cdn.shopifycdn.net",
+      "https://loox.io",
+      // cms
+      'https://cdn.sanity.io',
+      // pixels
       "https://static.hotjar.com",
-      "https://cdn.judge.me",
-      "https://cache.judge.me/",
+      ...securityPolicies.defaultSrc,
     ],
     connectSrc: [
-      "'self'",
-      "https://cache.judge.me/",
-      "https://cdn.judge.me",
-      "https://pp-proxy.parcelpanel.com",
-      "https://static.hotjar.com",
+      ...BASIC_SECURITY_POLICIES,
       // any other URLs your app needs to connect to
+      "https://pp-proxy.parcelpanel.com",
+      ...securityPolicies.connectSrc,
     ],
     frameAncestors: [
-      "'self'"
+      ...BASIC_SECURITY_POLICIES,
+      "https://loox.io",
+      ...securityPolicies.frameAncestors,
+    ],
+    styleSrc: [
+      ...BASIC_SECURITY_POLICIES,
+      "'unsafe-inline'",
+      ...securityPolicies.styleSrc,
     ]
   });
 
@@ -55,7 +69,8 @@ export default async function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html');
-  responseHeaders.set('Content-Security-Policy', header);
+  // responseHeaders.set('Content-Security-Policy', header);
+  // TODO : fix judge me Content-Security-Policy
 
   return new Response(body, {
     headers: responseHeaders,

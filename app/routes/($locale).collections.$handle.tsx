@@ -5,11 +5,13 @@ import {
   getPaginationVariables,
   Image,
   Money,
+  AnalyticsPageType,
 } from '@shopify/hydrogen';
 import type { ProductItemFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
 import { Collection as CollectionTemplate } from '@ui/templates';
 import { type rootLoader } from '~/root';
+import { JudgeMeReviewStars } from '~/components/products';
 
 export const meta: MetaFunction<typeof loader, { 'root': rootLoader }> = ({ data, matches }) => {
   const rootData = matches.find((m) => m.id === "root");
@@ -43,7 +45,13 @@ export async function loader({ request, params, context }: LoaderFunctionArgs) {
       status: 404,
     });
   }
-  return json({ collection });
+  return json({
+    collection,
+    analytics: {
+      pageType: AnalyticsPageType.collection,
+      collections: [collection]
+    },
+  });
 }
 
 export default function Collection() {

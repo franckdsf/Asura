@@ -7,10 +7,10 @@ import { Newsletter } from './Newsletter';
 
 export function Footer({ menu }: FooterQuery) {
   return (
-    <footer className="footer pb-16 mt-16 ">
+    <footer className="pb-16 mt-16 footer ">
       <Newsletter />
-      <div className="w-full h-1px bg-neutral-600 relative my-24">
-        <div className="relative inline-flex inset-center p-4 rounded-full border border-neutral-600 bg-white">
+      <div className="relative w-full my-24 h-1px bg-neutral-600">
+        <div className="relative inline-flex p-4 bg-white border rounded-full inset-center border-neutral-600">
           <Icon.Gavel className="icon-sm text-neutral-600" />
         </div>
       </div>
@@ -65,7 +65,7 @@ function FooterMenu({ menu }: Pick<FooterQuery, 'menu'>) {
               ? new URL(item.url).pathname
               : item.url;
           const isExternal = !url.startsWith('/');
-          return { url: url, label: item.title, external: isExternal }
+          return { url, label: item.title, external: isExternal }
         })}
       />
       <FooterSection
@@ -76,9 +76,9 @@ function FooterMenu({ menu }: Pick<FooterQuery, 'menu'>) {
           { label: '12 rue de la Part Dieu, 69003, Lyon' }
         ]}
       />
-      <div className="flex flex-col sm:flex-row justify-between sm:items-end">
-        <img src={logo} alt="logo" className="w-4/6 max-w-4xl" width="auto" />
-        <p className="max-sm:mt-6 max-sm:text-right text-xs sm:text-lg text-neutral-600">© {currentYear} Asura</p>
+      <div className="flex flex-col justify-between sm:flex-row sm:items-end">
+        <img src={logo} alt="logo" className="w-4/6 max-w-4xl" width={836} height={175} />
+        <p className="text-xs max-sm:mt-6 max-sm:text-right sm:text-lg text-neutral-600">© {currentYear} Asura</p>
       </div>
     </nav>
   );

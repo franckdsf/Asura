@@ -146,12 +146,13 @@ aside li {
 * components/Header
 * --------------------------------------------------
 */
+.header-container {
+  z-index: 75;
+}
+
 .header {
   align-items: center;
   display: flex;
-  position: sticky;
-  top: 0;
-  z-index: 50;
 
   height: var(--header-height-mobile);
 

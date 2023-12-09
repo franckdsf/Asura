@@ -53,6 +53,9 @@ dependencies:
   isbot:
     specifier: ^3.6.6
     version: 3.7.1
+  jotai:
+    specifier: ^2.6.0
+    version: 2.6.0(@types/react@18.2.39)(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -9132,6 +9135,22 @@ packages:
 
   /jose@5.1.2:
     resolution: {integrity: sha512-X7TOC/d8KPvx4wPUuLHVgTSdoWw0UW5TQOUwhvCvj+ZPfsf9vUPhhksYPjNBWVGPQ/6yd/JrL1gQxBnIDwYdFg==}
+    dev: false
+
+  /jotai@2.6.0(@types/react@18.2.39)(react@18.2.0):
+    resolution: {integrity: sha512-Vt6hsc04Km4j03l+Ax+Sc+FVft5cRJhqgxt6GTz6GM2eM3DyX3CdBdzcG0z2FrlZToL1/0OAkqDghIyARWnSuQ==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.39
+      react: 18.2.0
     dev: false
 
   /js-tokens@4.0.0:

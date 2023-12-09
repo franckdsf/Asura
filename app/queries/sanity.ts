@@ -1,27 +1,52 @@
 import groq from "groq"
-import { loadQuery, urlFor } from "sanity";
+import { DATASET, PROJECT_ID, loadQuery, urlFor } from "sanity";
 import type {
-  ContentBigTitle, ContentMoreInformation, ContentDescription, ImageWithUrl,
+  ContentBigTitle, ContentMoreInformation, ContentDescription, ImageWithUrl, Global,
   ActionBlock,
   HomePage,
-  ProductPage
+  ProductPage,
+  MediaWithUrl,
+  Block
 } from "./sanity.types";
 
-const parseActionBlock = (block: ActionBlock) => {
-  const mainImageWithUrl: ImageWithUrl = {
-    ...block.mainImage,
-    url: urlFor(block.mainImage.asset._ref).width(800).url() as string
-  };
-  const additionalImageWithUrl: ImageWithUrl | null = block.additionalImage ? {
-    ...block.additionalImage,
-    url: urlFor(block.additionalImage.asset._ref).width(200).url() as string
-  } : null;
+const urlForVideo = (id: string) => {
+  // remove the first "file-" from the string
+  const idWithoutFile = id.startsWith("file-") ? id.substring(5) : id;
+  // replace last "-" with a "."
+  const idWithExtension = idWithoutFile.replaceAll("-", ".");
 
+  return { url: () => `https://cdn.sanity.io/files/${PROJECT_ID}/${DATASET}/${idWithExtension}` };
+}
+
+const parseActionBlock = (block: ActionBlock) => {
+  const mainMediaWithUrl: MediaWithUrl = {
+    ...block.mainMedia,
+    image: block.mainMedia.image ? {
+      ...block.mainMedia.image,
+      url: urlFor(block.mainMedia.image.asset._ref).width(1200).url()
+    } : undefined,
+    video: block.mainMedia.video ? {
+      ...block.mainMedia.video,
+      url: urlForVideo(block.mainMedia.video.asset._ref).url()
+    } : undefined,
+  }
+
+  const additionalMediaWithUrl: MediaWithUrl | null = block.additionalMedia ? {
+    ...block.additionalMedia,
+    image: block.additionalMedia.image ? {
+      ...block.additionalMedia.image,
+      url: urlFor(block.additionalMedia.image.asset._ref).width(1200).url()
+    } : undefined,
+    video: block.additionalMedia.video ? {
+      ...block.additionalMedia.video,
+      url: urlForVideo(block.additionalMedia.video.asset._ref).url()
+    } : undefined,
+  } : null;
 
   return {
     ...block,
-    mainImage: mainImageWithUrl,
-    additionalImage: additionalImageWithUrl
+    mainMedia: mainMediaWithUrl,
+    additionalMedia: additionalMediaWithUrl
   }
 }
 
@@ -29,24 +54,51 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
   const query: Array<{
     store: {
       slug: string,
+      id: string,
     },
+    faq?: Array<{ question: string, answer: Array<Block> }>;
     modules: Array<ContentDescription | ContentBigTitle | ContentMoreInformation | ActionBlock>,
     page: ProductPage[] | null
   }> = await loadQuery(groq`*[_type == "product" && store.slug.current == "${slug}" ] {
     store {
-      slug
+      slug,
+      id
     },
     modules,
-    "page": *[_type == "productPage"]
+    faq,
+    "page": *[_type == "productPage"] {
+    defaultInformation,
+    bigTitle,
+    "pins": pins[]{
+      details,
+      name,
+      icon,
+     "linkedProducts": linkedProducts[]->store.id
+    }
+  }
   }
   `);
 
   if (query.length === 0) return null;
+
+  // parse pins
+  const pins = query[0].page?.[0].pins || [];
+
   return {
     ...query[0],
     modules: query[0].modules?.map((m) => m._type === "actionBlock" ? parseActionBlock(m) : m),
+    faq: query[0].faq || [],
     page: query[0].page?.[0] || null,
+    pins: pins.filter((p) => p.linkedProducts.includes(query[0].store.id))
   };
+}
+
+const GLOBAL_QUERY = async () => {
+  const query: Array<Global> = await loadQuery(groq`*[_type == "global"]`);
+
+  if (query.length === 0) return null;
+
+  return query[0];
 }
 
 const HOME_PAGE_QUERY = async () => {
@@ -86,6 +138,8 @@ const HOME_PAGE_QUERY = async () => {
 
 export const CMS = {
   PRODUCT_PAGE_QUERY,
+  GLOBAL_QUERY,
   HOME_PAGE_QUERY,
-  urlFor
+  urlForImg: urlFor,
+  urlForVideo
 }

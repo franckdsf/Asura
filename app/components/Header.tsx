@@ -1,23 +1,29 @@
 import { Await, NavLink, useMatches } from '@remix-run/react';
 import { Suspense } from 'react';
 import type { LayoutProps } from './Layout';
-import { Icon } from '@ui/atoms';
+import { Icon, Link } from '@ui/atoms';
 import logo from '../../public/assets/logo.png';
 import { trim } from '@ui/utils/trim';
+import { type Global } from '~/queries/sanity.types';
 
-type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>;
+type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'> & { promotion?: { backgroundColor?: { hex: string }; text?: string; link?: string; } };
 
 type Viewport = 'desktop' | 'mobile';
 
-export function Header({ header, isLoggedIn, cart }: HeaderProps) {
+export function Header({ header, isLoggedIn, promotion, cart }: HeaderProps) {
   const { shop, menu } = header;
 
   return (
-    <header className={trim(`bg-white sticky flex flex-row items-center justify-between px-4 sm:px-10 header lg:border-b border-neutral-300`)}>
-      <HeaderMenuMobileToggle />
-      <HeaderMenu menu={menu} viewport="desktop" />
-      <NavLink to="/"><img src={logo} alt="logo" className="absolute h-6 lg:h-10 inset-center" width="auto" /></NavLink>
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+    <header className={trim(`bg-white sticky top-0 lg:border-b border-neutral-300 header-container`)}>
+      {promotion && <div className="px-4 py-2 text-xs font-medium text-center text-white uppercase" style={{ backgroundColor: promotion.backgroundColor?.hex }}>
+        {promotion.link ? <Link href={promotion.link} className="text-white flex-row-center">{promotion.text}<Icon.ArrowRight className="ml-4" /></Link> : <p>{promotion.text}</p>}
+      </div>}
+      <div className="relative flex flex-row items-center justify-between px-4 sm:px-10 header">
+        <HeaderMenuMobileToggle />
+        <HeaderMenu menu={menu} viewport="desktop" />
+        <NavLink to="/"><img src={logo} alt="logo" className="absolute h-6 lg:h-10 inset-center" width="auto" /></NavLink>
+        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      </div>
     </header>
   );
 }
@@ -64,14 +70,14 @@ export function HeaderMenu({
           // if the url is internal, we strip the domain
           const url =
             element.url.includes('myshopify.com') ||
-              element.url.includes(publicStoreDomain)
+              element.url.includes(publicStoreDomain) || element.url // TODO REMOVE (|| element.url)
               ? new URL(element.url).pathname
               : element.url;
 
           return (
             <div key={element.id}>
               <NavLink
-                className={`uppercase header-menu-item text-md flex flex-row justify-start items-center`}
+                className={`uppercase header-menu-item text-sm 2xl:text-md flex flex-row justify-start items-center`}
                 end
                 onClick={closeAside}
                 prefetch="intent"
@@ -127,7 +133,7 @@ function HeaderCtas({
         prefetch="intent"
         style={activeLinkStyle}
         to="/pages/nous-contacter"
-        className="mr-6 uppercase max-lg:hidden header-menu-item text-md"
+        className="mr-6 text-sm uppercase max-lg:hidden header-menu-item 2xl:text-md"
       >
         nous contacter
       </NavLink>
@@ -136,7 +142,7 @@ function HeaderCtas({
         prefetch="intent"
         style={activeLinkStyle}
         to="/apps/parcelpanel"
-        className="mr-6 uppercase max-lg:hidden header-menu-item text-md"
+        className="mr-6 text-sm uppercase max-lg:hidden header-menu-item 2xl:text-md"
       >
         ma commande
       </NavLink>
@@ -147,7 +153,9 @@ function HeaderCtas({
 
 function HeaderMenuMobileToggle() {
   return (
-    <a className="p-2 border rounded-full lg:p-3 header-menu-mobile-toggle gap-x-2 border-neutral-300" href="#mobile-menu-aside" >
+    <a className="p-2 border rounded-full lg:p-3 header-menu-mobile-toggle gap-x-2 border-neutral-300" href="#mobile-menu-aside"
+      aria-label="menu toggle"
+    >
       <h3><Icon.List className="icon-md lg:icon-lg" /></h3>
     </a>
   );

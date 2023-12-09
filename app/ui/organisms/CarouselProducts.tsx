@@ -6,6 +6,8 @@ import { Link } from "@remix-run/react"
 
 type Props = {
   products: Array<{
+    id?: string;
+    name: string;
     img: ComponentProps<typeof Card.Product>['img'];
     price: ComponentProps<typeof Card.Product>['price'];
     link: string;
@@ -24,18 +26,23 @@ export const CarouselProducts = ({ products }: Props) => {
         initialSlide={0}
       >
         {products.map((product, i) => (
-          <SwiperSlide key={i} className="!w-56 md:!w-auto pr-4 md:pr-8">
+          // eslint-disable-next-line react/no-array-index-key
+          <SwiperSlide key={`${i}${product.id}${product.name}`} className="!w-56 md:!w-auto pr-4 md:pr-8">
             <Link to={product.link} className="flex-row-center">
-              <Card.Product img={product.img} price={product.price} />
+              <Card.Product name={product.name} img={product.img} price={product.price} id={product.id} />
             </Link>
           </SwiperSlide>
         ))}
       </Swiper>
       <div className="mt-8 flex-row-center gap-x-4">
-        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slidePrev()}>
+        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slidePrev()}
+          aria-label="previous product"
+        >
           <Icon.ArrowLeft className="icon-sm lg:icon-lg" />
         </button>
-        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slideNext()}>
+        <button className="p-3 border rounded-full border-neutral-300" onClick={() => swiper.current?.slideNext()}
+          aria-label="next product"
+        >
           <Icon.ArrowRight className="icon-sm lg:icon-lg" />
         </button>
       </div>

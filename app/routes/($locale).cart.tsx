@@ -72,14 +72,13 @@ export async function action({ request, context }: ActionFunctionArgs) {
     headers.set('Location', redirectTo);
   }
 
-  return json(
-    {
-      cart: cartResult,
-      errors,
-      analytics: {
-        cartId,
-      },
+  return json({
+    cart: cartResult,
+    errors,
+    analytics: {
+      cartId,
     },
+  },
     { status, headers },
   );
 }

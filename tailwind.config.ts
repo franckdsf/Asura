@@ -16,6 +16,11 @@ const fontSize: Record<string, Array<unknown>> = {
     lineHeight: '1.05rem',
     fontWeight: '400',
   }],
+  sm: ['0.875rem', {
+    letterSpacing: '0rem',
+    lineHeight: '1.15rem',
+    fontWeight: '400',
+  }],
   md: ['1rem', {
     letterSpacing: '0rem',
     lineHeight: '1.213rem',

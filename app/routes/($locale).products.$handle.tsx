@@ -3,6 +3,7 @@ import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import {
   useLoaderData,
   type MetaFunction,
+  useRouteLoaderData,
 } from '@remix-run/react';
 import type {
   ProductFragment,
@@ -13,19 +14,22 @@ import {
   Money,
   getSelectedProductOptions,
   getPaginationVariables,
+  AnalyticsPageType,
 } from '@shopify/hydrogen';
 import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { BigText, DeliveryDate, DescriptionBlock, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
-import { AddToCartButton } from '~/components/tracking';
+import { BigText, DeliveryDate, DescriptionBlock, JudgeMeReviewStars, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
+import { AddToCartButton } from '~/tracking/components';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
 import { Icon } from '~/ui/atoms';
 import { type SwiperClass } from 'swiper/react';
 import { CMS, COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
+import { Accordion, Pin } from '~/ui/molecules';
+import { type rootLoader } from '~/root';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   const siteName = 'Asura';
@@ -34,7 +38,7 @@ export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
 
   return [
     { title },
-    { description },
+    { name: "description", content: description },
     { property: 'og:site_name', content: siteName },
     { property: 'og:url', content: location },
     { property: 'og:title', content: title },
@@ -118,7 +122,16 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     variables: { handle },
   });
 
-  return defer({ productPage, product, variants, recommendedProducts });
+  return defer({
+    productPage,
+    product,
+    variants,
+    recommendedProducts,
+    analytics: {
+      pageType: AnalyticsPageType.product,
+      products: [product],
+    },
+  });
 }
 
 function redirectToFirstVariant({
@@ -148,12 +161,16 @@ type ImageStructure = { src: string, alt: string, width: number, height: number 
 export default function Product() {
   const swiper = useRef<SwiperClass>();
   const { productPage, product, variants, recommendedProducts } = useLoaderData<typeof loader>();
+  const rootLoader = useRouteLoaderData<rootLoader>('root');
   const { selectedVariant } = product;
 
   useEffect(() => {
     if (swiper.current)
       swiper.current.slideToLoop(0);
   }, [selectedVariant]);
+
+  const indexOfVariantInProductImages = product.images.nodes.findIndex((img) => img.url === selectedVariant?.image?.url);
+  const defaultCarouselIndex = product.variants.nodes.length > 1 && indexOfVariantInProductImages !== 0 ? 1 : 0;
 
   const images = [
     selectedVariant?.image ? {
@@ -201,8 +218,8 @@ export default function Product() {
     <div>
       <div className="flex-row items-center justify-between lg:h-screen-w-header lg:border-b border-neutral-300 lg:flex">
         {selectedVariant?.image && <CarouselProductImages
-          defaultIndex={0}
-          className="pt-4 lg:pt-10 lg:pb-[15vh] border-r border-neutral-300"
+          defaultIndex={defaultCarouselIndex}
+          className="pt-4 lg:pt-6 xl:pt-10 lg:pb-[15vh] xl:pb-[13vh] border-r border-neutral-300"
           getSwiper={(s) => swiper.current = s}
           images={images}
         />}
@@ -212,28 +229,31 @@ export default function Product() {
           selectedVariant={selectedVariant}
           product={product}
           variants={variants}
+          pins={productPage?.pins}
         />
       </div>
-      {modules.map((m) => {
+      {modules.map((m, i) => {
         switch (m._type) {
           case "module.content.bigTitle":
             return <BigText
               key={JSON.stringify(m)}
               title={m.title}
               bigTitle={m.bigTitle}
-              imageSrc={CMS.urlFor(m.sideImage.asset._ref).width(200).url()}
+              imageSrc={CMS.urlForImg(m.sideImage.asset._ref).width(400).url()}
+              showDesktopImage={i === modules.length - 1}
               className="px-4 my-24 md:my-48 md:px-10"
             />
           case "module.content.description":
             return <DescriptionBlock
               key={JSON.stringify(m)}
               description={m.description}
-              imageSrc={m.image ? CMS.urlFor(m.image.asset._ref).width(800).url() : selectedVariant?.image?.url}
-              list={m.list.map((i) => ({
+              videoSrc={m.media?.video ? CMS.urlForVideo(m.media.video.asset._ref).url() : undefined}
+              imageSrc={m.media?.image ? CMS.urlForImg(m.media.image.asset._ref).width(800).url() : product.images.nodes[0].url}
+              list={(m.list?.map((i) => ({
                 icon: i.icon,
                 title: i.title,
                 content: i.description,
-              }))}
+              })) || [])}
               className="mt-16 md:mt-28"
             />
           case "module.content.moreInformation":
@@ -252,21 +272,53 @@ export default function Product() {
               catchPhrase={m.catchPhrase}
               title={m.title}
               content={m.content}
-              mainImageSrc={m.mainImage.url}
-              additionalImageSrc={m.additionalImage?.url}
-              cta={m.cta ? { link: m.cta.link, text: m.cta.text } : undefined}
+              mainMedia={{ imageSrc: m.mainMedia.image?.url, videoSrc: m.mainMedia.video?.url }}
+              additionalMedia={m.additionalMedia ? { imageSrc: m.additionalMedia.image?.url, videoSrc: m.additionalMedia.video?.url } : undefined}
+              cta={m.cta && m.cta.link ? { link: m.cta.link, text: m.cta.text } : (m.cta ?
+                <AddToCartButton
+                  openCart={true}
+                  disabled={!selectedVariant || !selectedVariant.availableForSale}
+                  product={{
+                    ...product,
+                    name: product.title,
+                    brand: product.vendor,
+                    price: selectedVariant!.price.amount,
+                    productGid: product.id,
+                    variantGid: selectedVariant!.id
+                  }}>
+                  {selectedVariant?.availableForSale ? m.cta.text : 'Rupture de stock'}
+                </AddToCartButton>
+                : undefined)}
             />
           default:
             return null;
         }
       })}
-      <JudgeMeReviews productId={product.id} />
-      {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
+      {recommendedProducts && <RecommendedProducts
+        collection={recommendedProducts}
+        title={{ class: "text-neutral-600" }}
+        className="mb-12"
+      />}
+      <JudgeMeReviews productId={product.id} className="px-4 mb-12 md:mb-24 max-w-7xl" />
+      {(productPage?.faq.length || 0) > 0 && <div className="px-4 mx-auto mb-12 sm:px-10 max-w-8xl sm:mb-24">
+        <h1 className="text-2xl text-center uppercase sm:text-6xl font-accent">Questions fréquentes</h1>
+        <div className="p-4 pt-3 mt-12 border sm:p-8 sm:mt-24 border-neutral-300">
+          {productPage?.faq.map((f) => (
+            <Accordion
+              key={f.question}
+              className="mt-8"
+              title={f.question}
+              content={f.answer}
+            />
+          ))}
+        </div>
+      </div>}
       <ProductStickyATC
-        className="mt-12"
+        // className="mb-12 md:mb-24"
         selectedVariant={selectedVariant}
         product={product}
         variants={variants}
+        promotion={rootLoader?.global?.enablePromotion ? rootLoader?.global?.promotion?.name : undefined}
       />
     </div>
   );
@@ -277,43 +329,37 @@ function ProductMain({
   selectedVariant,
   product,
   variants,
+  pins
 }: {
   className?: string,
   product: ProductFragment;
   selectedVariant: ProductFragment['selectedVariant'];
   variants: Promise<ProductVariantsQuery>;
+  pins: Array<{ name: string, icon?: string }> | undefined;
 }) {
   const { title, descriptionHtml } = product;
   return (
     <div className={trim(`px-4 mt-6 ${className}`)}>
-      <div className="flex mb-3 max-lg:hidden">
-        {/* eslint-disable-next-line react/no-array-index-key */}
-        {Array(5).fill(0).map((_, i) => <Icon.Star className="icon-xs text-[#FBC400]" weight="fill" key={i} />)}
-      </div>
+      <JudgeMeReviewStars productId={product.id} className="mb-3" />
       <ProductPrice selectedVariant={selectedVariant} className="mb-2 max-lg:hidden" />
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="text-md" />
-      <div className="inline-flex px-4 py-2 mt-6 uppercase rounded-full bg-neutral-600 text-neutral-50 align-center gap-x-2">
-        <Icon.Book />
-        <span className="text-xs">ebook offert</span>
-      </div>
+      {pins && <div className="flex flex-row items-center justify-start gap-x-2">
+        {pins.map((p) => <Pin title={p.name} icon={p.icon} key={p.name} />)}
+      </div>}
       <AddToCartButton
-        className="w-full lg:max-w-lg !py-4 mt-4 lg:mt-12"
+        className={trim(`w-full lg:max-w-lg !py-4 ${pins ? 'mt-4' : 'mt-6'} lg:mt-12`)}
         disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          window.location.href = window.location.href + '#cart-aside';
+        openCart={true}
+        product={{
+          ...product,
+          name: product.title,
+          brand: product.vendor,
+          price: selectedVariant!.price.amount,
+          productGid: product.id,
+          variantGid: selectedVariant!.id
         }}
-        lines={
-          selectedVariant
-            ? [
-              {
-                merchandiseId: selectedVariant.id,
-                quantity: 1,
-              },
-            ]
-            : []
-        }
       >
         {selectedVariant?.availableForSale ? 'Ajouter au panier' : 'Rupture de stock'}
       </AddToCartButton>
@@ -407,7 +453,7 @@ const PRODUCT_FRAGMENT = `#graphql
     selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions) {
       ...ProductVariant
     }
-    variants(first: 1) {
+    variants(first: 2) {
       nodes {
         ...ProductVariant
       }

@@ -5,8 +5,27 @@ export type Image = {
   }
 }
 
+export type File = {
+  _type: 'file';
+  asset: {
+    _ref: string;
+  }
+}
+
 export type ImageWithUrl = Image & {
   url: string;
+}
+
+export type Media = {
+  _type: 'media';
+  image?: Image;
+  video?: File;
+}
+
+export type MediaWithUrl = {
+  _type: 'media';
+  image?: ImageWithUrl;
+  video?: File & { url: string };
 }
 
 export type Block = {
@@ -19,8 +38,8 @@ export type Block = {
 export type ContentDescription = {
   _type: 'module.content.description';
   description: Array<Block>;
-  image: Image;
-  list: Array<{
+  media?: Media;
+  list?: Array<{
     title: string;
     description: string;
     icon: string;
@@ -45,9 +64,9 @@ export type ActionBlock = {
   _type: 'actionBlock';
   catchPhrase: string;
   title: string;
-  content: string;
-  mainImage: Image;
-  additionalImage: Image;
+  content: Block;
+  mainMedia: Media;
+  additionalMedia?: Media;
   cta: {
     text: string;
     link: string;
@@ -60,7 +79,13 @@ export type ProductPage = {
   defaultInformation: {
     delivery: Array<Block>;
     guaranty: Array<Block>;
-  }
+  },
+  pins: Array<{
+    name: string;
+    icon?: string;
+    details?: string;
+    linkedProducts: Array<string>
+  }> | undefined;
 }
 
 export type HomePage = {
@@ -78,4 +103,17 @@ export type HomePage = {
       slug: string,
     }
   }>
+}
+
+export type Global = {
+  _type: 'global',
+  enablePromotion: boolean,
+  promotion?: {
+    name?: string;
+    header?: {
+      backgroundColor?: { hex: string };
+      text?: string;
+      link?: string;
+    }
+  }
 }

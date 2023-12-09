@@ -350,7 +350,7 @@ function ProductMain({
   return (
     <div className={trim(`px-4 mt-6 ${className}`)}>
       <JudgeMeReviewStars productId={product.id} className="mb-3" />
-      <ProductPrice selectedVariant={selectedVariant} className="mb-2 max-lg:hidden" />
+      <ProductPrice selectedVariant={selectedVariant} className="mb-2" />
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="text-md" />

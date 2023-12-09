@@ -15,7 +15,7 @@ export const MoreInformation = ({ included, delivery, guaranty, showTitleOnMobil
     <h3 className={trim(`${!showTitleOnMobile && 'max-md:hidden'} pt-8 lg:max-w-xs uppercase max-md:scale-75 text-2xl lg:text-4xl font-accent text-neutral-600`)}>
       plus d’informations
     </h3>
-    <ul className="flex-shrink-0 w-full max-w-xl mt-8 lg:-mt-2">
+    <ul className="w-full max-w-xl mt-8 xl:flex-shrink-0 lg:-mt-2">
       {included && <li>
         <Accordion
           title="inclus"

@@ -36,14 +36,14 @@ export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additiona
           autoPlay muted loop src={mainMedia.videoSrc} preload="none" />
         :
         <img loading="lazy" src={mainMedia.imageSrc} alt="special offer" className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[10/9]  2xl:aspect-[5/4]" />)}
-      <div className={trim(`max-w-lg text-left px-4 pr-6 max-md:mt-16 ${type === 'right' && 'md:order-1 max-md:self-start'}`)}>
+      <div className={trim(`max-w-lg text-left px-4 md:pr-6 max-md:mt-16 ${type === 'right' && 'md:order-1 max-md:self-start'}`)}>
         <div className="flex flex-row items-center justify-start">
           <span className="text-lg uppercase text-neutral-600">
             {catchPhrase}
           </span>
           <hr className="w-16 ml-3 border-neutral-600" />
         </div>
-        <h4 className="text-3xl uppercase sm:text-4xl font-accent my-9">
+        <h4 className="text-2xl uppercase sm:text-4xl font-accent my-9">
           {title}
         </h4>
         <div className="max-w-xs text-lg mb-9 [&>p]:mb-2">

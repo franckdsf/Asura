@@ -2,6 +2,8 @@ import { JudgemeReviewWidget, useJudgeme, JudgemePreviewBadge } from '@judgeme/s
 import { trim } from "~/ui/utils/trim"
 import { type RefObject, useEffect, useRef, useState } from "react"
 import { Icon } from '~/ui/atoms'
+import { DelayHeight } from '~/ui/wrappers'
+import { parseGid } from '@shopify/hydrogen'
 
 export const JudgeMeReviews = ({ productId, className }: { className?: string, productId: string }) => {
   useJudgeme({
@@ -13,31 +15,47 @@ export const JudgeMeReviews = ({ productId, className }: { className?: string, p
 
   return (
     <div className={trim(`mx-auto ${className}`)}>
-      <JudgemeReviewWidget id={productId} />
+      <DelayHeight>
+        {(ref) => <div ref={ref}>
+          <JudgemeReviewWidget id={productId} />
+        </div>}
+      </DelayHeight>
     </div>
   )
 }
 
 const TIMER = 500;
-const FakeStarsComponent = ({ parent }: { parent: RefObject<HTMLDivElement> }) => {
-  const [showFakeReviews, setShowFakeReviews] = useState<boolean | null>(false);
+const FakeStarsComponent = ({ parent, id }: { id?: string, parent: RefObject<HTMLDivElement> }) => {
+  const [reviewsCount, setReviewsCount] = useState<number>(0);
+
   useEffect(() => {
-    const t = setTimeout(() => {
+    const lookForParentReviews = () => {
       // get the value of the attribute data-number-of-reviews
       const numberOfReviews = parent.current?.querySelector('[data-number-of-reviews]')?.getAttribute('data-number-of-reviews');
-      if ((Number(numberOfReviews) || 0) === 0) setShowFakeReviews(true);
-    }, TIMER + 500)
+      if ((Number(numberOfReviews) || 0) === 0) { setReviewsCount(0) }
+      else { setReviewsCount(Number(numberOfReviews)) }
+    }
 
-    return () => clearTimeout(t)
+    const t1 = setTimeout(lookForParentReviews, TIMER + 300)
+    const t2 = setTimeout(lookForParentReviews, TIMER + 700)
+
+    return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [parent])
 
-  if (!showFakeReviews) return null;
   return (
-    <div className="flex text-[#FBC400] icon-xs gap-x-0.5">
+    <button className="flex text-[#FBC400] icon-xs gap-x-0.5 flex-row justify-start items-center"
+      aria-label='scroll to reviews'
+      onClick={() => {
+        if (!id) return;
+        // scroll to the first .jdgm-review-widget element
+        const reviewWidget = document?.querySelector(`.jdgm-review-widget[data-id="${parseGid(id).id}"]`);
+        reviewWidget?.scrollIntoView({ behavior: 'smooth' });
+      }}>
       {/* eslint-disable-next-line react/no-array-index-key */}
       {Array(4).fill(0).map((_, i) => <Icon.Star weight="fill" key={i} />)}
       <Icon.StarHalf weight="fill" />
-    </div>
+      {reviewsCount > 0 && <span className="ml-1 text-xs text-black">{reviewsCount} avis</span>}
+    </button>
   )
 }
 
@@ -58,12 +76,12 @@ export const JudgeMeReviewStars = ({ productId, className }: { className?: strin
       <style>
         {`
           .jdgm-preview-badge[data-template="product"] {
-            display: block !important;
+            display: hidden !important;
             font-size: 11px;
           }
         `}
       </style>
-      <FakeStarsComponent parent={div} />
+      <FakeStarsComponent parent={div} id={productId} />
       <JudgemePreviewBadge id={productId} template="product" />
     </div>
   )

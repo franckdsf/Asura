@@ -43,7 +43,7 @@ const fontSize: Record<string, Array<unknown>> = {
   }],
   '4xl': ['3.5rem', {
     letterSpacing: '-0.21rem',
-    lineHeight: '3.325rem',
+    lineHeight: '3.525rem',
     fontWeight: '400',
   }],
   '6xl': ['5.75rem', {

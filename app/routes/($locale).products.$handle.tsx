@@ -77,7 +77,13 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
       !option.name.startsWith('_ss') &&
       !option.name.startsWith('_v') &&
       // Filter out third party tracking params
-      !option.name.startsWith('fbclid'),
+      !option.name.startsWith('fbclid') &&
+      // Filter out Google Ads tracking params
+      !option.name.startsWith('utm_medium') &&
+      !option.name.startsWith('utm_source') &&
+      !option.name.startsWith('utm_campaign') &&
+      !option.name.startsWith('currency') &&
+      !option.name.startsWith('stkn')
   );
 
   if (!handle) {
@@ -225,7 +231,7 @@ export default function Product() {
         />}
         {/* <ProductImage image={selectedVariant?.image} /> */}
         <ProductMain
-          className="z-10 w-full lg:max-w-xl 2xl:max-w-3xl lg:px-24 2xl:px-32 lg:py-6 lg:-mt-16"
+          className="z-10 w-full max-w-xl max-lg:mx-auto 2xl:max-w-3xl lg:px-24 2xl:px-32 lg:py-6 lg:-mt-16"
           selectedVariant={selectedVariant}
           product={product}
           variants={variants}
@@ -299,7 +305,6 @@ export default function Product() {
         title={{ class: "text-neutral-600" }}
         className="mb-12"
       />}
-      <JudgeMeReviews productId={product.id} className="px-4 mb-12 md:mb-24 max-w-7xl" />
       {(productPage?.faq.length || 0) > 0 && <div className="px-4 mx-auto mb-12 sm:px-10 max-w-8xl sm:mb-24">
         <h1 className="text-2xl text-center uppercase sm:text-6xl font-accent">Questions fréquentes</h1>
         <div className="p-4 pt-3 mt-12 border sm:p-8 sm:mt-24 border-neutral-300">
@@ -313,6 +318,7 @@ export default function Product() {
           ))}
         </div>
       </div>}
+      <JudgeMeReviews productId={product.id} className="px-4 mb-12 md:mb-24 max-w-7xl" />
       <ProductStickyATC
         // className="mb-12 md:mb-24"
         selectedVariant={selectedVariant}

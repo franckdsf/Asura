@@ -23,7 +23,10 @@ export const securityPolicies = {
     // google
     ...GOOGLE,
     // hotjar
-    "https://script.hotjar.com"
+    "https://script.hotjar.com",
+    // judge me
+    "https://cdn.judge.me",
+    "https://cache.judge.me/",
   ],
   styleSrc: [
     // google
@@ -34,6 +37,9 @@ export const securityPolicies = {
     ...GOOGLE,
   ],
   connectSrc: [
+    // judge me 
+    "https://cache.judge.me/",
+    "https://cdn.judge.me",
     // hotjar
     "https://*.hotjar.com",
     "https://*.hotjar.io",

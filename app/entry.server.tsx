@@ -69,7 +69,8 @@ export default async function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html');
-  responseHeaders.set('Content-Security-Policy', header);
+  // responseHeaders.set('Content-Security-Policy', header);
+  // TODO : fix judge me Content-Security-Policy
 
   return new Response(body, {
     headers: responseHeaders,

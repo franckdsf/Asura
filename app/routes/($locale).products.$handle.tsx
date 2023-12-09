@@ -20,7 +20,7 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { BigText, DeliveryDate, DescriptionBlock, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
+import { BigText, DeliveryDate, DescriptionBlock, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts } from '~/components/products';
 import { AddToCartButton } from '~/tracking/components';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
@@ -307,6 +307,8 @@ export default function Product() {
           ))}
         </div>
       </div>}
+      <JudgeMeReviews productId={product.id} className="mb-12 md:mb-24 max-w-7xl" />
+      {recommendedProducts && <RecommendedProducts collection={recommendedProducts} title={{ class: "text-neutral-600" }} />}
       <ProductStickyATC
         // className="mb-12 md:mb-24"
         selectedVariant={selectedVariant}

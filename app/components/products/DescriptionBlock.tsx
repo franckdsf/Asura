@@ -43,11 +43,11 @@ export const DescriptionBlock = ({ imageSrc, videoSrc, description, list, classN
       {videoSrc && <video preload="none" src={videoSrc} className={mediaBlockClass} autoPlay={true} muted={true} loop={true} />}
       <div className="max-w-md mt-16 sm:mt-24 md:py-24">
         <h3 className="text-2xl uppercase font-accent text-neutral-600">Description</h3>
-        <div className="mt-10 text-sm md:w-11/12 md:text-md">
+        <div className="mt-10 md:w-11/12 text-md">
           {typeof description === "string" ? <p dangerouslySetInnerHTML={{ __html: description }}>
           </p> : <div><PortableText value={description} /></div>}
         </div>
-        <ul className="max-w-md space-y-8 max-md:float-right mt-14 ">
+        <ul className="max-w-md space-y-8 max-md:float-right mt-14 text-md">
           {list.map((i) => (
             <li key={JSON.stringify(i)}>
               <Element

@@ -27,11 +27,11 @@ export default function Page() {
   const { page } = useLoaderData<typeof loader>();
 
   return (
-    <div className="max-w-5xl px-4 mx-auto mt-24 page">
+    <div className="max-w-5xl px-4 mx-auto mt-12 sm:mt-24 page">
       <header>
         <h1 className="text-2xl uppercase lg:text-7xl font-accent">{page.title}</h1>
       </header>
-      <main dangerouslySetInnerHTML={{ __html: page.body }} className="mt-6 mb-32 [&>p]:mt-6" />
+      <main dangerouslySetInnerHTML={{ __html: page.body }} className="mt-6 md:mt-16 mb-12 md:mb-24 [&>p]:mt-6" />
     </div>
   );
 }

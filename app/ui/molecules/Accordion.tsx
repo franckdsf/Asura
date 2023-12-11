@@ -16,7 +16,7 @@ export const Accordion = ({ showBorder = true, title, className, content }: Prop
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => setExpanded((current) => !current);
 
-  const basicFormat = typeof content === "string" || typeof content !== "object" && typeof content[0] === "string";
+  const basicFormat = typeof content === "string" || Array.isArray(content) && typeof content[0] === "string";
 
   return (
     <button className={trim(`w-full my-2 cursor-pointer sm:my-4 md:my-6 ${showBorder && 'border-b'} border-neutral-600 ${className}`)} onClick={toggleExpanded}>
@@ -28,8 +28,8 @@ export const Accordion = ({ showBorder = true, title, className, content }: Prop
       </div>
       <div className={`px-6 pt-2 overflow-hidden transition-[max-height] duration-500 ease-in ${expanded ? "max-h-screen xl:max-h-screen" : "max-h-0"}`}>
         {basicFormat && [...(typeof content === "string" ? [content] : content)].map((c) => (
-          <p className="pb-8 text-left text-md" key={c}>
-            {c}
+          <p className="pb-8 text-left text-md" key={c.toString()}>
+            {c.toString()}
           </p>
         ))}
         {!basicFormat && <div className="pb-8 text-left text-md [&>p]:mb-4" >

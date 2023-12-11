@@ -110,7 +110,7 @@ export const Landing = ({ carousel, cta }: Props) => {
           <hr className="w-16 border-neutral-600" />
           <span>{carousel.length < 10 ? `0${carousel.length}` : carousel.length}</span>
         </div>
-        <div className="text-4xl text-center uppercase xl:text-6xl font-accent">
+        <div className="px-4 text-4xl text-center uppercase xl:text-6xl font-accent">
           <h1>Votre noël</h1>
           <div className="flex flex-row items-start justify-center">
             <h1>jusqu&apos;à moins 50%</h1>

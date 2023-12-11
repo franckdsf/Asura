@@ -67,14 +67,14 @@ export const JudgeMeReviewStars = ({ productId, className }: { className?: strin
 
   return (
     <div className={trim(`h-4 ${className}`)} ref={div}>
-      <style>
+      {/* <style>
         {`
           .jdgm-preview-badge[data-template="product"] {
             display: hidden !important;
             font-size: 11px;
           }
         `}
-      </style>
+      </style> */}
       <FakeStarsComponent parent={div} id={productId} />
       <JudgemePreviewBadge id={productId} template="product" />
     </div>

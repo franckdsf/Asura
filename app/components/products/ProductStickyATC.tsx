@@ -21,7 +21,7 @@ export function ProductOptions({ option, defaultOpen = false }: { option: Varian
   return (
     <div className="relative flex flex-row items-center justify-start" key={option.name}>
       <h5 className="flex-shrink-0 mr-4 uppercase max-md:hidden text-2xs text-neutral-600">cliquez pour changer de {option.name}</h5>
-      <button className="w-full lg:w-auto flex-row-between uppercase text-xs rounded-full px-4 py-2 md:py-2.5 text-neutral-900 border border-neutral-600
+      <button className="w-full lg:w-auto flex-row-between uppercase text-xs rounded-full px-4 py-2 md:py-2.5 text-neutral-900 max-sm:bg-white border border-neutral-300 sm:border-neutral-600
       gap-x-4"
         onClick={() => setOpen((o) => !o)}
       >

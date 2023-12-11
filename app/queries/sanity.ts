@@ -35,7 +35,7 @@ const parseActionBlock = (block: ActionBlock) => {
     ...block.additionalMedia,
     image: block.additionalMedia.image ? {
       ...block.additionalMedia.image,
-      url: urlFor(block.additionalMedia.image.asset._ref).width(1200).url()
+      url: urlFor(block.additionalMedia.image.asset._ref).width(600).url()
     } : undefined,
     video: block.additionalMedia.video ? {
       ...block.additionalMedia.video,

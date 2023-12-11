@@ -47,7 +47,7 @@ const FakeStarsComponent = ({ parent, id }: { id?: string, parent?: RefObject<HT
 
   return (
     <button className="flex text-[#FBC400] icon-xs gap-x-0.5 flex-row justify-start items-center"
-      aria-label='scroll to reviews'
+      aria-label={reviewsCount ? `voir les ${reviewsCount} avis` : 'note : 4.5'}
       onClick={() => {
         if (!id) return;
         // scroll to the first .jdgm-review-widget element

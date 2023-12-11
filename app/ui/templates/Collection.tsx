@@ -22,7 +22,10 @@ export const Product = ({ handle, priceRange, variants, featuredImage, id, title
         {featuredImage && <Image data={featuredImage} className="object-cover w-full aspect-square bg-container-light" sizes="33vw" />}
         <JudgeMeReviewStars className="mt-2 lg:mt-4" productId={id} />
         <span className="mt-2 uppercase text-2xs lg:text-md-semibold line-clamp-1">{title}</span>
-        <Money className="mt-1 text-2xs lg:text-xs line-clamp-1" data={priceRange.minVariantPrice} />
+        <div className="flex flex-row items-center justify-start gap-x-2">
+          <Money className="mt-1 text-2xs lg:text-xs line-clamp-1" data={priceRange.minVariantPrice} />
+          {variant.compareAtPrice && <Money className="mt-1 line-through text-2xs lg:text-xs line-clamp-1 text-neutral-600" data={variant.compareAtPrice} />}
+        </div>
       </Link>
     </div>
   )

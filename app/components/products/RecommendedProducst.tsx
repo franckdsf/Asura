@@ -21,6 +21,7 @@ export function RecommendedProducts({
         name: p.title,
         link: `/products/${p.handle}`,
         price: p.priceRange.minVariantPrice,
+        compareAtPrice: p.variants.nodes[0]?.compareAtPrice || undefined,
         img: p.featuredImage!,
       }))} />
       <br />

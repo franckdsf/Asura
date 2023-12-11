@@ -96,6 +96,7 @@ function ProductItem({
 }) {
   const variant = product.variants.nodes[0];
   const variantUrl = useVariantUrl(product.handle, variant.selectedOptions);
+
   return (
     <Link
       className="product-item"
@@ -146,6 +147,9 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
     }
     variants(first: 1) {
       nodes {
+        compareAtPrice {
+          ...MoneyProductItem
+        }
         selectedOptions {
           name
           value

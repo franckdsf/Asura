@@ -10,6 +10,7 @@ type Props = {
     name: string;
     img: ComponentProps<typeof Card.Product>['img'];
     price: ComponentProps<typeof Card.Product>['price'];
+    compareAtPrice?: ComponentProps<typeof Card.Product>['price'];
     link: string;
   }>
 }
@@ -29,7 +30,7 @@ export const CarouselProducts = ({ products }: Props) => {
           // eslint-disable-next-line react/no-array-index-key
           <SwiperSlide key={`${i}${product.id}${product.name}`} className="!w-56 md:!w-auto pr-4 md:pr-8">
             <Link to={product.link} className="flex-row-center">
-              <Card.Product name={product.name} img={product.img} price={product.price} id={product.id} />
+              <Card.Product name={product.name} img={product.img} price={product.price} id={product.id} compareAtPrice={product.compareAtPrice} />
             </Link>
           </SwiperSlide>
         ))}

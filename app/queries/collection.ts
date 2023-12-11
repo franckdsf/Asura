@@ -24,6 +24,9 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
     }
     variants(first: 1) {
       nodes {
+        compareAtPrice {
+          ...MoneyProductItem
+        }
         selectedOptions {
           name
           value

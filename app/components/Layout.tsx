@@ -1,5 +1,5 @@
 import { Await } from '@remix-run/react';
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import type {
   CartApiQueryFragment,
   FooterQuery,
@@ -14,9 +14,11 @@ import {
   PredictiveSearchResults,
 } from '~/components/Search';
 import { type CMS } from '~/queries';
+import { type CartModule } from '~/queries/sanity.types';
 
 export type LayoutProps = {
   cart: Promise<CartApiQueryFragment | null>;
+  cartModule: Promise<CartModule | null>;
   children?: React.ReactNode;
   footer: Promise<FooterQuery>;
   global: Awaited<ReturnType<typeof CMS.GLOBAL_QUERY>>;
@@ -26,6 +28,7 @@ export type LayoutProps = {
 
 export function Layout({
   cart,
+  cartModule,
   children = null,
   footer,
   global,
@@ -34,7 +37,7 @@ export function Layout({
 }: LayoutProps) {
   return (
     <>
-      <CartAside cart={cart} />
+      <CartAside cart={cart} modules={cartModule} />
       <SearchAside />
       <MobileMenuAside menu={header.menu} />
       <Header header={header} cart={cart} isLoggedIn={isLoggedIn} promotion={global?.enablePromotion ? global.promotion?.header : undefined} />
@@ -48,14 +51,18 @@ export function Layout({
   );
 }
 
-function CartAside({ cart }: { cart: LayoutProps['cart'] }) {
+function CartAside({ cart, modules }: { cart: LayoutProps['cart'], modules: LayoutProps['cartModule'] }) {
   return (
     <Aside id="cart-aside" heading="panier">
       <Suspense fallback={<p>Loading cart ...</p>}>
-        <Await resolve={cart}>
-          {(cart) => {
-            return <CartMain cart={cart} layout="aside" />;
-          }}
+        <Await resolve={modules}>
+          {(m) => (
+            <Suspense fallback={<div>Loading cart...</div>}>
+              <Await resolve={cart}>
+                {(c) => <CartMain cart={c} modules={m} layout="aside" />}
+              </Await>
+            </Suspense>
+          )}
         </Await>
       </Suspense>
     </Aside>

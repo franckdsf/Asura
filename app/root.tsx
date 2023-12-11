@@ -76,6 +76,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   // defer the cart query by not awaiting it
   const cartPromise = cart.get();
+  const cartCMS = CMS.CART.QUERY();
 
   // defer the footer query (below the fold)
   const footerPromise = storefront.query(FOOTER_QUERY, {
@@ -112,6 +113,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
       { property: "og:image:height", content: "175" }],
       NODE_ENV,
       cart: cartPromise,
+      cartModule: cartCMS,
       footer: footerPromise,
       global,
       header: { ...header, ...global },

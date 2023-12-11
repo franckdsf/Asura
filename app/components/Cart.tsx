@@ -1,20 +1,23 @@
-import { CartForm, Image, Money } from '@shopify/hydrogen';
+import { CartForm, Image, Money, parseGid } from '@shopify/hydrogen';
 import type { CartLineUpdateInput } from '@shopify/hydrogen/storefront-api-types';
 import { Link } from '@remix-run/react';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
 import { Icon } from '~/ui/atoms';
-import { FreeItem } from './cart/FreeItem';
+import { FreeItems } from './cart/FreeItem';
 import { CheckoutLink } from '~/tracking/components';
+import { type CartModule } from '~/queries/sanity.types';
+import { CMS } from '~/queries/sanity';
 
 type CartLine = CartApiQueryFragment['lines']['nodes'][0];
 
 type CartMainProps = {
   cart: CartApiQueryFragment | null;
+  modules: CartModule | null;
   layout: 'page' | 'aside';
 };
 
-export function CartMain({ layout, cart }: CartMainProps) {
+export function CartMain({ layout, cart, modules }: CartMainProps) {
   const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
   const withDiscount =
     cart &&
@@ -24,17 +27,23 @@ export function CartMain({ layout, cart }: CartMainProps) {
   return (
     <div className={className}>
       <CartEmpty hidden={linesCount} layout={layout} />
-      <CartDetails cart={cart} layout={layout} />
+      <CartDetails cart={cart} modules={modules} layout={layout} />
     </div>
   );
 }
 
-function CartDetails({ layout, cart }: CartMainProps) {
+function CartDetails({ layout, cart, modules }: CartMainProps) {
   const cartHasItems = !!cart && cart.totalQuantity > 0;
-
   return (
     <div className="cart-details">
       <CartLines lines={cart?.lines} layout={layout} />
+      <FreeItems
+        cart={cart?.lines.nodes.map((l) => parseGid(l.merchandise.product.id).id) || []}
+        filters={[
+          { type: CMS.CART.FREE_ITEMS.NAILS, products: modules?.freeItems.find((i) => i.gift === CMS.CART.FREE_ITEMS.NAILS)?.linkedProducts || [] },
+          { type: CMS.CART.FREE_ITEMS.HAIR, products: modules?.freeItems.find((i) => i.gift === CMS.CART.FREE_ITEMS.HAIR)?.linkedProducts || [] },
+        ]}
+      />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
           {/* <CartDiscounts discountCodes={cart.discountCodes} /> */}

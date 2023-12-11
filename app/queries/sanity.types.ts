@@ -117,3 +117,17 @@ export type Global = {
     }
   }
 }
+
+export type CartModule = {
+  freeItems: {
+    gift: string;
+    name: string;
+    _key: string;
+    linkedProducts: Array<string>;
+  }[];
+  filteredPins: Array<{
+    name: string;
+    _key: string;
+    linkedProducts: Array<string>;
+  }>;
+} 

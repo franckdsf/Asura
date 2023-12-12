@@ -1,4 +1,5 @@
-import FreeItemImg from '../../../public/assets/ebook.webp';
+import FreeItemNailsImg from '../../../public/assets/ebook-nail.webp';
+import FreeItemHairImg from '../../../public/assets/ebook-hair.jpg';
 
 type Props = {
   name: string;
@@ -15,7 +16,8 @@ export const FreeItem = ({ name, imgSrc }: Props) => {
       />
 
       <div>
-        <p className="uppercase text-xs-semibold">         {name}
+        <p className="uppercase text-xs-semibold">
+          {name}
         </p>
         <small className="text-xs uppercase">
           AUJOURD&apos;HUI SEULEMENT !
@@ -32,11 +34,11 @@ export const FreeItem = ({ name, imgSrc }: Props) => {
 }
 
 FreeItem.Nail = () => (
-  <FreeItem name={"Le Guide Ultime Du Nail Art Maison"} imgSrc={FreeItemImg} />
+  <FreeItem name={"Le Guide Ultime Du Nail Art Maison"} imgSrc={FreeItemNailsImg} />
 )
 
 FreeItem.Hair = () => (
-  <FreeItem name={"Le Guide Cheveux Maison"} imgSrc={FreeItemImg} />
+  <FreeItem name={"Le Guide D'entretien Cheveux"} imgSrc={FreeItemHairImg} />
 )
 
 type FreeItemsProps = {

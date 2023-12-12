@@ -352,7 +352,7 @@ function ProductMain({
       <JudgeMeReviewStars productId={product.id} className="mb-3" />
       <ProductPrice selectedVariant={selectedVariant} className="mb-2" />
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
-      <DeliveryDate className="mt-2 mb-5" />
+      <DeliveryDate className="mt-2 mb-5" type="expedition" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="text-md" />
       {pins && <div className="flex flex-row items-center justify-start gap-x-2">
         {pins.map((p) => <Pin title={p.name} icon={p.icon} key={p.name} />)}
@@ -360,6 +360,7 @@ function ProductMain({
       <AddToCartButton
         className={trim(`w-full lg:max-w-lg !py-4 ${pins ? 'mt-4' : 'mt-6'} lg:mt-12`)}
         disabled={!selectedVariant || !selectedVariant.availableForSale}
+        showPaymentMethods={true}
         openCart={true}
         product={{
           ...product,

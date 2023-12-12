@@ -1,4 +1,4 @@
-import { useNonce, useShopifyCookies } from '@shopify/hydrogen';
+import { useNonce } from '@shopify/hydrogen';
 import { defer, type MetaFunction, type LoaderFunctionArgs, json } from '@shopify/remix-oxygen';
 import {
   Links,

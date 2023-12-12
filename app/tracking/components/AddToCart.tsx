@@ -92,6 +92,7 @@ export function AddToCartButton({
   disabled,
   className = "",
   openCart = false,
+  showPaymentMethods = false,
   onClick,
 }: {
   className?: string;
@@ -99,6 +100,7 @@ export function AddToCartButton({
   children: React.ReactNode;
   disabled?: boolean;
   openCart?: boolean;
+  showPaymentMethods?: boolean;
   onClick?: () => void;
 }) {
   const analytics = { products: [product] };
@@ -124,6 +126,7 @@ export function AddToCartButton({
           >
             {children}
           </button>
+          {showPaymentMethods && <img src="/assets/payment-methods.webp" width={500} height={37} alt="payment methods" className="object-contain h-6 mt-4" />}
         </AddToCartAnalytics>
       )}
     </CartForm>

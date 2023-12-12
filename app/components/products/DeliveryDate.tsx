@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 
-type Props = { className?: string }
-export const DeliveryDate = ({ className = "" }: Props) => {
+type Props = { className?: string, type?: 'date' | 'expedition' }
+export const DeliveryDate = ({ className = "", type = 'date' }: Props) => {
   const [currentDate] = useState(new Date());
 
   const fourDaysAfter = useMemo(() => {
@@ -26,9 +26,12 @@ export const DeliveryDate = ({ className = "" }: Props) => {
     return str;
   }, [currentDate]);
 
+  const text = useMemo(() => type === 'date' ? ` en stock, livré entre le ${fourDaysAfter} - ${tenDaysAfter}` : 'en stock, expédié en 24/48h',
+    [fourDaysAfter, tenDaysAfter, type]);
+
   return (
     <p className={`text-xs lg:text-sm uppercase text-neutral-600 ${className}`}>
-      en stock, livré entre le {fourDaysAfter} - {tenDaysAfter}
+      {text}
     </p>
   )
 }

@@ -1,5 +1,6 @@
 import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { useLoaderData, type MetaFunction } from '@remix-run/react';
+import { AnalyticsPageType } from '@shopify/hydrogen';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Asura | ${data?.page.title}` }];
@@ -20,7 +21,13 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     throw new Response('Not Found', { status: 404 });
   }
 
-  return json({ handle: params.handle, page });
+  return json({
+    handle: params.handle,
+    page,
+    analytics: {
+      pageType: AnalyticsPageType.page
+    }
+  });
 }
 
 export default function Page() {

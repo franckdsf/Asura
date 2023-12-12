@@ -1,7 +1,7 @@
 import { Await, useMatches, type MetaFunction } from '@remix-run/react';
 import { Suspense, useEffect } from 'react';
 import type { CartQueryData } from '@shopify/hydrogen';
-import { CartForm } from '@shopify/hydrogen';
+import { AnalyticsPageType, CartForm } from '@shopify/hydrogen';
 import { type ActionFunctionArgs, json } from '@shopify/remix-oxygen';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { CartMain } from '~/components/Cart';
@@ -76,6 +76,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     cart: cartResult,
     errors,
     analytics: {
+      pageType: AnalyticsPageType.cart,
       cartId,
     },
   },
@@ -93,7 +94,7 @@ export default function Cart() {
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await errorElement={<div>An error occurred</div>} resolve={cart}>
           {(cart) => {
-            return <CartMain layout="page" cart={cart} />;
+            return <CartMain layout="page" cart={cart} modules={null} />;
           }}
         </Await>
       </Suspense>

@@ -1,6 +1,6 @@
 import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
-import { Image, Pagination, getPaginationVariables } from '@shopify/hydrogen';
+import { AnalyticsPageType, Image, Pagination, getPaginationVariables } from '@shopify/hydrogen';
 import type { ArticleItemFragment } from 'storefrontapi.generated';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -31,7 +31,12 @@ export const loader = async ({
     throw new Response('Not found', { status: 404 });
   }
 
-  return json({ blog });
+  return json({
+    blog,
+    analytics: {
+      pageType: AnalyticsPageType.blog,
+    },
+  });
 };
 
 export default function Blog() {

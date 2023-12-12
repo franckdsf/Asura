@@ -2,10 +2,19 @@ import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { useLoaderData, type MetaFunction } from '@remix-run/react';
 import { Accordion } from '~/ui/molecules';
 import { Link } from '~/ui/atoms';
+import { AnalyticsPageType } from '@shopify/hydrogen';
 
 export const meta: MetaFunction = ({ data }) => {
   return [{ title: `Asura | FAQ` }];
 };
+
+export async function loader() {
+  return json({
+    analytics: {
+      pageType: AnalyticsPageType.page
+    }
+  })
+}
 
 export default function Page() {
   return (

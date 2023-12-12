@@ -1,6 +1,6 @@
 import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
-import { Pagination, getPaginationVariables } from '@shopify/hydrogen';
+import { AnalyticsPageType, Pagination, getPaginationVariables } from '@shopify/hydrogen';
 
 export const meta: MetaFunction<typeof loader> = ({ matches }) => {
   return [{ title: `Asura | Blogs` }];
@@ -17,7 +17,12 @@ export const loader = async ({ request, context: { storefront } }: LoaderFunctio
     },
   });
 
-  return json({ blogs });
+  return json({
+    blogs,
+    analytics: {
+      pageType: AnalyticsPageType.page,
+    },
+  });
 };
 
 export default function Blogs() {

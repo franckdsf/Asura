@@ -1,6 +1,7 @@
 import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
 import { type Shop } from '@shopify/hydrogen/storefront-api-types';
+import { AnalyticsPageType } from '@shopify/hydrogen';
 
 type SelectedPolicies = keyof Pick<
   Shop,
@@ -38,7 +39,12 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     throw new Response('Could not find the policy', { status: 404 });
   }
 
-  return json({ policy });
+  return json({
+    policy,
+    analytics: {
+      pageType: AnalyticsPageType.policy,
+    },
+  });
 }
 
 export default function Policy() {

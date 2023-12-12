@@ -344,7 +344,7 @@ function ProductMain({
   product: ProductFragment;
   selectedVariant: ProductFragment['selectedVariant'];
   variants: Promise<ProductVariantsQuery>;
-  pins: Array<{ name: string, icon?: string }> | undefined;
+  pins: Array<{ name: string, icon?: string, details?: string }> | undefined;
 }) {
   const { title, descriptionHtml } = product;
   return (
@@ -355,7 +355,7 @@ function ProductMain({
       <DeliveryDate className="mt-2 mb-5" type="expedition" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="text-md" />
       {pins && <div className="flex flex-row items-center justify-start gap-x-2">
-        {pins.map((p) => <Pin title={p.name} icon={p.icon} key={p.name} />)}
+        {pins.map((p) => <Pin title={p.name} icon={p.icon} details={p.details} key={p.name} />)}
       </div>}
       <AddToCartButton
         className={trim(`w-full lg:max-w-lg !py-4 ${pins ? 'mt-4' : 'mt-6'} lg:mt-12`)}

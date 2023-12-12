@@ -156,7 +156,11 @@ export function CartSummary({
 
   return (
     <div aria-labelledby="cart-summary" className={className}>
-      <dl className="mb-6 cart-subtotal text-md flex-row-between">
+      <div className="flex flex-row items-center justify-start max-w-sm px-4 py-1 mb-4 bg-container-light rounded-xs">
+        <Icon.Truck className="mr-4 icon-md" />
+        <p>Livraison standard gratuite *</p>
+      </div>
+      <dl className="pt-4 mb-4 border-t cart-subtotal text-md flex-row-between border-neutral-900">
         <dt>Sous-total</dt>
         <dd className="ml-4">
           {cost?.subtotalAmount?.amount ? (
@@ -167,6 +171,7 @@ export function CartSummary({
         </dd>
       </dl>
       {children}
+      <img src="/assets/payment-methods.webp" width={500} height={37} alt="payment methods" className="object-contain h-6 mt-4 mb-6" />
     </div>
   );
 }

@@ -384,6 +384,10 @@ function ProductPrice({
   selectedVariant: ProductFragment['selectedVariant'];
   className?: string
 }) {
+
+  const discountPercent = Math.round(100 * (selectedVariant?.compareAtPrice ? ((Number(selectedVariant?.compareAtPrice.amount) - Number(selectedVariant.price.amount))
+    / Number(selectedVariant?.compareAtPrice.amount)) : 0));
+
   return (
     <div className={trim(`text-md-medium lg:text-lg-semibold ${className}`)}>
       {selectedVariant?.compareAtPrice ? (
@@ -393,6 +397,9 @@ function ProductPrice({
             <s className="mr-1 lg:font-regular">
               <Money data={selectedVariant.compareAtPrice} />
             </s>
+            <div className="-mt-0.5 px-2 py-0.5 text-2xs uppercase text-primary-on bg-primary-500 !leading-[unset] rounded-xs">
+              promo -{discountPercent}%
+            </div>
           </div>
         </>
       ) : (

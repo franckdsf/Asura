@@ -80,6 +80,10 @@ export default {
       container: {
         light: '#F6F5F3',
       },
+      primary: {
+        on: '#FFFFFF',
+        500: "#ed60f7",
+      },
       neutral: {
         50: '#FFFFFF',
         300: '#EBE7E0',

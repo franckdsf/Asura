@@ -26,7 +26,7 @@ export const DeliveryDate = ({ className = "", type = 'date' }: Props) => {
     return str;
   }, [currentDate]);
 
-  const text = useMemo(() => type === 'date' ? ` en stock, livré entre le ${fourDaysAfter} - ${tenDaysAfter}` : 'en stock, expédié en 24/48h',
+  const text = useMemo(() => type === 'date' ? ` en stock, livré entre le ${fourDaysAfter} - ${tenDaysAfter}` : 'en stock, expédié en 24 / 48h',
     [fourDaysAfter, tenDaysAfter, type]);
 
   return (

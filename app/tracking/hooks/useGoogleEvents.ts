@@ -32,6 +32,8 @@ type GoogleAdsItem = {
   brand?: string;
 }
 
+type AzameoItem = [string, number | undefined, number];
+
 type ProductItem = {
   productId: string,
   variantId?: string,
@@ -62,7 +64,8 @@ type BeginCheckoutEvent = {
 
 const convertProductsToItems = (products: Array<ProductItem>): {
   google_analytics_4: Array<GA4Item>,
-  google_ads: Array<GoogleAdsItem>
+  google_ads: Array<GoogleAdsItem>,
+  azameo: Array<AzameoItem>,
 } => {
   /* Check this documentation for GA4 payload format :
   https://developers.google.com/analytics/devguides/collection/ga4/ecommerce?hl=fr&client_type=gtag#add_or_remove_an_item_from_a_shopping_cart
@@ -76,6 +79,12 @@ const convertProductsToItems = (products: Array<ProductItem>): {
     discount: Number(p.discount) || undefined,
     quantity: p.quantity || 1,
   }))
+
+  const itemsAzameo: Array<AzameoItem> = products.map((p) => ([
+    p.productId,
+    Number(p.price) || undefined,
+    p.quantity || 1,
+  ]))
 
   const itemsGoogleAds: Array<GoogleAdsItem> = products.map((p) => ({
     id: p.productId,
@@ -91,6 +100,7 @@ const convertProductsToItems = (products: Array<ProductItem>): {
   return {
     google_analytics_4: itemsGA4,
     google_ads: itemsGoogleAds,
+    azameo: itemsAzameo,
   };
 }
 

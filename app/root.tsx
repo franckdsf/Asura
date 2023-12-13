@@ -141,7 +141,7 @@ export default function App() {
   return (
     <html lang="en">
       <head>
-        {data.NODE_ENV === "production" && <HeadPixel />}
+        <HeadPixel environment={data.NODE_ENV} />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="google-site-verification" content="tC-eTfj_wAb60oZ3b2Trc4yiR1PiK5p3hS0kjv3V8Ks" />
@@ -149,7 +149,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        {data.NODE_ENV === "production" && <BodyPixel />}
+        <BodyPixel environment={data.NODE_ENV} />
         <Layout {...data}>
           <Outlet />
         </Layout>

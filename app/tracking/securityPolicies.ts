@@ -18,6 +18,11 @@ const GOOGLE = [
   // "https://*.google.com",
 ]
 
+const AZAMEO = [
+  "https://*.azame.net",
+  "https://tag.azame.net"
+]
+
 export const securityPolicies = {
   defaultSrc: [
     // google
@@ -27,6 +32,8 @@ export const securityPolicies = {
     // judge me
     "https://cdn.judge.me",
     "https://cache.judge.me/",
+    // azameo
+    ...AZAMEO,
   ],
   styleSrc: [
     // google

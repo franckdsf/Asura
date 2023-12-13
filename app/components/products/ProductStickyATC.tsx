@@ -1,16 +1,16 @@
 import { Await, Link } from "@remix-run/react";
-import { Money, type VariantOption, VariantSelector, type ShopifyAnalyticsProduct } from "@shopify/hydrogen";
+import { Money, type VariantOption, VariantSelector } from "@shopify/hydrogen";
 import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
 import { type ReactNode, useState, useRef, useMemo } from "react";
-import { useBreakpoint, useClickOutside, useScrollDirection, useSticky } from "@ui/hooks";
+import { useBreakpoint, useClickOutside, useScrollDirection } from "@ui/hooks";
 import { AddToCartButton } from "~/tracking/components";
 import { JudgeMeReviewStars } from ".";
 
 type DefaultProps = { className?: string }
 
-export function ProductOptions({ option, defaultOpen = false }: { option: VariantOption, defaultOpen?: boolean }) {
+export function ProductOptions({ option, defaultOpen = false, shrink = false }: { shrink?: boolean, option: VariantOption, defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   const ref = useClickOutside(() => open && setOpen(false));
 
@@ -19,8 +19,10 @@ export function ProductOptions({ option, defaultOpen = false }: { option: Varian
   if (option.values.length < 2) return null;
 
   return (
-    <div className="relative flex flex-row items-center justify-start" key={option.name}>
-      <h5 className="flex-shrink-0 mr-4 uppercase max-md:hidden text-2xs text-neutral-600">cliquez pour changer de {option.name}</h5>
+    <div className="relative flex flex-col items-center justify-start md:flex-row" key={option.name}>
+      {!shrink && <h5 className="flex-shrink-0 ml-4 mr-4 uppercase text-2xs text-neutral-600 max-md:mb-3">cliquez pour changer de {option.name}
+        <Icon.ArrowDown className="inline ml-2 icon-sm md:hidden" />
+      </h5>}
       <button className="w-full lg:w-auto flex-row-between uppercase text-xs rounded-full px-4 py-2 md:py-2.5 text-neutral-900 max-sm:bg-white border border-neutral-300 sm:border-neutral-600
       gap-x-4"
         onClick={() => setOpen((o) => !o)}
@@ -39,6 +41,10 @@ export function ProductOptions({ option, defaultOpen = false }: { option: Varian
               preventScrollReset
               replace
               to={to}
+              onClick={() => {
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                setOpen(false);
+              }}
               style={{
                 opacity: isAvailable ? 1 : 0.3,
               }}
@@ -99,6 +105,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
   const { isGreater } = useBreakpoint(768);
 
   const showExtra = useMemo(() => (!isGreater && scrolled && direction === "up") || isGreater || !scrolled, [scrolled, isGreater, direction]);
+  const isMobile = !isGreater;
 
   return (
     <div ref={ref} className={trim(`${scrollPourcent === 100 ? "translate-y-full" : "bottom-0"} z-50 fixed w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>
@@ -113,14 +120,13 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
                 <h1 className="uppercase text-md-semibold">{product.title}</h1>
               </div>
               : (
-                showExtra &&
                 <div className={trim(`w-full mb-4 lg:mb-0 py-1px px-4`)}>
                   <VariantSelector
                     handle={product.handle}
                     options={product.options}
                     variants={data.product?.variants.nodes || []}
                   >
-                    {({ option }) => <ProductOptions key={option.name} option={option} />}
+                    {({ option }) => <ProductOptions key={option.name} option={option} shrink={!showExtra && isMobile} />}
                   </VariantSelector>
                 </div>)
           )}

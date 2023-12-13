@@ -20,7 +20,7 @@ export function ProductOptions({ option, defaultOpen = false, shrink = false }: 
 
   return (
     <div className="relative flex flex-col items-center justify-start md:flex-row" key={option.name}>
-      {!shrink && <h5 className="flex-shrink-0 ml-4 mr-4 uppercase text-2xs text-neutral-600 max-md:mb-3">cliquez pour changer de {option.name}
+      {!shrink && <h5 className="flex-shrink-0 ml-4 mr-4 uppercase text-2xs text-neutral-600 max-md:mb-3 max-md:hidden">cliquez pour changer de {option.name}
         <Icon.ArrowDown className="inline ml-2 icon-sm md:hidden" />
       </h5>}
       <button className="w-full lg:w-auto flex-row-between uppercase text-xs rounded-full px-4 py-2 md:py-2.5 text-neutral-900 max-sm:bg-white border border-neutral-300 sm:border-neutral-600
@@ -104,8 +104,9 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
   const { scrolled, scrollPourcent, direction } = useScrollDirection();
   const { isGreater } = useBreakpoint(768);
 
-  const showExtra = useMemo(() => (!isGreater && scrolled && direction === "up") || isGreater || !scrolled, [scrolled, isGreater, direction]);
+  // const showExtra = useMemo(() => (!isGreater && scrolled && direction === "up") || isGreater || !scrolled, [scrolled, isGreater, direction]);
   const isMobile = !isGreater;
+  const showExtra = true;
 
   return (
     <div ref={ref} className={trim(`${scrollPourcent === 100 ? "translate-y-full" : "bottom-0"} z-50 fixed w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>
@@ -120,7 +121,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
                 <h1 className="uppercase text-md-semibold">{product.title}</h1>
               </div>
               : (
-                <div className={trim(`w-full mb-4 lg:mb-0 py-1px px-4`)}>
+                <div className={trim(`w-full mb-3 lg:mb-0 py-1px px-4`)}>
                   <VariantSelector
                     handle={product.handle}
                     options={product.options}
@@ -131,7 +132,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
                 </div>)
           )}
         </Await>
-        {!isGreater && <div className={trim(`w-full px-4 mb-2 flex-row-between ${!showExtra && 'hidden'} lg:hidden lg:px-10`)}>
+        {isMobile && <div className={trim(`w-full px-4 mb-2 flex-row-between ${!showExtra && 'hidden'} lg:hidden lg:px-10`)}>
           {selectedVariant?.compareAtPrice && promotion && <PromotionTag>{promotion}</PromotionTag>}
           <JudgeMeReviewStars productId={product.id} />
         </div>}

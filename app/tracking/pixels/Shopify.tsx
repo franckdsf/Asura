@@ -41,7 +41,7 @@ export const useShopifyPixel = ({ shopId }: { shopId: string }) => {
 
   const pageAnalytics = usePageAnalytics();
 
-  useShopifyCookies({ hasUserConsent: true });
+  useShopifyCookies({ hasUserConsent: true, domain: 'asuranail.com' });
 
   useEffect(() => {
     // Filter out useEffect running twice

@@ -21,7 +21,7 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { BigText, DeliveryDate, DescriptionBlock, JudgeMeReviewStars, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts, useJudgeMe } from '~/components/products';
+import { BigText, DeliveryDate, DescriptionBlock, ItemsLeft, JudgeMeReviewStars, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts, useJudgeMe } from '~/components/products';
 import { AddToCartButton } from '~/tracking/components';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
@@ -369,13 +369,17 @@ function ProductMain({
   pins: Array<{ name: string, icon?: string, details?: string }> | undefined;
 }) {
   const { title, descriptionHtml } = product;
+
+  const hasDiscount = !!selectedVariant?.compareAtPrice;
+
   return (
     <div className={trim(`px-4 mt-6 ${className}`)}>
       <JudgeMeReviewStars productId={product.id} className="mb-3" />
       <ProductPrice selectedVariant={selectedVariant} className="mb-2" />
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" type="expedition" />
-      <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="text-md" />
+      <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="pr-2 text-justify text-md" />
+      {hasDiscount && <ItemsLeft className="mt-6 mb-2" id={product.id} />}
       {pins && <div className="flex flex-row items-center justify-start gap-x-2">
         {pins.map((p) => <Pin title={p.name} icon={p.icon} details={p.details} key={p.name} />)}
       </div>}

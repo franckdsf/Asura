@@ -1,66 +1,8 @@
 import { useCallback } from "react"
-
-type EventVariables = Record<string, string> | object;
-type Event<T extends EventVariables> = {
-  name: string;
-  userId?: string;
-  transactionId?: string;
-  payload?: T;
-}
-type EventWithoutName<T extends EventVariables> = Omit<Event<T>, 'name'>;
-type EventWithPayloadWithoutName<T extends EventVariables> = Omit<EventWithoutName<T>, 'payload'> & { payload: T };
-type DataLayer<K extends EventVariables> = Array<Omit<Event<K>, 'name'> & { event: string }>
-
-type GA4Item = {
-  item_id: string;
-  item_name: string;
-  item_variant?: string;
-  item_brand?: string;
-  quantity?: number;
-  price?: number;
-  discount?: number;
-}
-
-type GoogleAdsItem = {
-  id: string;
-  name: string;
-  variant?: string;
-  quantity?: number;
-  price?: number;
-  discount?: number;
-  sku?: string;
-  brand?: string;
-}
-
-type AzameoItem = [string, number | undefined, number];
-
-type ProductItem = {
-  productId: string,
-  variantId?: string,
-  sku?: string;
-  brand?: string;
-  name: string;
-  discount?: number | string;
-  quantity?: number;
-  price: number | string,
-  currency: string;
-}
-
-type AddToCartEvent = {
-  cartId: string;
-  total: number;
-  currency: string;
-  products: Array<ProductItem>,
-  rawData?: object,
-}
-
-type BeginCheckoutEvent = {
-  cartId: string;
-  total: number;
-  currency: string;
-  products: Array<ProductItem>;
-  rawData?: object;
-}
+import type {
+  Event, ProductItem, GA4Item, GoogleAdsItem, AzameoItem, EventWithPayloadWithoutName,
+  BeginCheckoutEvent, AddToCartEvent, EventVariables, DataLayer, ViewItemEvent
+} from "./events"
 
 const convertProductsToItems = (products: Array<ProductItem>): {
   google_analytics_4: Array<GA4Item>,
@@ -150,5 +92,18 @@ export const useGoogleEvents = () => {
     })
   }, [sendEvent])
 
-  return { sendBeginCheckout, sendAddToCartEvent }
+  const sendItemViewEvent = useCallback(({ payload }: EventWithPayloadWithoutName<ViewItemEvent>) => {
+    sendEvent({
+      name: 'view_item',
+      payload: {
+        ...payload,
+        total: Number(payload.product.price) || 0,
+        currency: payload.product.currency,
+        items: convertProductsToItems([payload.product])
+      }
+    })
+
+  }, [sendEvent])
+
+  return { sendBeginCheckout, sendItemViewEvent, sendAddToCartEvent }
 }

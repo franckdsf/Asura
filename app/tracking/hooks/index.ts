@@ -1,2 +1,2 @@
-export * from './useGoogleEvents';
+export * from './google';
 export * from './useShopId';

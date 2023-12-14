@@ -15,6 +15,7 @@ import {
   getSelectedProductOptions,
   getPaginationVariables,
   AnalyticsPageType,
+  parseGid,
 } from '@shopify/hydrogen';
 import type {
   SelectedOption,
@@ -30,6 +31,7 @@ import { CMS, COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
 import { Accordion, Pin } from '~/ui/molecules';
 import { type rootLoader } from '~/root';
+import { useGoogleEvents } from '~/tracking/hooks';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   const siteName = 'Asura';
@@ -170,6 +172,26 @@ export default function Product() {
   const { productPage, product, variants, recommendedProducts } = useLoaderData<typeof loader>();
   const rootLoader = useRouteLoaderData<rootLoader>('root');
   const { selectedVariant } = product;
+
+  // send an item view event to google everytime the item changes
+  const { sendItemViewEvent } = useGoogleEvents();
+  useEffect(() => {
+    product.selectedVariant && sendItemViewEvent({
+      payload: {
+        product: {
+          productId: parseGid(product.id).id,
+          variantId: parseGid(product.selectedVariant.id).id,
+          // brand: product.vendor, // TODO add vendor
+          name: product.title,
+          discount: 0, // TODO add discount
+          quantity: 1,
+          price: product.selectedVariant.price.amount,
+          currency: product.selectedVariant.price.currencyCode,
+        }
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product]);
 
   useJudgeMe();
 

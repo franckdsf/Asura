@@ -2,7 +2,7 @@ import { useLocation, useMatches } from "@remix-run/react";
 import { useEffect, useMemo, useRef } from "react";
 import {
   useShopifyCookies, AnalyticsEventName,
-  type ShopifyPageViewPayload, getClientBrowserParameters, sendShopifyAnalytics
+  type ShopifyPageViewPayload, getClientBrowserParameters, sendShopifyAnalytics, ShopifySalesChannel
 } from '@shopify/hydrogen';
 
 export function usePageAnalytics({ hasUserConsent } = { hasUserConsent: true }) {
@@ -35,13 +35,16 @@ export function usePageAnalytics({ hasUserConsent } = { hasUserConsent: true }) 
   return analyticsFromMatches;
 }
 
+const hasUserConsent = true;
+const domain = 'asuranail.com';
+
 export const useShopifyPixel = ({ shopId }: { shopId: string }) => {
   const location = useLocation();
   const lastLocationKey = useRef<string>('');
 
-  const pageAnalytics = usePageAnalytics();
+  const pageAnalytics = usePageAnalytics({ hasUserConsent });
 
-  useShopifyCookies({ hasUserConsent: true, domain: 'asuranail.com' });
+  useShopifyCookies({ hasUserConsent, domain });
 
   useEffect(() => {
     // Filter out useEffect running twice
@@ -52,12 +55,13 @@ export const useShopifyPixel = ({ shopId }: { shopId: string }) => {
     const payload = {
       ...getClientBrowserParameters(),
       ...pageAnalytics,
-      shopId
+      shopId,
+      shopifySalesChannel: ShopifySalesChannel.hydrogen
     };
 
     sendShopifyAnalytics({
       eventName: AnalyticsEventName.PAGE_VIEW,
-      payload,
+      payload
     });
 
     // This hook is where you can send a page view event to Shopify and other third-party analytics
@@ -68,6 +72,8 @@ export const useShopifyPixel = ({ shopId }: { shopId: string }) => {
 // ORDER - TRACKING SAVE
 
 /* 
+<script>
+{% if order.financial_status == 'paid' %}
 <script>
 window.dataLayer = window.dataLayer || [];
 
@@ -100,5 +106,5 @@ dataLayer.push({
   }
 });
 </script>
-
+{% endif %}
 */

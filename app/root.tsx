@@ -102,6 +102,10 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   return defer(
     {
+      analytics: {
+        shopId: header.shop.id,
+      },
+      shopId: header.shop.id,
       meta: [{ title: header.shop.name },
       { name: "description", content: header.shop.description },
       { property: "og:site_name", content: header.shop.name },
@@ -117,7 +121,6 @@ export async function loader({ context }: LoaderFunctionArgs) {
       footer: footerPromise,
       global,
       header: { ...header, ...global },
-      shopId: header.shop.id,
       isLoggedIn,
       publicStoreDomain,
     },

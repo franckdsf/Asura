@@ -1,7 +1,8 @@
-import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
-import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
+import { json, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { useLoaderData, type MetaFunction } from '@remix-run/react';
 import { type Shop } from '@shopify/hydrogen/storefront-api-types';
 import { AnalyticsPageType } from '@shopify/hydrogen';
+import { OtherPolicies } from './($locale).policies.others.$handle';
 
 type SelectedPolicies = keyof Pick<
   Shop,
@@ -21,6 +22,10 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     /-([a-z])/g,
     (_: unknown, m1: string) => m1.toUpperCase(),
   ) as SelectedPolicies;
+
+  if (OtherPolicies.includes(params.handle)) {
+    throw redirect(`/policies/others/${params.handle}`);
+  }
 
   const data = await context.storefront.query(POLICY_CONTENT_QUERY, {
     variables: {

@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import {
   useLoaderData,
   type MetaFunction,
   useRouteLoaderData,
+  Await,
 } from '@remix-run/react';
 import type {
   ProductFragment,
@@ -21,11 +22,13 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import { getVariantUrl } from '~/utils';
-import { BigText, DeliveryDate, DescriptionBlock, ItemsLeft, JudgeMeReviewStars, JudgeMeReviews, MoreInformation, ProductStickyATC, RecommendedProducts, useJudgeMe } from '~/components/products';
+import {
+  BigText, DeliveryDate, DescriptionBlock, ItemsLeft, JudgeMeReviewStars, JudgeMeReviews,
+  MoreInformation, ProductStickyATC, RecommendedProducts, VariantSelector, useJudgeMe
+} from '~/components/products';
 import { AddToCartButton } from '~/tracking/components';
 import { CarouselProductImages } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
-import { Icon } from '~/ui/atoms';
 import { type SwiperClass } from 'swiper/react';
 import { CMS, COLLECTION_QUERY } from '~/queries';
 import { SpecialOffer } from '~/ui/templates';
@@ -379,12 +382,25 @@ function ProductMain({
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" type="expedition" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="pr-2 text-justify text-md" />
-      {hasDiscount && <ItemsLeft className="mt-6 mb-2" id={product.id} />}
       {pins && <div className="flex flex-row items-center justify-start gap-x-2">
         {pins.map((p) => <Pin title={p.name} icon={p.icon} details={p.details} key={p.name} />)}
       </div>}
+      {hasDiscount && <ItemsLeft className="my-6" id={product.id} />}
+      <form className={trim(`relative w-full ${pins ? 'mt-4' : 'mt-6'} lg:mt-10 mb-4`)} onSubmit={(e) => e.preventDefault()}>
+        <Suspense fallback={null}>
+          <Await resolve={variants}>
+            {(v) => <VariantSelector
+              popUp={{ scheme: 'dark', className: `bottom-14` }}
+              className="w-full !py-2.5"
+              options={product.options}
+              handle={product.handle}
+              variants={v.product?.variants.nodes || []}
+            />}
+          </Await>
+        </Suspense>
+      </form>
       <AddToCartButton
-        className={trim(`w-full lg:max-w-lg !py-4 ${pins ? 'mt-4' : 'mt-6'} lg:mt-12`)}
+        className={trim(`w-full lg:max-w-lg !py-4`)}
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         showPaymentMethods={true}
         openCart={true}

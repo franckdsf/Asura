@@ -6,3 +6,4 @@ export * from './MoreInformation';
 export * from './ProductStickyATC';
 export * from './RecommendedProducst';
 export * from './Reviews';
+export * from './VariantSelector';

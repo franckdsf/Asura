@@ -1,59 +1,30 @@
-import { Await, Link } from "@remix-run/react";
-import { Money, type VariantOption, VariantSelector } from "@shopify/hydrogen";
+import { Await } from "@remix-run/react";
+import { Money } from "@shopify/hydrogen";
 import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
-import { type ReactNode, useState, useRef, useMemo } from "react";
-import { useBreakpoint, useClickOutside, useScrollDirection } from "@ui/hooks";
+import { type ReactNode, useRef, type ComponentProps } from "react";
+import { useBreakpoint, useScrollDirection } from "@ui/hooks";
 import { AddToCartButton } from "~/tracking/components";
-import { JudgeMeReviewStars } from ".";
+import { JudgeMeReviewStars, VariantSelector } from ".";
+
 
 type DefaultProps = { className?: string }
 
-export function ProductOptions({ option, defaultOpen = false, shrink = false }: { shrink?: boolean, option: VariantOption, defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(defaultOpen);
-  const ref = useClickOutside(() => open && setOpen(false));
+type ProductOptions = { shrink?: boolean } & ComponentProps<typeof VariantSelector>;
+export function ProductOptions({ defaultOpen = false, shrink = false, options = [], handle, variants }: ProductOptions) {
 
-  const selectedValue = option.values.find((o) => o.isActive);
-
-  if (option.values.length < 2) return null;
+  if (options.length < 2 && (options[0].values?.length || 0) < 2) return null;
 
   return (
-    <div className="relative flex flex-col items-center justify-start md:flex-row" key={option.name}>
-      {!shrink && <h5 className="flex-shrink-0 ml-4 mr-4 uppercase text-2xs text-neutral-600 max-md:mb-3 max-md:hidden">cliquez pour changer de {option.name}
+    <div className="relative flex flex-col items-center justify-start md:flex-row" >
+      {!shrink && <h5 className="flex-shrink-0 ml-4 mr-4 uppercase text-2xs text-neutral-600 max-md:mb-3 max-md:hidden">cliquez pour changer de {options[0].name}
         <Icon.ArrowDown className="inline ml-2 icon-sm md:hidden" />
       </h5>}
-      <button className="w-full lg:w-auto flex-row-between uppercase text-xs rounded-full px-4 py-2 md:py-2.5 text-neutral-900 max-sm:bg-white border border-neutral-300 sm:border-neutral-600
-      gap-x-4"
-        onClick={() => setOpen((o) => !o)}
-      >
-        {selectedValue?.value}
-        {open ? <Icon.CaretDown className="icon-sm lg:icon-md" /> : <Icon.CaretUp className="icon-sm lg:icon-md" />}
-      </button>
-      {open && <div ref={ref} className={trim(`border border-neutral-300 absolute w-full bottom-16 lg:max-w-xl lg:bottom-20 bg-container-light flex flex-wrap p-4 gap-2`)}>
-        {option.values.map(({ value, isAvailable, isActive, to }) => {
-          return (
-            <Link
-              className={trim(`uppercase text-xs rounded-full px-4 py-2 md:py-2.5
-               ${isActive ? 'text-neutral-50 bg-neutral-900' : 'text-neutral-600 border border-neutral-600'}`)}
-              key={option.name + value}
-              prefetch="intent"
-              preventScrollReset
-              replace
-              to={to}
-              onClick={() => {
-                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-                setOpen(false);
-              }}
-              style={{
-                opacity: isAvailable ? 1 : 0.3,
-              }}
-            >
-              {value}
-            </Link>
-          );
-        })}
-      </div>}
+      <VariantSelector options={options} handle={handle} variants={variants} defaultOpen={defaultOpen}
+        className="w-full lg:w-auto"
+        popUp={{ scheme: 'light', className: `bottom-16 lg:bottom-20` }}
+      />
     </div>
   );
 }
@@ -122,13 +93,12 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
               </div>
               : (
                 <div className={trim(`w-full mb-3 lg:mb-0 py-1px px-4`)}>
-                  <VariantSelector
+                  <ProductOptions
+                    shrink={!showExtra && isMobile}
                     handle={product.handle}
                     options={product.options}
                     variants={data.product?.variants.nodes || []}
-                  >
-                    {({ option }) => <ProductOptions key={option.name} option={option} shrink={!showExtra && isMobile} />}
-                  </VariantSelector>
+                  />
                 </div>)
           )}
         </Await>

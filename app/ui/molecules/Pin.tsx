@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Icon, IconFromStr } from "../atoms"
 
 type Props = {
@@ -6,20 +7,39 @@ type Props = {
   details?: string;
 }
 export const Pin = ({ icon, title, details }: Props) => {
+  const ref = useRef<HTMLButtonElement>(null);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    // hide went mouse out
+    const handleMouseOut = (e: MouseEvent) => {
+      setShow(false);
+    }
+    const target = ref.current;
+    if (!target) return;
+
+    target.addEventListener('mouseout', handleMouseOut)
+    return () => target.removeEventListener('mouseout', handleMouseOut)
+  }, [])
+
   return (
-    <div className="relative inline-flex px-4 py-2 mt-6 text-black uppercase rounded-full bg-neutral-300 align-center gap-x-2 group">
+    <button
+      ref={ref}
+      className="relative inline-flex px-4 py-2 mt-6 text-black uppercase rounded-full bg-neutral-300 align-center gap-x-2 group"
+      onClick={() => setShow((s) => !s)}
+    >
       {icon && <IconFromStr icon={icon} />}
       <span className="text-xs">{title}</span>
-      {details && <Icon.Info className="cursor-pointer" />}
-      {details && <div className="group-hover:block hidden rounded-xs absolute left-0 w-[120%] max-w-xs px-4 pb-2 pt-3 text-sm normal-case bg-neutral-900 bottom-12">
+      {details && <Icon.Question className="cursor-pointer" />}
+      {details && <div className={`${show ? 'block' : 'lg:group-hover:block hidden'} rounded-xs absolute left-0 w-[120%] max-w-xs px-4 pb-2 pt-3 text-sm normal-case bg-neutral-900 bottom-12`}>
         <p className="flex flex-row items-center justify-start mb-1.5 text-xs font-semibold text-white uppercase">
-          <Icon.Info className="mr-1 icon-sm" />
+          <Icon.Question className="mr-1 icon-sm" />
           détails
         </p>
-        <p className="text-white">
+        <p className="text-left text-white">
           {details}
         </p>
       </div>}
-    </div>
+    </button>
   )
 }

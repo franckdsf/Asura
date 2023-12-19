@@ -70,41 +70,4 @@ export const useShopifyPixel = ({ shopId }: { shopId: string }) => {
 
 
 // ORDER - TRACKING SAVE
-
-/* 
-<script>
-{% if order.financial_status == 'paid' %}
-<script>
-window.dataLayer = window.dataLayer || [];
-
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PDR3G28M');
-
-dataLayer.push({
-  event: "purchase",
-  transaction_id: "{{ order.order_number }}",
-  payload: {
-      transaction_id: "{{ order.order_number }}",
-      total: {{ total_price | times: 0.01 }},
-      tax: {{ tax_price | times: 0.01 }},
-      shipping: {{ shipping_price | times: 0.01 }},
-      currency: "{{ order.currency }}",
-      rawData: undefined,
-      items: [
-       {% for line_item in line_items %}{
-        item_variant: "{{ line_item.variant_id }}",
-        item_id: "{{ line_item.product_id }}",
-        item_name: "{{ line_item.product.title }}",
-        currency: "{{ order.currency }}",
-        price: {{ line_item.final_price | times: 0.01 }},
-        quantity: {{ line_item.quantity }}
-      },{% endfor %}
- ]
-  }
-});
-</script>
-{% endif %}
-*/
+// Check notion https://www.notion.so/desfcorp/Documentation-8af13bca87854ee78009874ed0b26dcd?pvs=4#9d2ce0272b2a49278734136c038e2cf8

@@ -43,7 +43,7 @@ export const ItemsLeft = ({ className, id }: Props) => {
     <div className={`${className}`}>
       <p className="mb-2 text-xs font-medium uppercase">
         {itemsLeft ?
-          `${itemsLeft} articles en promotion restant` :
+          `${itemsLeft} articles en promotion restant${itemsLeft > 0 ? 's' : ''}` :
           'Recupération des articles en promotion'}
       </p>
       <div className="w-5/6 h-2 max-w-sm overflow-hidden bg-container-light rounded-xs">

@@ -380,7 +380,7 @@ function ProductMain({
       <JudgeMeReviewStars productId={product.id} className="mb-3" />
       <ProductPrice selectedVariant={selectedVariant} className="mb-2" />
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
-      <DeliveryDate className="mt-2 mb-5" type="expedition" />
+      <DeliveryDate className="mt-2 mb-5" type="date" />
       <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="pr-2 text-justify text-md" />
       {pins && <div className="flex flex-row items-center justify-start gap-x-2">
         {pins.map((p) => <Pin title={p.name} icon={p.icon} details={p.details} key={p.name} />)}

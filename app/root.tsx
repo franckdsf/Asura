@@ -25,6 +25,7 @@ import swiperCss from 'swiper/css';
 import { BodyPixel, useShopifyPixel, HeadPixel } from './tracking/pixels';
 import { useShopId } from './tracking/hooks';
 import { CMS } from './queries';
+import { Tidio } from './components/Tidio';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -142,7 +143,7 @@ export default function App() {
   useShopifyPixel({ shopId: data.shopId });
 
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadPixel environment={data.NODE_ENV} />
         <meta charSet="utf-8" />
@@ -150,6 +151,7 @@ export default function App() {
         <meta name="google-site-verification" content="tC-eTfj_wAb60oZ3b2Trc4yiR1PiK5p3hS0kjv3V8Ks" />
         <Meta />
         <Links />
+        <Tidio />
       </head>
       <body>
         <BodyPixel environment={data.NODE_ENV} />
@@ -179,12 +181,13 @@ export function ErrorBoundary() {
   }
 
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        <Tidio />
       </head>
       <body>
         <Layout {...root.data as any}>

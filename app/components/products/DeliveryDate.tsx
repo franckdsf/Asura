@@ -30,8 +30,11 @@ export const DeliveryDate = ({ className = "", type = 'date' }: Props) => {
     [fourDaysAfter, tenDaysAfter, type]);
 
   return (
-    <p className={`text-xs lg:text-sm uppercase text-neutral-600 ${className}`}>
-      {text}
-    </p>
+    <div className={`flex flex-row items-center justify-start ${className}`}>
+      <img src="/assets/french_flag.png" width={20} height={12} alt="drapeau français" className="rounded-none" />
+      <p className={`text-xs lg:text-sm uppercase text-neutral-600 ml-2`}>
+        {text}
+      </p>
+    </div>
   )
 }

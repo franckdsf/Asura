@@ -4,10 +4,11 @@ import { Link } from '@remix-run/react';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
 import { Icon } from '~/ui/atoms';
-import { FreeItems } from './cart/FreeItem';
+import { FreeItems } from '~/components/cart/FreeItem';
 import { CheckoutLink } from '~/tracking/components';
 import { type CartModule } from '~/queries/sanity.types';
 import { CMS } from '~/queries/sanity';
+import { Countdown } from './cart/Countdown';
 
 type CartLine = CartApiQueryFragment['lines']['nodes'][0];
 
@@ -61,10 +62,11 @@ function CartLines({
   layout: CartMainProps['layout'];
   lines: CartApiQueryFragment['lines'] | undefined;
 }) {
-  if (!lines) return null;
+  if (!lines || lines.nodes.length === 0) return null;
 
   return (
     <div aria-labelledby="cart-lines">
+      <Countdown />
       <ul>
         {lines.nodes.map((line) => (
           <CartLineItem key={line.id} line={line} layout={layout} />
@@ -250,8 +252,12 @@ function CartLinePrice({
   }
 
   return (
-    <div className={`text-xs ${className}`}>
+    <div className={`text-xs flex flex-row justify-start items-center gap-x-1 ${className}`}>
       <Money withoutTrailingZeros {...passthroughProps} data={moneyV2} />
+      {line.cost.compareAtAmountPerQuantity && <Money withoutTrailingZeros
+        className='line-through text-neutral-600'
+        data={line.cost.compareAtAmountPerQuantity}
+      />}
     </div>
   );
 }

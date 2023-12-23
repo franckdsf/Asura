@@ -3,10 +3,11 @@ import { Money } from "@shopify/hydrogen";
 import type { ProductFragment, ProductVariantsQuery } from "storefrontapi.generated";
 import { trim } from "@ui/utils/trim";
 import { Icon } from "@ui/atoms";
-import { type ReactNode, useRef, type ComponentProps } from "react";
+import { type ReactNode, useRef, type ComponentProps, useEffect } from "react";
 import { useBreakpoint, useScrollDirection } from "@ui/hooks";
 import { AddToCartButton } from "~/tracking/components";
 import { JudgeMeReviewStars, VariantSelector } from ".";
+import { useProduct } from "./useProduct";
 
 
 type DefaultProps = { className?: string }
@@ -72,12 +73,16 @@ type Props = {
 }
 export const ProductStickyATC = ({ className = "", selectedVariant, variants, product, promotion }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
+  const { setFloatingATC } = useProduct();
   const { scrolled, scrollPourcent, direction } = useScrollDirection();
   const { isGreater } = useBreakpoint(768);
 
   // const showExtra = useMemo(() => (!isGreater && scrolled && direction === "up") || isGreater || !scrolled, [scrolled, isGreater, direction]);
   const isMobile = !isGreater;
   const showExtra = true;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { setFloatingATC(true); return () => { setFloatingATC(false) } }, []);
 
   return (
     <div ref={ref} className={trim(`${scrollPourcent === 100 ? "translate-y-full" : "bottom-0"} z-50 fixed w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>

@@ -35,6 +35,7 @@ import { SpecialOffer } from '~/ui/templates';
 import { Accordion, Pin } from '~/ui/molecules';
 import { type rootLoader } from '~/root';
 import { useGoogleEvents } from '~/tracking/hooks';
+import { useProduct } from '~/components/products/useProduct';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   const siteName = 'Asura';
@@ -174,12 +175,18 @@ export default function Product() {
   const swiper = useRef<SwiperClass>();
   const { productPage, product, variants, recommendedProducts } = useLoaderData<typeof loader>();
   const rootLoader = useRouteLoaderData<rootLoader>('root');
+  const { setHasVariants, setProductId } = useProduct();
   const { selectedVariant } = product;
 
   // send an item view event to google everytime the item changes
   const { sendItemViewEvent } = useGoogleEvents();
   useEffect(() => {
-    product.selectedVariant && sendItemViewEvent({
+    if (!product.selectedVariant) return;
+
+    setHasVariants(product.variants.nodes.length > 1);
+    setProductId(product.id);
+
+    sendItemViewEvent({
       payload: {
         product: {
           productId: parseGid(product.id).id,
@@ -195,6 +202,9 @@ export default function Product() {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => () => { setHasVariants(false); setProductId(null); }, [])
 
   useJudgeMe();
 

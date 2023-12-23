@@ -1,10 +1,12 @@
-import { useLocation } from "@remix-run/react";
 import { Script } from "@shopify/hydrogen";
 import { useEffect, useState } from "react";
+import { useProduct } from "./products/useProduct";
+import { useBreakpoint } from "~/ui/hooks";
 
 export const Tidio = () => {
-  const location = useLocation();
+  const { hasVariants, floatingATC } = useProduct();
   const [loaded, setLoaded] = useState(false);
+  const { isGreater } = useBreakpoint(768);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -26,13 +28,16 @@ export const Tidio = () => {
     const refresh = () => {
       if (iframe) {
         iframe.style.zIndex = "75";
-        if (location.pathname.includes('/products/') && iframe.style.height !== "100%") {
-          const width = iframe.clientWidth;
-          // if closed
-          if (width < 310) {
-            iframe.style.bottom = '100px';
-          } else {
-            iframe.style.bottom = '100px';
+        if (floatingATC && iframe.style.height !== "100%") {
+          if (!isGreater && hasVariants) iframe.style.bottom = '150px';
+          else {
+            const width = iframe.clientWidth;
+            // if closed
+            if (width < 310) {
+              iframe.style.bottom = '100px';
+            } else {
+              iframe.style.bottom = '100px';
+            }
           }
         } else {
           iframe.style.bottom = '0px';
@@ -50,7 +55,7 @@ export const Tidio = () => {
 
     return () => observer.disconnect();
 
-  }, [location, loaded])
+  }, [hasVariants, isGreater, floatingATC, loaded])
 
   return <Script src="//code.tidio.co/xxvzjerbarhyhfri1elyrnd9ymf40vf1.js" async />
 }

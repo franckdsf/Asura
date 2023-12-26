@@ -75,6 +75,7 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
     faq,
     "page": *[_type == "productPage"] {
     defaultInformation,
+    bulletsBand,
     bigTitle,
     "pins": pins[]{
       details,

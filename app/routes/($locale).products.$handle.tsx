@@ -37,7 +37,7 @@ import { type rootLoader } from '~/root';
 import { useGoogleEvents } from '~/tracking/hooks';
 import { useProduct } from '~/components/products/useProduct';
 import { STORE } from '~/store.info';
-import { ContentMoreInformation, ContentTablePoints } from '~/queries/sanity.types';
+import type { ContentMoreInformation, ContentTablePoints } from '~/queries/sanity.types';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   const siteName = STORE.name;
@@ -238,8 +238,11 @@ export default function Product() {
   const modules = useMemo(() => {
     const baseModules = productPage?.modules || [];
 
+    const showDefaultBulletsBand = !baseModules.some((m) => m._type === 'module.content.tablePoints');
     const showDefaultMoreInformation = !baseModules.some((m) => m._type === "module.content.moreInformation");
     const showDefaultBigTitle = baseModules.length > 0 ? baseModules[baseModules.length - 1]._type !== "module.content.bigTitle" : true;
+
+    const defaultBulletsBand = productPage?.page?.bulletsBand;
 
     const defaultMoreInformation = {
       _type: "module.content.moreInformation",
@@ -251,10 +254,15 @@ export default function Product() {
       _type: "module.content.bigTitle",
     } as const : null;
 
-    const modules = [...(baseModules || [])];
+    const modules: typeof baseModules = [];
 
     if (defaultMoreInformation && showDefaultMoreInformation)
       modules.push(defaultMoreInformation);
+
+    modules.push(...(baseModules || []));
+
+    if (defaultBulletsBand && showDefaultBulletsBand)
+      modules.splice(1, 0, defaultBulletsBand);
 
     if (defaultBigTitle && showDefaultBigTitle)
       modules.push(defaultBigTitle);
@@ -419,7 +427,7 @@ function ProductMain({
             return <TablePoints
               items={m.list.map((i) => ({
                 icon: i.media.icon,
-                imgSrc: i.media.image ? CMS.urlForImg(i.media.image.asset._ref).width(400).url() : undefined,
+                imgSrc: i.media.image ? CMS.urlForImg(i.media.image.asset._ref).width(32).url() : undefined,
                 title: i.title,
                 description: i.description,
               }))}

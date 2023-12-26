@@ -24,9 +24,9 @@ export const TablePoints = ({ items, className }: Props) => {
           {item.imgSrc && <img
             alt={item.title}
             src={item.imgSrc}
-            className="object-contain w-5 mr-3 sm:w-6 sm:mr-4 aspect-square"
+            className="object-contain w-6 mr-3 sm:mr-4 aspect-square"
           />}
-          {item.icon && <div className="mt-0.5 mr-3 sm:mr-4 icon-sm sm:icon-md text-primary-500">
+          {item.icon && <div className="mt-0.5 mr-3 sm:mr-4 icon-lg text-primary-500">
             <IconFromStr icon={item.icon} weight="fill" />
           </div>}
           <div>

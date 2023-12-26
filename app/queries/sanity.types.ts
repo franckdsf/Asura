@@ -96,6 +96,7 @@ export type FreeItem = {
 
 export type ProductPage = {
   _type: 'productPage',
+  bulletsBand?: ContentTablePoints,
   bigTitle: ContentBigTitle,
   defaultInformation: {
     delivery: Array<Block>;

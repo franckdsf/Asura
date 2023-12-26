@@ -18,22 +18,22 @@ export const TablePoints = ({ items, className }: Props) => {
     <div className={trim(`grid grid-cols-2 gap-2 ${className}`)}>
       {items.map((item, i) => (
         <div
-          className={trim(`flex flex-row justify-start items-start bg-container-light/75 h-full px-4 py-4 rounded-xs`)}
+          className={trim(`flex flex-row justify-start items-center bg-container-light border-container-light h-full px-4 py-3 rounded-sm`)}
           key={item.title + item.description}
         >
           {item.imgSrc && <img
             alt={item.title}
             src={item.imgSrc}
-            className="object-contain w-5 mr-2 sm:w-8 sm:mr-4 aspect-square"
+            className="object-contain w-5 mr-3 sm:w-6 sm:mr-4 aspect-square"
           />}
-          {item.icon && <div className="mt-0.5 mr-2 sm:mr-4 icon-sm sm:icon-md text-primary-500">
+          {item.icon && <div className="mt-0.5 mr-3 sm:mr-4 icon-sm sm:icon-md text-primary-500">
             <IconFromStr icon={item.icon} weight="fill" />
           </div>}
           <div>
-            <h3 className="text-xs font-medium sm:text-sm lg:text-md">{item.title}</h3>
-            <p className="text-2xs sm:text-xs lg:text-sm">
-              {item.description && <PortableText value={item.description} />}
-            </p>
+            <h3 className="text-xs sm:text-sm lg:text-md">{item.title}</h3>
+            {item.description && <p className="mt-1 text-2xs sm:text-xs lg:text-sm text-neutral-600">
+              <PortableText value={item.description} />
+            </p>}
           </div>
         </div>
       ))}

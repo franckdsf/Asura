@@ -1,11 +1,9 @@
-import FreeItemNailsImg from '../../../public/assets/ebook-nail.webp';
-import FreeItemHairImg from '../../../public/assets/ebook-hair.jpg';
-
 type Props = {
   name: string;
+  compareAtPrice: number;
   imgSrc: string;
 }
-export const FreeItem = ({ name, imgSrc }: Props) => {
+export const FreeItem = ({ name, compareAtPrice, imgSrc }: Props) => {
   return (
     <li key={"free-cart-item"} className="cart-line border-b border-neutral-300 !py-6">
       <img
@@ -24,32 +22,11 @@ export const FreeItem = ({ name, imgSrc }: Props) => {
         </small>
         <div className="mt-2">
           <p className="text-xs uppercase">
-            <span className="line-through text-neutral-600">19,99€</span>
-            <span className="ml-2">Gratuit</span>
+            <span className="line-through text-neutral-600">{compareAtPrice}€</span>
+            <span className="ml-2">Offert</span>
           </p>
         </div>
       </div>
     </li>
-  )
-}
-
-FreeItem.Nail = () => (
-  <FreeItem name={"Le Guide Ultime Du Nail Art Maison"} imgSrc={FreeItemNailsImg} />
-)
-
-FreeItem.Hair = () => (
-  <FreeItem name={"Le Guide D'entretien Cheveux"} imgSrc={FreeItemHairImg} />
-)
-
-type FreeItemsProps = {
-  cart: Array<string>;
-  filters: [{ type: 'nails', products: Array<string> }, { type: 'hair', products: Array<string> }];
-}
-export const FreeItems = ({ cart, filters }: FreeItemsProps) => {
-  return (
-    <>
-      {cart.some((e) => filters[0].products.includes(e)) && <FreeItem.Nail />}
-      {cart.some((e) => filters[1].products.includes(e)) && <FreeItem.Hair />}
-    </>
   )
 }

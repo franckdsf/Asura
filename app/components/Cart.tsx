@@ -47,6 +47,7 @@ function CartDetails({ layout, cart, modules }: CartMainProps) {
           <FreeItem
             key={item.name}
             name={item.name}
+            compareAtPrice={item.compareAtPrice}
             imgSrc={CMS.urlForImg(item.image.asset._ref).width(500).url()}
           />
         )

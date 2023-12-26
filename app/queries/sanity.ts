@@ -112,6 +112,7 @@ const CART_QUERY = async (): Promise<CartModule | null> => {
       description,
       compareAtPrice,
       image,
+      name,
       "linkedProducts":linkedProducts[]->store.id
     }
   }`);

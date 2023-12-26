@@ -1,9 +1,9 @@
 import { Image, Money } from "@shopify/hydrogen"
 import { useMemo } from "react"
-import { trim } from "../utils/trim";
-import { useRandomSeed } from "../hooks";
+import { trim } from "@ui/utils/trim";
+import { useRandomSeed } from "@ui/hooks";
 import type { ProductItemFragment } from 'storefrontapi.generated';
-import { Link } from "../atoms";
+import { Link } from "@ui/atoms";
 import { useVariantUrl } from "~/utils";
 import { JudgeMeReviewStars } from "~/components/products";
 

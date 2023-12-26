@@ -1,9 +1,9 @@
 import { useMatches, Link } from '@remix-run/react';
 import type { FooterQuery } from 'storefrontapi.generated';
 import { trim } from '@ui/utils/trim';
-import logo from '../../../public/assets/logo-hd.png';
-import { Icon } from '../atoms';
-import { Newsletter } from './Newsletter';
+import logo from '../../public/assets/logo-hd.png';
+import { Icon } from '../ui/atoms';
+import { Newsletter } from '../ui/templates/Newsletter';
 import { STORE } from '~/store.info';
 
 export function Footer({ menu }: FooterQuery) {
@@ -40,7 +40,7 @@ const FooterSection = ({ className = '', title, links }: DefaultProps) => {
 
 function FooterMenu({ menu }: Pick<FooterQuery, 'menu'>) {
   const [root] = useMatches();
-  const publicStoreDomain = root?.data?.publicStoreDomain;
+  const publicStoreDomain = (root?.data as { publicStoreDomain: string })?.publicStoreDomain;
 
   const currentYear = new Date().getFullYear();
 

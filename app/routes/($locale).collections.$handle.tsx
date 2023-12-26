@@ -9,9 +9,9 @@ import {
 } from '@shopify/hydrogen';
 import type { ProductItemFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
-import { Collection as CollectionTemplate } from '@ui/templates';
+import { Collection as CollectionTemplate } from '~/components/collections';
 import { type rootLoader } from '~/root';
-import { JudgeMeReviewStars, useJudgeMe } from '~/components/products';
+import { useJudgeMe } from '~/components/products';
 
 export const meta: MetaFunction<typeof loader, { 'root': rootLoader }> = ({ data, matches }) => {
   const rootData = matches.find((m) => m.id === "root");

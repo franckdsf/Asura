@@ -27,7 +27,7 @@ import {
   MoreInformation, ProductStickyATC, RecommendedProducts, VariantSelector, useJudgeMe
 } from '~/components/products';
 import { AddToCartButton } from '~/tracking/components';
-import { CarouselProductImages } from '~/ui/organisms';
+import { BulletsBand, CarouselProductImages, TablePoints } from '~/ui/organisms';
 import { trim } from '~/ui/utils/trim';
 import { type SwiperClass } from 'swiper/react';
 import { CMS, COLLECTION_QUERY } from '~/queries';
@@ -37,6 +37,7 @@ import { type rootLoader } from '~/root';
 import { useGoogleEvents } from '~/tracking/hooks';
 import { useProduct } from '~/components/products/useProduct';
 import { STORE } from '~/store.info';
+import { ContentMoreInformation, ContentTablePoints } from '~/queries/sanity.types';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   const siteName = STORE.name;
@@ -179,6 +180,8 @@ export default function Product() {
   const { setHasVariants, setProductId } = useProduct();
   const { selectedVariant } = product;
 
+  const hasSideElements = productPage ? productPage.additionalDescriptionBlocks.length > 0 : false;
+
   // send an item view event to google everytime the item changes
   const { sendItemViewEvent } = useGoogleEvents();
   useEffect(() => {
@@ -261,20 +264,23 @@ export default function Product() {
 
   return (
     <div>
-      <div className="flex-row items-center justify-between lg:h-screen-w-header lg:border-b border-neutral-300 lg:flex">
+      <div className={trim(`flex-row ${hasSideElements ? 'items-start' : 'items-center'} justify-between lg:border-b border-neutral-300 lg:flex`)}>
         {selectedVariant?.image && <CarouselProductImages
           defaultIndex={defaultCarouselIndex}
-          className="pt-4 lg:pt-6 xl:pt-10 lg:pb-[15vh] xl:pb-[13vh] border-r border-neutral-300"
+          className={trim(`pt-4 lg:pt-6 xl:pt-10 lg:pb-[15vh] xl:pb-[13vh] border-r border-neutral-300 lg:sticky lg:top-header lg:h-screen-w-header`)}
           getSwiper={(s) => swiper.current = s}
           images={images}
         />}
         {/* <ProductImage image={selectedVariant?.image} /> */}
         <ProductMain
-          className="z-10 w-full max-w-xl max-lg:mx-auto 2xl:max-w-3xl lg:px-24 2xl:px-32 lg:py-6 lg:-mt-16"
+          className={trim(`z-10 w-full max-w-xl max-lg:mx-auto 2xl:max-w-3xl lg:px-24 
+            2xl:px-32 ${hasSideElements ? 'pt-16 pb-24 lg:sticky lg:top-header' : 'lg:py-6 lg:-mt-16'}`)}
           selectedVariant={selectedVariant}
           product={product}
           variants={variants}
+          modules={productPage?.additionalDescriptionBlocks}
           pins={productPage?.pins}
+          showDescription={productPage?.showShopifyDescription}
         />
       </div>
       {modules.map((m, i) => {
@@ -300,6 +306,17 @@ export default function Product() {
                 content: i.description,
               })) || [])}
               className="mt-16 md:mt-28"
+            />
+          case "module.content.tablePoints":
+            return <BulletsBand
+              items={m.list.map((i) => ({
+                icon: i.media.icon,
+                imgSrc: i.media.image ? CMS.urlForImg(i.media.image.asset._ref).width(400).url() : undefined,
+                title: i.title,
+                description: i.description,
+              }))}
+              key={JSON.stringify(m)}
+              className="mb-16 md:my-32"
             />
           case "module.content.moreInformation":
             return <MoreInformation
@@ -374,12 +391,16 @@ function ProductMain({
   selectedVariant,
   product,
   variants,
-  pins
+  pins,
+  modules,
+  showDescription = true,
 }: {
   className?: string,
   product: ProductFragment;
   selectedVariant: ProductFragment['selectedVariant'];
   variants: Promise<ProductVariantsQuery>;
+  showDescription?: boolean;
+  modules?: Array<ContentTablePoints | ContentMoreInformation>;
   pins: Array<{ name: string, icon?: string, details?: string }> | undefined;
 }) {
   const { title, descriptionHtml } = product;
@@ -392,7 +413,24 @@ function ProductMain({
       <ProductPrice selectedVariant={selectedVariant} className="mb-2" />
       <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       <DeliveryDate className="mt-2 mb-5" type="date" />
-      <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="pr-2 text-justify text-md" />
+      {modules && modules.map((m) => {
+        switch (m._type) {
+          case "module.content.tablePoints":
+            return <TablePoints
+              items={m.list.map((i) => ({
+                icon: i.media.icon,
+                imgSrc: i.media.image ? CMS.urlForImg(i.media.image.asset._ref).width(400).url() : undefined,
+                title: i.title,
+                description: i.description,
+              }))}
+              key={JSON.stringify(m)}
+              className="my-6"
+            />
+          default:
+            return null;
+        }
+      })}
+      {showDescription && <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="pr-2 text-justify text-md" />}
       {pins && <div className="flex flex-row items-center justify-start gap-x-2">
         {pins.map((p) => <Pin title={p.name} icon={p.icon} details={p.details} key={p.name} />)}
       </div>}
@@ -411,7 +449,7 @@ function ProductMain({
         </Suspense>
       </form>
       <AddToCartButton
-        className={trim(`w-full lg:max-w-lg !py-4`)}
+        className={trim(`w-full lg:max-w-xl !py-4`)}
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         showPaymentMethods={true}
         openCart={true}

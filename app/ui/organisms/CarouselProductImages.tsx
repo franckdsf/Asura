@@ -39,7 +39,7 @@ export const CarouselProductImages = ({ getSwiper, defaultIndex = 0, images, cla
   return (
     <div className={trim(`w-full h-full flex-col-center select-none ${className}`)}>
       <Swiper
-        className="w-full"
+        className="w-full h-full"
         loop={true}
         slidesPerView={'auto'}
         spaceBetween={16}

@@ -8,7 +8,8 @@ import type {
   MediaWithUrl,
   Block,
   CartModule,
-  FreeItem
+  FreeItem,
+  ContentTablePoints
 } from "./sanity.types";
 
 const urlForVideo = (id: string) => {
@@ -59,7 +60,9 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
       id: string,
     },
     faq?: Array<{ question: string, answer: Array<Block> }>;
-    modules: Array<ContentDescription | ContentBigTitle | ContentMoreInformation | ActionBlock>,
+    showShopifyDescription?: boolean,
+    additionalDescriptionBlocks: Array<ContentTablePoints | ContentMoreInformation>,
+    modules: Array<ContentDescription | ContentBigTitle | ContentMoreInformation | ContentTablePoints | ActionBlock>,
     page: ProductPage[] | null
   }> = await loadQuery(groq`*[_type == "product" && store.slug.current == "${slug}" ] {
     store {
@@ -67,6 +70,8 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
       id
     },
     modules,
+    additionalDescriptionBlocks,
+    showShopifyDescription,
     faq,
     "page": *[_type == "productPage"] {
     defaultInformation,
@@ -88,7 +93,9 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
 
   return {
     ...query[0],
-    modules: query[0].modules?.map((m) => m._type === "actionBlock" ? parseActionBlock(m) : m),
+    showShopifyDescription: query[0].showShopifyDescription ?? true,
+    additionalDescriptionBlocks: query[0].additionalDescriptionBlocks || [],
+    modules: query[0].modules?.map((m) => m._type === "actionBlock" ? parseActionBlock(m) : m) || [],
     faq: query[0].faq || [],
     page: query[0].page?.[0] || null,
     pins: pins.filter((p) => p.linkedProducts.includes(query[0].store.id))

@@ -12,6 +12,30 @@
     }
   }
 
+  .top-header {
+    top: var(--header-height-mobile);
+
+    @media (min-width: 45em) {
+      top: var(--header-height-desktop);
+    }
+  }
+
+  .max-h-screen-w-header {
+    max-height: calc(100vh - var(--header-height-mobile));
+
+    @media (min-width: 45em) {
+      max-height: calc(100vh - var(--header-height-desktop));
+    }
+  }
+
+  .min-h-screen-w-header {
+    min-height: calc(100vh - var(--header-height-mobile));
+
+    @media (min-width: 45em) {
+      min-height: calc(100vh - var(--header-height-desktop));
+    }
+  }
+
   .icon-2xs {
     font-size: 10px;
   }

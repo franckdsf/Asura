@@ -60,6 +60,18 @@ export type ContentMoreInformation = {
   guaranty?: Array<Block>;
 }
 
+export type ContentTablePoints = {
+  _type: 'module.content.tablePoints';
+  list: Array<{
+    title: string;
+    description: Array<Block>;
+    media: {
+      image?: Image;
+      icon?: string;
+    }
+  }>;
+}
+
 export type ActionBlock = {
   _type: 'actionBlock';
   catchPhrase: string;

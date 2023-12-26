@@ -7,7 +7,8 @@ import type {
   ProductPage,
   MediaWithUrl,
   Block,
-  CartModule
+  CartModule,
+  FreeItem
 } from "./sanity.types";
 
 const urlForVideo = (id: string) => {
@@ -102,18 +103,15 @@ const GLOBAL_QUERY = async () => {
   return query[0];
 }
 
-const FREE_ITEMS = { NAILS: 'nails', HAIR: 'hair' } as const;
 const CART_QUERY = async (): Promise<CartModule | null> => {
   const query: Array<{
-    filteredPins: Array<{
-      name: string,
-      _key: string,
-      linkedProducts: Array<string>;
-    }>
+    freeItems: Array<FreeItem>
   }> = await loadQuery(groq`*[_type == "productPage"] {
-    "filteredPins": pins[_key in ["526c0ca83474", "796834b43802"]] {
-      name,
+    "freeItems": *[_type == "freeItem"] {
       _key,
+      description,
+      compareAtPrice,
+      image,
       "linkedProducts":linkedProducts[]->store.id
     }
   }`);
@@ -122,10 +120,9 @@ const CART_QUERY = async (): Promise<CartModule | null> => {
 
   return {
     ...query[0],
-    freeItems: query[0].filteredPins.map((p) => ({
+    freeItems: query[0].freeItems.map((p) => ({
       ...p,
       linkedProducts: p.linkedProducts.map((p) => p.toString()),
-      gift: p._key === "526c0ca83474" ? FREE_ITEMS.NAILS : FREE_ITEMS.HAIR,
     }))
   }
 }
@@ -167,7 +164,6 @@ const HOME_PAGE_QUERY = async () => {
 
 const CART = {
   QUERY: CART_QUERY,
-  FREE_ITEMS
 }
 
 export const CMS = {

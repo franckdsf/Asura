@@ -4,7 +4,7 @@ import { Link } from '@remix-run/react';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
 import { Icon } from '~/ui/atoms';
-import { FreeItems } from '~/components/cart/FreeItem';
+import { FreeItem } from '~/components/cart/FreeItem';
 import { CheckoutLink } from '~/tracking/components';
 import { type CartModule } from '~/queries/sanity.types';
 import { CMS } from '~/queries/sanity';
@@ -35,16 +35,22 @@ export function CartMain({ layout, cart, modules }: CartMainProps) {
 
 function CartDetails({ layout, cart, modules }: CartMainProps) {
   const cartHasItems = !!cart && cart.totalQuantity > 0;
+
   return (
     <div className="cart-details">
       <CartLines lines={cart?.lines} layout={layout} />
-      <FreeItems
-        cart={cart?.lines.nodes.map((l) => parseGid(l.merchandise.product.id).id) || []}
-        filters={[
-          { type: CMS.CART.FREE_ITEMS.NAILS, products: modules?.freeItems.find((i) => i.gift === CMS.CART.FREE_ITEMS.NAILS)?.linkedProducts || [] },
-          { type: CMS.CART.FREE_ITEMS.HAIR, products: modules?.freeItems.find((i) => i.gift === CMS.CART.FREE_ITEMS.HAIR)?.linkedProducts || [] },
-        ]}
-      />
+      {modules?.freeItems.map((item) => {
+        const cartItems = cart?.lines.nodes.map((l) => parseGid(l.merchandise.product.id).id) || [];
+        if (!item.linkedProducts.some((e) => cartItems.includes(e))) return null;
+
+        return (
+          <FreeItem
+            key={item.name}
+            name={item.name}
+            imgSrc={CMS.urlForImg(item.image.asset._ref).width(500).url()}
+          />
+        )
+      })}
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
           {/* <CartDiscounts discountCodes={cart.discountCodes} /> */}

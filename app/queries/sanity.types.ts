@@ -73,6 +73,15 @@ export type ActionBlock = {
   }
 }
 
+export type FreeItem = {
+  _type: 'freeItem';
+  name: string;
+  description: string;
+  compareAtPrice: number;
+  image: Image;
+  linkedProducts: Array<string>;
+}
+
 export type ProductPage = {
   _type: 'productPage',
   bigTitle: ContentBigTitle,
@@ -119,15 +128,5 @@ export type Global = {
 }
 
 export type CartModule = {
-  freeItems: {
-    gift: string;
-    name: string;
-    _key: string;
-    linkedProducts: Array<string>;
-  }[];
-  filteredPins: Array<{
-    name: string;
-    _key: string;
-    linkedProducts: Array<string>;
-  }>;
+  freeItems: FreeItem[],
 } 

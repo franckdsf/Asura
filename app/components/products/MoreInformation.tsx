@@ -18,18 +18,21 @@ export const MoreInformation = ({ included, delivery, guaranty, showTitleOnMobil
     <ul className="w-full max-w-xl mt-8 xl:flex-shrink-0 lg:-mt-2">
       {included && <li>
         <Accordion
+          icon="sparkle"
           title="inclus"
           content={included}
         />
       </li>}
       {delivery && <li>
         <Accordion
+          icon={'truck'}
           title="livraison"
           content={delivery}
         />
       </li>}
       {guaranty && <li>
         <Accordion
+          icon="shieldCheck"
           title="garantie"
           content={guaranty}
         />

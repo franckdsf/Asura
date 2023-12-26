@@ -1,48 +1,50 @@
 import { Icon } from ".";
 
-export const IconFromStr = ({ icon }: { icon?: string }) => {
+export const IconFromStr = ({ icon, weight = 'regular' }: { icon?: string, weight?: 'regular' | 'fill' }) => {
   const iconLower = icon?.toLowerCase();
 
   switch (iconLower) {
     case 'leaf':
-      return <Icon.Leaf />
+      return <Icon.Leaf weight={weight} />
     case 'pencil':
-      return <Icon.Pencil />
+      return <Icon.Pencil weight={weight} />
     case 'tree':
-      return <Icon.Tree />
+      return <Icon.Tree weight={weight} />
     case 'thumbup':
-      return <Icon.ThumbsUp />
+      return <Icon.ThumbsUp weight={weight} />
     case 'batterychargingvertical':
-      return <Icon.BatteryChargingVertical />
+      return <Icon.BatteryChargingVertical weight={weight} />
     case 'chatcircledots':
-      return <Icon.ChatCircleDots />
+      return <Icon.ChatCircleDots weight={weight} />
     case 'circlesthree':
-      return <Icon.CirclesThree />
+      return <Icon.CirclesThree weight={weight} />
     case 'clock':
-      return <Icon.Clock />
+      return <Icon.Clock weight={weight} />
     case 'book':
-      return <Icon.Book />
+      return <Icon.Book weight={weight} />
     case 'drop':
-      return <Icon.Drop />
+      return <Icon.Drop weight={weight} />
     case 'eyeclosed':
-      return <Icon.EyeClosed />
+      return <Icon.EyeClosed weight={weight} />
     case 'eyedropper':
-      return <Icon.Eyedropper />
+      return <Icon.Eyedropper weight={weight} />
     case 'flowertulip':
-      return <Icon.FlowerTulip />
+      return <Icon.FlowerTulip weight={weight} />
     case 'heart':
-      return <Icon.Heart />
+      return <Icon.Heart weight={weight} />
     case 'maskhappy':
-      return <Icon.MaskHappy />
+      return <Icon.MaskHappy weight={weight} />
     case 'palette':
-      return <Icon.Palette />
+      return <Icon.Palette weight={weight} />
     case 'shieldcheck':
-      return <Icon.ShieldCheck />
+      return <Icon.ShieldCheck weight={weight} />
     case 'smiley':
-      return <Icon.Smiley />
+      return <Icon.Smiley weight={weight} />
+    case 'truck':
+      return <Icon.Truck weight={weight} />
     case 'sparkle':
-      return <Icon.Sparkle />
+      return <Icon.Sparkle weight={weight} />
     default:
-      return <Icon.Pencil />
+      return <Icon.Pencil weight={weight} />
   }
 }

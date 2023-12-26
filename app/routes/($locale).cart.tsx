@@ -5,9 +5,10 @@ import { AnalyticsPageType, CartForm } from '@shopify/hydrogen';
 import { type ActionFunctionArgs, json } from '@shopify/remix-oxygen';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { CartMain } from '~/components/Cart';
+import { STORE } from '~/store.info';
 
 export const meta: MetaFunction<typeof action> = () => {
-  return [{ title: `Asura | Cart` }];
+  return [{ title: `${STORE.name} | Cart` }];
 };
 
 export async function action({ request, context }: ActionFunctionArgs) {

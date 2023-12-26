@@ -3,6 +3,7 @@ import { useLoaderData, type MetaFunction } from '@remix-run/react';
 import { type Shop } from '@shopify/hydrogen/storefront-api-types';
 import { AnalyticsPageType } from '@shopify/hydrogen';
 import { OtherPolicies } from './($locale).policies.others.$handle';
+import { STORE } from '~/store.info';
 
 type SelectedPolicies = keyof Pick<
   Shop,
@@ -10,7 +11,7 @@ type SelectedPolicies = keyof Pick<
 >;
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [{ title: `Asura | ${data?.policy.title}` }];
+  return [{ title: `${STORE.name} | ${data?.policy.title}` }];
 };
 
 export async function loader({ params, context }: LoaderFunctionArgs) {

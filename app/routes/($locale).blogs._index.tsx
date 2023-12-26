@@ -1,9 +1,10 @@
 import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react';
 import { AnalyticsPageType, Pagination, getPaginationVariables } from '@shopify/hydrogen';
+import { STORE } from '~/store.info';
 
 export const meta: MetaFunction<typeof loader> = ({ matches }) => {
-  return [{ title: `Asura | Blogs` }];
+  return [{ title: `${STORE.name} | Blogs` }];
 };
 
 export const loader = async ({ request, context: { storefront } }: LoaderFunctionArgs) => {

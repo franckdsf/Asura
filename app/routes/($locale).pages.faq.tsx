@@ -3,9 +3,10 @@ import { useLoaderData, type MetaFunction } from '@remix-run/react';
 import { Accordion } from '~/ui/molecules';
 import { Link } from '~/ui/atoms';
 import { AnalyticsPageType } from '@shopify/hydrogen';
+import { STORE } from '~/store.info';
 
 export const meta: MetaFunction = ({ data }) => {
-  return [{ title: `Asura | FAQ` }];
+  return [{ title: `${STORE.name} | FAQ` }];
 };
 
 export async function loader() {
@@ -43,7 +44,7 @@ export default function Page() {
             `Après l'expédition de votre commande, vous devriez recevoir un numéro de confirmation d'expédition par e-mail dans un délai de 24 à 48 heures, 
             pensez à vérifier votre dossier de courrier indésirable si vous ne le trouvez pas. Ce numéro vous permettra de suivre votre colis en temps réel.`,
             `Vous pouvez aussi utiliser l'onglet 'Ma Commande' disponible sur notre site.`,
-            `Si vous n'avez pas reçu de confirmation après quelques jours et avez des préoccupations, n'hésitez pas à nous contacter à contact@asura.fr. 
+            `Si vous n'avez pas reçu de confirmation après quelques jours et avez des préoccupations, n'hésitez pas à nous contacter à ${STORE.contactEmail}. 
             Notre équipe du service client est là pour vous aider avec plaisir.`
           ]}
         />
@@ -52,7 +53,7 @@ export default function Page() {
           title="Comment modifier mes informations ?"
           content={[
             `Une fois votre commande passée, il n'est pas possible de modifier les détails de facturation ou d'expédition par vous-même.`,
-            `Si vous avez besoin de faire des ajustements, veuillez prendre contact avec notre Service Client à contact@nookshop.fr.`,
+            `Si vous avez besoin de faire des ajustements, veuillez prendre contact avec notre Service Client à ${STORE.contactEmail}.`,
             `Si votre colis n'a pas encore été expédié, nous pourrons organiser son envoi à la nouvelle adresse.`,
             `Cependant, une fois le colis en transit, les informations d'expédition ne pourront plus être modifiées.`
           ]}

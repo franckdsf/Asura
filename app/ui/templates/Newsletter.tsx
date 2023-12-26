@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Icon } from "../atoms"
+import { STORE } from "~/store.info";
 
 export const Newsletter = () => {
   const [sent, setSent] = useState(false);
@@ -9,11 +10,11 @@ export const Newsletter = () => {
     <section className="overflow-hidden">
       <div className="text-center">
         <h3 className="max-sm:hidden text-2xl md:text-4xl xl:text-7xl uppercase font-accent -ml-[50vw]">devenez</h3>
-        <h3 className="my-5 text-2xl uppercase max-sm:hidden md:text-4xl xl:text-7xl font-accent">un membre asura</h3>
+        <h3 className="my-5 text-2xl uppercase max-sm:hidden md:text-4xl xl:text-7xl font-accent">un membre {STORE.name}</h3>
         <h3 className="max-sm:hidden text-2xl md:text-4xl xl:text-7xl uppercase font-accent ml-[30vw]">aujourd’hui!</h3>
         <h3 className="sm:hidden text-2xl md:text-4xl xl:text-7xl uppercase font-accent -ml-[40vw]">devenez</h3>
         <h3 className="my-5 text-2xl uppercase sm:hidden md:text-4xl xl:text-7xl font-accent">membre</h3>
-        <h3 className="sm:hidden text-2xl md:text-4xl xl:text-7xl uppercase font-accent ml-[30vw]">asura !</h3>
+        <h3 className="sm:hidden text-2xl md:text-4xl xl:text-7xl uppercase font-accent ml-[30vw]">{STORE.name} !</h3>
       </div>
       <p className="relative max-w-xs my-16 text-lg max-sm:left-4 sm:left-1/2 sm:my-24">
         Inscrivez vous à notre newsletter et retrouvez toutes nos offres promotionnelles et derniers produits.

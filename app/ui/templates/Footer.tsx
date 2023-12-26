@@ -4,6 +4,7 @@ import { trim } from '@ui/utils/trim';
 import logo from '../../../public/assets/logo-hd.png';
 import { Icon } from '../atoms';
 import { Newsletter } from './Newsletter';
+import { STORE } from '~/store.info';
 
 export function Footer({ menu }: FooterQuery) {
   return (
@@ -49,7 +50,7 @@ function FooterMenu({ menu }: Pick<FooterQuery, 'menu'>) {
         className="mb-8 lg:mb-24"
         title="liens utiles"
         links={[
-          { url: '/', label: 'Asura' },
+          { url: '/', label: STORE.name },
           { url: '/pages/nous-contacter', label: 'Nous contacter' }
         ]}
       />
@@ -78,7 +79,7 @@ function FooterMenu({ menu }: Pick<FooterQuery, 'menu'>) {
       />
       <div className="flex flex-col justify-between sm:flex-row sm:items-end">
         <img src={logo} alt="logo" className="w-4/6 max-w-4xl" width={836} height={175} />
-        <p className="text-xs max-sm:mt-6 max-sm:text-right sm:text-lg text-neutral-600">© {currentYear} Asura</p>
+        <p className="text-xs capitalize max-sm:mt-6 max-sm:text-right sm:text-lg text-neutral-600">© {currentYear} {STORE.name}</p>
       </div>
     </nav>
   );

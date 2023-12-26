@@ -4,6 +4,7 @@ import {
   useShopifyCookies, AnalyticsEventName,
   type ShopifyPageViewPayload, getClientBrowserParameters, sendShopifyAnalytics, ShopifySalesChannel
 } from '@shopify/hydrogen';
+import { STORE } from "~/store.info";
 
 export function usePageAnalytics({ hasUserConsent } = { hasUserConsent: true }) {
   const matches = useMatches();
@@ -36,7 +37,7 @@ export function usePageAnalytics({ hasUserConsent } = { hasUserConsent: true }) 
 }
 
 const hasUserConsent = true;
-const domain = 'asuranail.com';
+const domain = STORE.domain;
 
 export const useShopifyPixel = ({ shopId }: { shopId: string }) => {
   const location = useLocation();

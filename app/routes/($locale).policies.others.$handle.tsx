@@ -1,12 +1,13 @@
 import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { useLoaderData, type MetaFunction } from '@remix-run/react';
 import { AnalyticsPageType } from '@shopify/hydrogen';
+import { STORE } from '~/store.info';
 
 export const OtherPolicies = ['legal-notice', 'terms-of-sale'] as const;
 export type TOtherPolicies = typeof OtherPolicies[number];
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [{ title: `Asura | ${data?.policy.title}` }];
+  return [{ title: `${STORE.name} | ${data?.policy.title}` }];
 };
 
 export async function loader({ params, context }: LoaderFunctionArgs) {
@@ -42,7 +43,7 @@ export default function Policy() {
           <p>SIREN : 922 789 771</p>
           <p>Adresse : 12 Rue de la Part Dieu, 69003, Lyon</p>
           <p>Téléphone : +33 07 56 93 97 04</p>
-          <p>Mail : contact@asuranail.com</p>
+          <p>Mail : {STORE.contactEmail}</p>
           <p>Sellest est une société enregistrée en vertu des dispositions de la loi Française et basée à Lyon.</p>
         </>}
         {policy.name === "terms-of-sale" && <div>
@@ -201,7 +202,7 @@ export default function Policy() {
 
 
 
-          Les questions relatives aux Conditions d’utilisation doivent nous être envoyées à contact@asuranail.com.
+          Les questions relatives aux Conditions d’utilisation doivent nous être envoyées à {STORE.contactEmail}.
         </div>}
       </main>
     </div>

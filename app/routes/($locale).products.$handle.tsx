@@ -36,9 +36,10 @@ import { Accordion, Pin } from '~/ui/molecules';
 import { type rootLoader } from '~/root';
 import { useGoogleEvents } from '~/tracking/hooks';
 import { useProduct } from '~/components/products/useProduct';
+import { STORE } from '~/store.info';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
-  const siteName = 'Asura';
+  const siteName = STORE.name;
   const title = data?.product.seo.title || `${data?.product.title} | ${siteName}`;
   const description = `${data?.product.seo.description || data?.product.description}`;
 

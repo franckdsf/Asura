@@ -7,6 +7,7 @@ type CTA = { text: string, link: string }
 type Props = {
   className?: string,
   type?: 'center' | 'right',
+  imagePosition?: 'left' | 'right';
   showSectionTitle?: boolean,
   catchPhrase?: string;
   title?: string;
@@ -21,7 +22,7 @@ type Props = {
   };
   cta?: ReactNode | CTA;
 }
-export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additionalMedia, cta, showSectionTitle = true, className = "", type = "center" }: Props) => (
+export const CallToAction = ({ imagePosition = 'left', catchPhrase, title, content, mainMedia, additionalMedia, cta, showSectionTitle = true, className = "", type = "center" }: Props) => (
   <div className={trim(`text-center mb-32 sm:mb-48 relative ${className}`)} >
     {showSectionTitle && <>
       <h1 className="text-2xl sm:text-4xl lg:text-7xl uppercase font-accent -ml-[20vw]">offre</h1>
@@ -29,8 +30,8 @@ export const SpecialOffer = ({ catchPhrase, title, content, mainMedia, additiona
     </>}
     <div className={trim(`sm:pl-8 flex flex-col md:flex-row ${type === "right" ? "gap-x-8 2xl:gap-x-32 justify-end items-end md:items-center" : "gap-x-16 xl:gap-x-32 justify-center items-center"} mt-24 xl:mt-32`)}>
       {type === "center" &&
-        (mainMedia.imageSrc ? <img loading="lazy" src={mainMedia.imageSrc} className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} alt="special offer" /> :
-          <video src={mainMedia.videoSrc} preload="none" className={trim(`object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} autoPlay muted loop />)}
+        (mainMedia.imageSrc ? <img loading="lazy" src={mainMedia.imageSrc} className={trim(`${imagePosition === 'right' && 'md:order-2'} object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} alt="special offer" /> :
+          <video src={mainMedia.videoSrc} preload="none" className={trim(`${imagePosition === 'right' && 'md:order-2'} object-cover bg-container-light aspect-3/4 w-86 xl:w-112 rounded-full`)} autoPlay muted loop />)}
       {type === "right" && (mainMedia.videoSrc ?
         <video className="object-cover md:order-2 rounded-l-full w-11/12 sm:w-1/2 bg-container-light max-sm:h-112 sm:aspect-[10/9]  2xl:aspect-[5/4]"
           autoPlay muted loop src={mainMedia.videoSrc} preload="none" />

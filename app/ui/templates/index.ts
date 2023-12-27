@@ -1,4 +1,4 @@
 export * from './Landing';
 export * from './Newsletter';
 export * from './ProductsSpotlight';
-export * from './SpecialOffer';
+export * from './CallToAction';

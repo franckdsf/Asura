@@ -31,7 +31,7 @@ import { BulletsBand, CarouselProductImages, TablePoints } from '~/ui/organisms'
 import { trim } from '~/ui/utils/trim';
 import { type SwiperClass } from 'swiper/react';
 import { CMS, COLLECTION_QUERY } from '~/queries';
-import { SpecialOffer } from '~/ui/templates';
+import { CallToAction } from '~/ui/templates';
 import { Accordion, Pin } from '~/ui/molecules';
 import { type rootLoader } from '~/root';
 import { useGoogleEvents } from '~/tracking/hooks';
@@ -291,7 +291,7 @@ export default function Product() {
           showDescription={productPage?.showShopifyDescription}
         />
       </div>
-      {modules.map((m, i) => {
+      {modules.map((m, i, n) => {
         switch (m._type) {
           case "module.content.bigTitle":
             return <BigText
@@ -336,9 +336,10 @@ export default function Product() {
               included={m.included}
             />
           case "actionBlock":
-            return <SpecialOffer
+            return <CallToAction
               key={JSON.stringify(m)}
-              type="right"
+              type={n[i + 1] && n[i + 1]._type === "module.content.description" ? "center" : "right"}
+              imagePosition="right"
               showSectionTitle={false}
               catchPhrase={m.catchPhrase}
               title={m.title}

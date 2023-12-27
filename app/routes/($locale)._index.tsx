@@ -6,7 +6,7 @@ import {
 } from '@remix-run/react';
 import { AnalyticsPageType, getPaginationVariables, Image } from '@shopify/hydrogen';
 import type { FeaturedCollectionFragment, } from 'storefrontapi.generated';
-import { Landing, ProductsSpotlight, SpecialOffer } from '@ui/templates';
+import { Landing, ProductsSpotlight, CallToAction } from '@ui/templates';
 import { CMS, COLLECTION_QUERY, COLLECTIONS_QUERY } from '../queries';
 import { RecommendedProducts, useJudgeMe } from '~/components/products';
 import { ExtractCollection } from '~/components/collections';
@@ -74,8 +74,9 @@ export default function Homepage() {
           <ExtractCollection collections={data.collections.nodes} filter="tout voir" />
         </ul>
       </div>
-      {offer && <SpecialOffer
+      {offer && <CallToAction
         catchPhrase={offer.catchPhrase}
+        imagePosition='left'
         title={offer.title}
         content={offer.content}
         mainMedia={{ imageSrc: offer.mainMedia.image?.url, videoSrc: offer.mainMedia.video?.url }}

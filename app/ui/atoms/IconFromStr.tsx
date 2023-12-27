@@ -44,6 +44,14 @@ export const IconFromStr = ({ icon, weight = 'regular' }: { icon?: string, weigh
       return <Icon.Truck weight={weight} />
     case 'sparkle':
       return <Icon.Sparkle weight={weight} />
+    case 'star':
+      return <Icon.Star weight={weight} />
+    case 'phoneplus':
+      return <Icon.PhonePlus weight={weight} />
+    case 'crownsimple':
+      return <Icon.CrownSimple weight={weight} />
+    case 'sealcheck':
+      return <Icon.SealCheck weight={weight} />
     default:
       return <Icon.Pencil weight={weight} />
   }

@@ -308,6 +308,7 @@ export default function Product() {
               description={m.description}
               videoSrc={m.media?.video ? CMS.urlForVideo(m.media.video.asset._ref).url() : undefined}
               imageSrc={m.media?.image ? CMS.urlForImg(m.media.image.asset._ref).width(800).url() : product.images.nodes[0].url}
+              title={m.title}
               list={(m.list?.map((i) => ({
                 icon: i.icon,
                 title: i.title,

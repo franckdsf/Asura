@@ -37,8 +37,9 @@ export type Block = {
 
 export type ContentDescription = {
   _type: 'module.content.description';
-  description: Array<Block>;
+  description?: Array<Block>;
   media?: Media;
+  title?: string;
   list?: Array<{
     title: string;
     description: string;

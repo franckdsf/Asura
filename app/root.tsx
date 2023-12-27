@@ -28,6 +28,7 @@ import { CMS } from './queries';
 import { Tidio } from './components/Tidio';
 import { useEffect } from 'react';
 import { Link } from './ui/atoms';
+import { UPSELL_PRODUCT_QUERY } from './queries/upsell';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -98,8 +99,12 @@ export async function loader({ context }: LoaderFunctionArgs) {
   });
 
   const global = await CMS.GLOBAL_QUERY();
-
   const header = await headerPromise;
+
+  // defer upsell
+  const upsell = storefront.query(UPSELL_PRODUCT_QUERY, {
+    variables: { handle: 'cotons-demaquillants-reutilisables-x12' }
+  });
 
   const NODE_ENV: 'production' | 'development' = (context.env as any).NODE_ENV || 'production';
 
@@ -119,6 +124,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
       { property: "og:image:width", content: "836" },
       { property: "og:image:height", content: "175" }],
       NODE_ENV,
+      upsell,
       cart: cartPromise,
       cartModule: cartCMS,
       footer: footerPromise,

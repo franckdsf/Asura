@@ -75,8 +75,8 @@ export type ContentTablePoints = {
 
 export type ActionBlock = {
   _type: 'actionBlock';
-  catchPhrase: string;
-  title: string;
+  catchPhrase?: string;
+  title?: string;
   content: Block;
   mainMedia: Media;
   additionalMedia?: Media;

@@ -26,6 +26,8 @@ import { BodyPixel, useShopifyPixel, HeadPixel } from './tracking/pixels';
 import { useShopId } from './tracking/hooks';
 import { CMS } from './queries';
 import { Tidio } from './components/Tidio';
+import { useEffect } from 'react';
+import { Link } from './ui/atoms';
 
 // This is important to avoid re-fetching root queries on sub-navigations
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -191,14 +193,14 @@ export function ErrorBoundary() {
       </head>
       <body>
         <Layout {...root.data as any}>
-          <div className="route-error">
-            <h1>Oops</h1>
-            <h2>{errorStatus}</h2>
+          <div className="py-32 text-center route-error">
+            <h1 className="text-3xl font-accent">Oops erreur {errorStatus} 🫣</h1>
             {errorMessage && (
               <fieldset>
                 <pre>{errorMessage}</pre>
               </fieldset>
             )}
+            <Link href="/" underline>Retourner à l&apos;accueil</Link>
           </div>
         </Layout>
         <ScrollRestoration nonce={nonce} />

@@ -1,5 +1,5 @@
 import { CartForm, Image, Money, parseGid } from '@shopify/hydrogen';
-import type { CartLineUpdateInput } from '@shopify/hydrogen/storefront-api-types';
+import type { CartLineUpdateInput, MoneyV2 } from '@shopify/hydrogen/storefront-api-types';
 import { Link } from '@remix-run/react';
 import type { CartApiQueryFragment } from 'storefrontapi.generated';
 import { useVariantUrl } from '~/utils';
@@ -9,6 +9,7 @@ import { CheckoutLink } from '~/tracking/components';
 import { type CartModule } from '~/queries/sanity.types';
 import { CMS } from '~/queries/sanity';
 import { Countdown } from './cart/Countdown';
+import { useMemo } from 'react';
 
 type CartLine = CartApiQueryFragment['lines']['nodes'][0];
 
@@ -36,13 +37,32 @@ export function CartMain({ layout, cart, modules }: CartMainProps) {
 function CartDetails({ layout, cart, modules }: CartMainProps) {
   const cartHasItems = !!cart && cart.totalQuantity > 0;
 
+  const freeItems = useMemo(() => {
+    if (!cartHasItems || !modules?.freeItems) return [];
+    return modules?.freeItems.filter((item) => {
+      const cartItems = cart?.lines.nodes.map((l) => parseGid(l.merchandise.product.id).id) || [];
+      return item.linkedProducts.some((e) => cartItems.includes(e));
+    })
+  }, [cartHasItems, cart, modules])
+
+  const discount = cart?.lines.nodes.reduce((discount, line) => {
+    if (!line.cost.compareAtAmountPerQuantity) return discount;
+    const reductionAmount = Number(line.cost.compareAtAmountPerQuantity.amount) - Number(line.cost.amountPerQuantity.amount);
+    return discount + freeItems.reduce((i, p) => i + p.compareAtPrice, 0) + reductionAmount * line.quantity;
+  }, 0)
+
+  const cost = cartHasItems ? {
+    ...cart.cost,
+    discount: {
+      amount: `${discount}`,
+      currencyCode: cart.cost.totalAmount.currencyCode
+    }
+  } : null;
+
   return (
     <div className="cart-details">
       <CartLines lines={cart?.lines} layout={layout} />
-      {modules?.freeItems.map((item) => {
-        const cartItems = cart?.lines.nodes.map((l) => parseGid(l.merchandise.product.id).id) || [];
-        if (!item.linkedProducts.some((e) => cartItems.includes(e))) return null;
-
+      {freeItems.map((item) => {
         return (
           <FreeItem
             key={item.name}
@@ -53,7 +73,7 @@ function CartDetails({ layout, cart, modules }: CartMainProps) {
         )
       })}
       {cartHasItems && (
-        <CartSummary cost={cart.cost} layout={layout}>
+        <CartSummary cost={cost!} layout={layout}>
           {/* <CartDiscounts discountCodes={cart.discountCodes} /> */}
           <CartCheckoutActions cart={cart} />
         </CartSummary>
@@ -101,7 +121,7 @@ function CartLineItem({
         <Image
           alt={title}
           data={image}
-          height={130}
+          height={100}
           loading="lazy"
           width={100}
         />
@@ -131,8 +151,14 @@ function CartLineItem({
             </li>
           ))}
         </ul>
-        <CartLinePrice line={line} as="span" className="my-2" />
-        <CartLineQuantity line={line} />
+        <div className="flex flex-row items-center justify-start mt-2">
+          <CartLineQuantity line={line} />
+          <CartLinePrice
+            line={line}
+            as="span"
+            className="ml-4 sm:ml-6"
+          />
+        </div>
       </div>
     </li>
   );
@@ -144,9 +170,9 @@ function CartCheckoutActions({ cart }: { cart: CartApiQueryFragment }) {
   return (
     <CheckoutLink
       cart={cart}
-      className="float-right w-full max-w-xl px-5 py-3 mb-5 text-center rounded-full bg-neutral-900"
+      className="float-right w-full max-w-xl px-5 py-4 mb-5 text-center rounded-full bg-neutral-900"
     >
-      <p className="text-sm uppercase text-neutral-50 lg:text-md">Passer à la caisse</p>
+      <p className="text-sm uppercase text-neutral-50 lg:text-md">Passer à la caisse <span className="mx-1">•</span> <Money data={cart.cost.subtotalAmount} className="inline-block" /></p>
     </CheckoutLink>
   );
 }
@@ -157,7 +183,7 @@ export function CartSummary({
   children = null,
 }: {
   children?: React.ReactNode;
-  cost: CartApiQueryFragment['cost'];
+  cost: CartApiQueryFragment['cost'] & { discount?: MoneyV2 };
   layout: CartMainProps['layout'];
 }) {
   const className =
@@ -167,18 +193,18 @@ export function CartSummary({
     <div aria-labelledby="cart-summary" className={className}>
       <div className="flex flex-row items-center justify-start max-w-sm px-4 py-1 mb-4 bg-container-light rounded-xs">
         <Icon.Truck className="mr-4 icon-md" />
-        <p>Livraison standard offerte *</p>
+        <p>Livraison standard offerte</p>
       </div>
-      <dl className="pt-4 mb-4 border-t cart-subtotal text-md flex-row-between border-neutral-900">
-        <dt>Sous-total</dt>
-        <dd className="ml-4">
-          {cost?.subtotalAmount?.amount ? (
-            <Money data={cost?.subtotalAmount} />
+      {cost?.discount && <dl className="pt-4 mb-4 border-t cart-subtotal text-md flex-row-between border-neutral-900">
+        <dt><Icon.Tag className="inline-block ml-1" /> Vous économisez </dt>
+        <dd className="ml-4 flex-row-center">
+          {cost?.discount?.amount ? (
+            <Money data={cost?.discount} />
           ) : (
             '-'
           )}
         </dd>
-      </dl>
+      </dl>}
       {children}
       <img src="/assets/payment-methods.webp" width={500} height={37} alt="payment methods" className="object-contain h-6 mt-4 mb-6" />
     </div>
@@ -238,33 +264,52 @@ function CartLineQuantity({ line }: { line: CartLine }) {
 
 function CartLinePrice({
   line,
-  priceType = 'regular',
   className = '',
   ...passthroughProps
 }: {
   line: CartLine;
-  priceType?: 'regular' | 'compareAt';
   [key: string]: any;
   className?: string;
 }) {
   if (!line?.cost?.amountPerQuantity || !line?.cost?.totalAmount) return null;
 
-  const moneyV2 =
-    priceType === 'regular'
-      ? line.cost.totalAmount
-      : line.cost.compareAtAmountPerQuantity;
-
-  if (moneyV2 == null) {
+  if (line.cost.amountPerQuantity == null) {
     return null;
   }
 
+  const moneyV2 = {
+    ...line.cost.amountPerQuantity,
+    amount: `${Number(line.cost.amountPerQuantity.amount) * line.quantity}`
+  };
+
+  const compareAt = line.cost.compareAtAmountPerQuantity ? {
+    ...line.cost.compareAtAmountPerQuantity,
+    amount: `${Number(line.cost.compareAtAmountPerQuantity.amount) * line.quantity}`
+  } : undefined;
+
+  const reductionAmount = Number(compareAt!.amount || moneyV2.amount) - Number(moneyV2.amount);
+  const reduction = {
+    amount: `${Math.round(reductionAmount * 100) / 100}`,
+    currencyCode: moneyV2.currencyCode
+  }
+  const reductionPourcent = Math.round(Number(reduction.amount) / Number(compareAt!.amount || moneyV2.amount) * 100);
+
   return (
-    <div className={`text-xs flex flex-row justify-start items-center gap-x-1 ${className}`}>
-      <Money withoutTrailingZeros {...passthroughProps} data={moneyV2} />
-      {line.cost.compareAtAmountPerQuantity && <Money withoutTrailingZeros
-        className='line-through text-neutral-600'
-        data={line.cost.compareAtAmountPerQuantity}
-      />}
+    <div className={`${className}`}>
+      <div className="flex flex-row items-center justify-start text-xs gap-x-2">
+        <Money withoutTrailingZeros {...passthroughProps} data={moneyV2} />
+        {compareAt && <Money withoutTrailingZeros
+          className='line-through text-neutral-600'
+          data={compareAt}
+        />}
+      </div>
+      {reductionAmount > 0 && <div className="text-2xs lg:text-xs text-primary-500 mt-0.5">
+        Economisez <Money data={reduction} className='inline-block' />
+      </div>}
+      {line.quantity > 1 && reductionAmount > 0 && <div className="px-2 py-1 mt-2 uppercase text-2xs lg:text-xs lg:font-medium bg-container-light rounded-xs flex-row-center">
+        <Icon.Tag className="inline-block mr-2 icon-sm" />
+        acheter {line.quantity} pour {reductionPourcent}%
+      </div>}
     </div>
   );
 }

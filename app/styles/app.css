@@ -1,5 +1,5 @@
 :root {
-  --aside-width: 350px;
+  --aside-width: 450px;
   --cart-aside-summary-height-with-discount: 300px;
   --cart-aside-summary-height: 250px;
   --grid-item-width: 355px;
@@ -32,8 +32,8 @@ aside {
   background: var(--color-light);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
   height: 100dvh;
-  max-width: var(--aside-width);
-  min-width: var(--aside-width);
+  max-width: 100dvw;
+  width: var(--aside-width);
   position: fixed;
   right: calc(-1 * var(--aside-width));
   top: 0;
@@ -231,7 +231,7 @@ aside li {
   bottom: 0;
   padding-top: 0.75rem;
   position: absolute;
-  width: calc(var(--aside-width) - 40px);
+  width: calc(100% - 40px);
 }
 
 .cart-line-quantiy {

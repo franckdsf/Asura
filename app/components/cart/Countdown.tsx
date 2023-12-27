@@ -49,13 +49,13 @@ export const Countdown = () => {
   const date = useCountdown();
 
   return (
-    <div className="px-4 py-3 bg-neutral-300 text-neutral-900 rounded-xs">
-      <p className="w-full text-sm text-center">
+    <div className="px-4 py-3 flex-row-center bg-neutral-300 text-neutral-900 rounded-xs">
+      <p className="w-full max-w-xs text-sm text-center">
         Il vous reste seulement
         <span className="mx-1 font-medium text-neutral-900">
           {date}
         </span>
-        pour obtenir votre commande avec <span className="font-medium">une livraison GRATUITE</span> !
+        pour bénéficier de la <span className="font-medium"> livraison GRATUITE</span> !
       </p>
     </div>
   )

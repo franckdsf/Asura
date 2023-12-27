@@ -22,10 +22,10 @@ export const BulletsBand = ({ items, className = '' }: Props) => {
         {item.imgSrc && <img
           alt={item.title}
           src={item.imgSrc}
-          className="object-contain w-16 mb-4 xl:mb-8 md:w-32 aspect-square"
+          className="object-contain w-16 mb-4 xl:mb-8 md:w-28 aspect-square"
         />}
-        {item.icon && <div className="text-[64px] md:text-[128px] mb-4 xl:mb-8">
-          <IconFromStr icon={item.icon} />
+        {item.icon && <div className="text-[64px] md:text-[112px] mb-4 xl:mb-8">
+          <IconFromStr icon={item.icon} weight="fill" />
         </div>}
         <h3 className="max-w-xs mb-4 text-lg font-medium sm:text-2xl font-accent">{item.title}</h3>
         <div className="max-w-xs text-xs sm:text-md text-neutral-600">

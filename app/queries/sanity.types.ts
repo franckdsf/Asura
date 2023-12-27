@@ -130,6 +130,11 @@ export type HomePage = {
 export type Global = {
   _type: 'global',
   enablePromotion: boolean,
+  upsells?: Array<{
+    store: {
+      slug: string,
+    }
+  }>
   promotion?: {
     name?: string;
     header?: {

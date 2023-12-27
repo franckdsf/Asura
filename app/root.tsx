@@ -102,9 +102,9 @@ export async function loader({ context }: LoaderFunctionArgs) {
   const header = await headerPromise;
 
   // defer upsell
-  const upsell = storefront.query(UPSELL_PRODUCT_QUERY, {
-    variables: { handle: 'cotons-demaquillants-reutilisables-x12' }
-  });
+  const upsells = global?.upsells ? Promise.all(global.upsells.map((u) => storefront.query(UPSELL_PRODUCT_QUERY, {
+    variables: { handle: u.store.slug }
+  }))) : undefined;
 
   const NODE_ENV: 'production' | 'development' = (context.env as any).NODE_ENV || 'production';
 
@@ -124,7 +124,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
       { property: "og:image:width", content: "836" },
       { property: "og:image:height", content: "175" }],
       NODE_ENV,
-      upsell,
+      upsells,
       cart: cartPromise,
       cartModule: cartCMS,
       footer: footerPromise,

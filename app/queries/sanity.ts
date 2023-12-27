@@ -104,7 +104,15 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
 }
 
 const GLOBAL_QUERY = async () => {
-  const query: Array<Global> = await loadQuery(groq`*[_type == "global"]`);
+  const query: Array<Global> = await loadQuery(groq`*[_type == "global"] {
+    enablePromotion,
+    promotion,
+    "upsells": upsells[].productWithVariant.product->{
+      store {
+        "slug": slug.current,
+      }
+     }
+  }`);
 
   if (query.length === 0) return null;
 

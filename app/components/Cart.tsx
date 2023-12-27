@@ -13,13 +13,13 @@ import { UpsellCartItem } from './cart/Upsell';
 import { CartLineItem } from './cart/LineItem';
 
 export type CartMainProps = {
-  upsell: Promise<UpsellProductQuery | null>;
+  upsells: Promise<Array<UpsellProductQuery | null>> | undefined;
   cart: CartApiQueryFragment | null;
   modules: CartModule | null;
   layout: 'page' | 'aside';
 };
 
-export function CartMain({ layout, cart, modules, upsell }: CartMainProps) {
+export function CartMain({ layout, cart, modules, upsells }: CartMainProps) {
   const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
   const withDiscount =
     cart &&
@@ -29,12 +29,12 @@ export function CartMain({ layout, cart, modules, upsell }: CartMainProps) {
   return (
     <div className={className}>
       <CartEmpty hidden={linesCount} layout={layout} />
-      <CartDetails cart={cart} modules={modules} layout={layout} upsell={upsell} />
+      <CartDetails cart={cart} modules={modules} layout={layout} upsells={upsells} />
     </div>
   );
 }
 
-function CartDetails({ layout, cart, modules, upsell }: CartMainProps) {
+function CartDetails({ layout, cart, modules, upsells }: CartMainProps) {
   const cartHasItems = !!cart && cart.totalQuantity > 0;
 
   const freeItems = useMemo(() => {
@@ -73,9 +73,9 @@ function CartDetails({ layout, cart, modules, upsell }: CartMainProps) {
         )
       })}
       <Suspense>
-        <Await resolve={upsell}>
-          {(product) => product?.product && <UpsellModule
-            upsell={product.product}
+        <Await resolve={upsells}>
+          {(result) => result && <UpsellsModule
+            products={result.map((i) => i && i.product ? i.product : null)}
             layout={layout}
             lines={cart?.lines}
           />}
@@ -91,21 +91,22 @@ function CartDetails({ layout, cart, modules, upsell }: CartMainProps) {
   );
 }
 
-function UpsellModule({ upsell, layout, lines }: {
-  upsell: UpsellProductFragment,
+function UpsellsModule({ products, layout, lines }: {
+  products: Array<UpsellProductFragment | null>,
   layout: CartMainProps['layout'];
   lines: CartApiQueryFragment['lines'] | undefined;
 }) {
-  const upsellAlreadyInCart = lines?.nodes.some((line) => {
-    return upsell.variants.nodes.some((e) => parseGid(line.merchandise.id).id === parseGid(e.id).id)
-  })
-
-  if (upsellAlreadyInCart) return null;
+  // check if there is upsells available and check if all product is not null
+  if (!products || products.length === 0 || products.every((p) => !p)) return null;
 
   return (
     <div className="mt-8 lg:mt-16">
       <p className="mb-2 text-center">Nous suggérons aussi</p>
-      <UpsellCartItem product={upsell} layout={layout} />
+      {products.map((p) => {
+        if (!p) return null;
+
+        return <UpsellCartItem product={p} layout={layout} key={p.id} />
+      })}
     </div>
   )
 }

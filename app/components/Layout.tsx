@@ -19,7 +19,7 @@ import { type CartModule } from '~/queries/sanity.types';
 
 export type LayoutProps = {
   cart: Promise<CartApiQueryFragment | null>;
-  upsell: Promise<UpsellProductQuery | null>;
+  upsells: Promise<Array<UpsellProductQuery | null>> | undefined;
   cartModule: Promise<CartModule | null>;
   children?: React.ReactNode;
   footer: Promise<FooterQuery>;
@@ -29,7 +29,7 @@ export type LayoutProps = {
 };
 
 export function Layout({
-  upsell,
+  upsells,
   cart,
   cartModule,
   children = null,
@@ -40,7 +40,7 @@ export function Layout({
 }: LayoutProps) {
   return (
     <>
-      <CartAside cart={cart} modules={cartModule} upsell={upsell} />
+      <CartAside cart={cart} modules={cartModule} upsells={upsells} />
       <SearchAside />
       <MobileMenuAside menu={header.menu} />
       <Header header={header} cart={cart} isLoggedIn={isLoggedIn} promotion={global?.enablePromotion ? global.promotion?.header : undefined} />
@@ -54,7 +54,7 @@ export function Layout({
   );
 }
 
-function CartAside({ cart, upsell, modules }: { upsell: LayoutProps['upsell'], cart: LayoutProps['cart'], modules: LayoutProps['cartModule'] }) {
+function CartAside({ cart, upsells, modules }: { upsells: LayoutProps['upsells'], cart: LayoutProps['cart'], modules: LayoutProps['cartModule'] }) {
   return (
     <Aside id="cart-aside" heading="panier">
       <Suspense fallback={<p>Loading cart ...</p>}>
@@ -62,7 +62,7 @@ function CartAside({ cart, upsell, modules }: { upsell: LayoutProps['upsell'], c
           {(m) => (
             <Suspense fallback={<div>Loading cart...</div>}>
               <Await resolve={cart}>
-                {(c) => <CartMain cart={c} modules={m} layout="aside" upsell={upsell} />}
+                {(c) => <CartMain cart={c} modules={m} layout="aside" upsells={upsells} />}
               </Await>
             </Suspense>
           )}

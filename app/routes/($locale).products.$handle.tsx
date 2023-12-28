@@ -238,8 +238,10 @@ export default function Product() {
   const modules = useMemo(() => {
     const baseModules = productPage?.modules || [];
 
+    const hasMoreInformationOnSideDescription = productPage?.additionalDescriptionBlocks.some((m) => m._type === 'module.content.moreInformation');
     const showDefaultBulletsBand = !baseModules.some((m) => m._type === 'module.content.tablePoints');
-    const showDefaultMoreInformation = !baseModules.some((m) => m._type === "module.content.moreInformation");
+    const showDefaultMoreInformation = !baseModules.some((m) => m._type === "module.content.moreInformation")
+      && !hasMoreInformationOnSideDescription;
     const showDefaultBigTitle = baseModules.length > 0 ? baseModules[baseModules.length - 1]._type !== "module.content.bigTitle" : true;
 
     const defaultBulletsBand = productPage?.page?.bulletsBand;
@@ -262,7 +264,7 @@ export default function Product() {
     modules.push(...(baseModules || []));
 
     if (defaultBulletsBand && showDefaultBulletsBand)
-      modules.splice(1, 0, defaultBulletsBand);
+      modules.splice(hasMoreInformationOnSideDescription ? 0 : 1, 0, defaultBulletsBand);
 
     if (defaultBigTitle && showDefaultBigTitle)
       modules.push(defaultBigTitle);
@@ -282,11 +284,23 @@ export default function Product() {
         {/* <ProductImage image={selectedVariant?.image} /> */}
         <ProductMain
           className={trim(`z-10 w-full max-w-xl max-lg:mx-auto 2xl:max-w-3xl lg:px-24 
-            2xl:px-32 ${hasSideElements ? 'pt-16 pb-24 lg:sticky lg:top-header' : 'lg:py-6 lg:-mt-16'}`)}
+            2xl:px-32 ${hasSideElements ? 'py-16 md:pb-24 lg:sticky lg:top-header' : 'lg:py-6 lg:-mt-16'}`)}
           selectedVariant={selectedVariant}
           product={product}
           variants={variants}
-          modules={productPage?.additionalDescriptionBlocks}
+          modules={productPage?.additionalDescriptionBlocks.map((m) => {
+            switch (m._type) {
+              case 'module.content.moreInformation':
+                return {
+                  ...m,
+                  delivery: m.delivery || productPage?.page?.defaultInformation.delivery,
+                  guaranty: m.guaranty || productPage?.page?.defaultInformation.guaranty,
+                  included: m.included
+                }
+              default:
+                return m;
+            }
+          })}
           pins={productPage?.pins}
           showDescription={productPage?.showShopifyDescription}
         />
@@ -325,7 +339,7 @@ export default function Product() {
                 description: i.description,
               }))}
               key={JSON.stringify(m)}
-              className="mb-16 md:my-32"
+              className={`mb-16 md:mb-32 ${i !== 0 && 'md:mt-32'}`}
             />
           case "module.content.moreInformation":
             return <MoreInformation
@@ -474,6 +488,20 @@ function ProductMain({
       >
         {selectedVariant?.availableForSale ? 'Ajouter au panier' : 'Rupture de stock'}
       </AddToCartButton>
+      {modules && modules.map((m) => {
+        switch (m._type) {
+          case "module.content.moreInformation":
+            return <MoreInformation.Small
+              key={JSON.stringify(m)}
+              className="mt-8"
+              delivery={m.delivery}
+              guaranty={m.guaranty}
+              included={m.included}
+            />
+          default:
+            return null;
+        }
+      })}
     </div>
   );
 }

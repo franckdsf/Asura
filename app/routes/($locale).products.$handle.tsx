@@ -430,12 +430,14 @@ function ProductMain({
   const { title, descriptionHtml } = product;
 
   const hasDiscount = !!selectedVariant?.compareAtPrice;
+  const hasVariants = product.variants.nodes.length > 1;
 
   return (
     <div className={trim(`px-4 mt-6 ${className}`)}>
       <JudgeMeReviewStars productId={product.id} className="mb-3" />
       <ProductPrice selectedVariant={selectedVariant} className="mb-2" />
       <h1 className="mb-3 uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
+      {!hasVariants && <DeliveryDate className="mt-2 mb-4" type="date" />}
       {modules && modules.map((m) => {
         switch (m._type) {
           case "module.content.tablePoints":
@@ -471,7 +473,7 @@ function ProductMain({
           </Await>
         </Suspense>
       </form>
-      <DeliveryDate className="mt-2 mb-4" type="date" />
+      {hasVariants && <DeliveryDate className="mt-2 mb-4" type="date" />}
       <AddToCartButton
         className={trim(`w-full lg:max-w-xl !py-4`)}
         disabled={!selectedVariant || !selectedVariant.availableForSale}

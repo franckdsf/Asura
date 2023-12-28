@@ -4,6 +4,7 @@
   --cart-aside-summary-height: 250px;
   --grid-item-width: 355px;
   --header-height-desktop: 130px;
+  --header-discount-band: 18px;
   --header-height-mobile: 96px;
   --color-dark: #000;
   --color-light: #fff;
@@ -154,10 +155,10 @@ aside li {
   align-items: center;
   display: flex;
 
-  height: var(--header-height-mobile);
+  height: calc(var(--header-height-mobile) - var(--header-discount-band));
 
   @media (min-width: 45em) {
-    height: var(--header-height-desktop);
+    height: calc(var(--header-height-desktop) - var(--header-discount-band));
   }
 
 }

@@ -12,18 +12,19 @@ type Props = {
   icon?: string;
   content: string | string[] | PortableTextProp,
   className?: string
-  showBorder?: boolean
+  showBorder?: boolean;
+  size?: 'small' | 'default';
 }
-export const Accordion = ({ icon, showBorder = true, title, className, content }: Props) => {
+export const Accordion = ({ size = 'default', icon, showBorder = true, title, className, content }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => setExpanded((current) => !current);
 
   const basicFormat = typeof content === "string" || Array.isArray(content) && typeof content[0] === "string";
 
   return (
-    <button className={trim(`w-full my-2 cursor-pointer sm:my-4 md:my-6 ${showBorder && 'border-b'} border-neutral-600 ${className}`)} onClick={toggleExpanded}>
-      <div className="flex flex-row items-center justify-between h-16 px-2 pb-4 text-left select-none sm:px-6">
-        <h5 className="flex-1 uppercase text-md-semibold md:text-lg-semibold">
+    <button className={trim(`w-full my-2 cursor-pointer ${size === "small" ? 'my-2' : 'sm:my-4 md:my-6'} ${showBorder && 'border-b'} border-neutral-600 ${className}`)} onClick={toggleExpanded}>
+      <div className={trim(`flex flex-row items-center justify-between ${size === "small" ? 'h-12 pb-0' : 'h-16 pb-4'} px-2 text-left select-none sm:px-6`)}>
+        <h5 className="flex-1 uppercase text-md-semibold">
           <span className="inline-block mr-3">{icon && <IconFromStr icon={icon} />}</span>
           {title}
         </h5>
@@ -43,3 +44,5 @@ export const Accordion = ({ icon, showBorder = true, title, className, content }
     </button>
   )
 }
+
+Accordion.Small = ({ ...props }: Props) => <Accordion {...props} size="small" />

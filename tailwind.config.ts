@@ -80,6 +80,10 @@ export default {
       container: {
         light: '#F6F5F3',
       },
+      success: {
+        100: "#f8f9fa",
+        500: "#3c966a",
+      },
       primary: {
         on: '#FFFFFF',
         500: "#ed60f7",

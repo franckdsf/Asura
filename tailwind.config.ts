@@ -81,7 +81,7 @@ export default {
         light: '#F6F5F3',
       },
       success: {
-        100: "#f8f9fa",
+        100: "#f9fbf9",
         500: "#3c966a",
       },
       primary: {

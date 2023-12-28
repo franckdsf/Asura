@@ -27,20 +27,21 @@ export const DeliveryDate = ({ className = "", type = 'date' }: Props) => {
     return str;
   }, [currentDate]);
 
-  const text = useMemo(() => type === 'date' ? `Livré entre le ${fourDaysAfter} - ${tenDaysAfter}` : 'Expédié en 24 / 48h',
-    [fourDaysAfter, tenDaysAfter, type]);
-
   return (
     <div className={`flex flex-row items-center justify-around bg-success-100 text-success-500 py-3 px-3 md:px-4 rounded-xs ${className}`}>
-      <p className={`text-xs lg:text-sm first-letter:uppercase mr-2 2xl:mr-6`}>
+      <p className={`text-xs lg:text-sm first-letter:uppercase`}>
         <Icon.Check className="inline-block mr-2 -mt-0.5" />
-        Livraison gratuite
-      </p>
-      <p className={`text-xs lg:text-sm first-letter:uppercase ml-2`}>
-        <img src="/assets/french_flag.png" width={20} height={12} alt="drapeau français"
-          className="inline-block rounded-none mr-2 -mt-0.5"
-        />
-        {text}
+        {type === 'date' ? <>
+          <span className="mr-1 font-medium">Livraison gratuite</span>
+          entre le
+          <span className="ml-1 font-medium">
+            {`${fourDaysAfter} - ${tenDaysAfter}`}
+          </span>
+        </> :
+          <>
+            Expédié en 24 / 48h
+          </>
+        }
       </p>
     </div>
   )

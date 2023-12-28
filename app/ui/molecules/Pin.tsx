@@ -25,7 +25,7 @@ export const Pin = ({ icon, title, details }: Props) => {
   return (
     <button
       ref={ref}
-      className="relative inline-flex px-4 py-2 mt-6 text-black uppercase rounded-full bg-neutral-300 align-center gap-x-2 group"
+      className="relative inline-flex px-4 py-2 mt-6 text-black uppercase rounded-full bg-container-light align-center gap-x-2 group"
       onClick={() => setShow((s) => !s)}
     >
       {icon && <IconFromStr icon={icon} />}

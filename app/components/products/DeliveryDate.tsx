@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import { Icon } from "~/ui/atoms";
 
 type Props = { className?: string, type?: 'date' | 'expedition' }
 export const DeliveryDate = ({ className = "", type = 'date' }: Props) => {
@@ -26,13 +27,19 @@ export const DeliveryDate = ({ className = "", type = 'date' }: Props) => {
     return str;
   }, [currentDate]);
 
-  const text = useMemo(() => type === 'date' ? ` en stock, livré entre le ${fourDaysAfter} - ${tenDaysAfter}` : 'en stock, expédié en 24 / 48h',
+  const text = useMemo(() => type === 'date' ? `Livré entre le ${fourDaysAfter} - ${tenDaysAfter}` : 'Expédié en 24 / 48h',
     [fourDaysAfter, tenDaysAfter, type]);
 
   return (
-    <div className={`flex flex-row items-center justify-start ${className}`}>
-      <img src="/assets/french_flag.png" width={20} height={12} alt="drapeau français" className="rounded-none" />
-      <p className={`text-xs lg:text-sm uppercase text-neutral-600 ml-2`}>
+    <div className={`flex flex-row items-center justify-around bg-success-100 text-success-500 py-3 px-3 md:px-4 rounded-xs ${className}`}>
+      <p className={`text-xs lg:text-sm first-letter:uppercase mr-2 2xl:mr-6`}>
+        <Icon.Check className="inline-block mr-2 -mt-0.5" />
+        Livraison gratuite
+      </p>
+      <p className={`text-xs lg:text-sm first-letter:uppercase ml-2`}>
+        <img src="/assets/french_flag.png" width={20} height={12} alt="drapeau français"
+          className="inline-block rounded-none mr-2 -mt-0.5"
+        />
         {text}
       </p>
     </div>

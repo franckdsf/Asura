@@ -421,8 +421,7 @@ function ProductMain({
     <div className={trim(`px-4 mt-6 ${className}`)}>
       <JudgeMeReviewStars productId={product.id} className="mb-3" />
       <ProductPrice selectedVariant={selectedVariant} className="mb-2" />
-      <h1 className="uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
-      <DeliveryDate className="mt-2 mb-5" type="date" />
+      <h1 className="mb-3 uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
       {modules && modules.map((m) => {
         switch (m._type) {
           case "module.content.tablePoints":
@@ -440,7 +439,7 @@ function ProductMain({
             return null;
         }
       })}
-      {showDescription && <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="pr-2 text-justify text-md" />}
+      {showDescription && <div dangerouslySetInnerHTML={{ __html: descriptionHtml }} className="pr-2 mb-2 text-justify" />}
       {pins && <div className="flex flex-row items-center justify-start gap-x-2">
         {pins.map((p) => <Pin title={p.name} icon={p.icon} details={p.details} key={p.name} />)}
       </div>}
@@ -458,6 +457,7 @@ function ProductMain({
           </Await>
         </Suspense>
       </form>
+      <DeliveryDate className="mt-2 mb-4" type="date" />
       <AddToCartButton
         className={trim(`w-full lg:max-w-xl !py-4`)}
         disabled={!selectedVariant || !selectedVariant.availableForSale}

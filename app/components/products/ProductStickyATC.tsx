@@ -86,7 +86,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
 
   return (
     <div ref={ref} className={trim(`${scrollPourcent === 100 ? "translate-y-full" : "bottom-0"} z-50 fixed w-full bg-container-light py-4 lg:py-6 border-t border-neutral-300 lg:px-10 ${className}`)}>
-      <div className="flex flex-col items-stretch justify-between lg:flex-row">
+      <div className="flex flex-col items-stretch justify-between mx-auto lg:flex-row max-w-9xl">
         <Await
           errorElement="There was a problem loading product variants"
           resolve={variants}
@@ -117,6 +117,7 @@ export const ProductStickyATC = ({ className = "", selectedVariant, variants, pr
         <div className="flex flex-row items-center justify-between w-full max-lg:px-4">
           <ProductPrice selectedVariant={selectedVariant} promotion={promotion} />
           <AddToCartButton
+            className="px-10"
             disabled={!selectedVariant || !selectedVariant.availableForSale}
             openCart={true}
             product={{

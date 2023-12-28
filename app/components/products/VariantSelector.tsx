@@ -48,7 +48,10 @@ export const VariantSelector = ({ popUp, className = '', variants, options, hand
         max-sm:bg-white border border-neutral-300 sm:border-neutral-600 gap-x-4 ${className}`}
           onClick={() => setOpen((o) => !o)}
         >
-          {option.value}
+          <span>
+            {option.name} {' : '}
+            {option.value}
+          </span>
           {open ? <Icon.CaretDown className="icon-sm lg:icon-md" /> : <Icon.CaretUp className="icon-sm lg:icon-md" />}
         </button>
         {open && <div ref={ref} className={trim(`p-4 border border-neutral-300 absolute w-full lg:max-w-xl ${popUp?.className} ${theme === "light" ? 'bg-container-light' : 'bg-black'} p-4`)}>

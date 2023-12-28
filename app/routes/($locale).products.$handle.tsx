@@ -263,11 +263,12 @@ export default function Product() {
 
     modules.push(...(baseModules || []));
 
-    if (defaultBulletsBand && showDefaultBulletsBand)
-      modules.splice(hasMoreInformationOnSideDescription ? 0 : 1, 0, defaultBulletsBand);
-
     if (defaultBigTitle && showDefaultBigTitle)
       modules.push(defaultBigTitle);
+
+    if (defaultBulletsBand && showDefaultBulletsBand)
+      // modules.splice(hasMoreInformationOnSideDescription ? 0 : 1, 0, defaultBulletsBand);
+      modules.push(defaultBulletsBand);
 
     return modules;
   }, [productPage])
@@ -283,8 +284,8 @@ export default function Product() {
         />}
         {/* <ProductImage image={selectedVariant?.image} /> */}
         <ProductMain
-          className={trim(`z-10 w-full max-w-xl max-lg:mx-auto 2xl:max-w-3xl lg:px-24 
-            2xl:px-32 ${hasSideElements ? 'py-16 md:pb-24 lg:sticky lg:top-header' : 'lg:py-6 lg:-mt-16'}`)}
+          className={trim(`z-10 w-full max-w-xl max-lg:mx-auto xl:max-w-2xl 2xl:max-w-3xl lg:px-16 pb-6
+            2xl:px-32 ${hasSideElements ? 'lg:py-16 md:pb-24 lg:sticky lg:top-header' : 'lg:py-6 lg:-mt-16'}`)}
           selectedVariant={selectedVariant}
           product={product}
           variants={variants}
@@ -339,7 +340,7 @@ export default function Product() {
                 description: i.description,
               }))}
               key={JSON.stringify(m)}
-              className={`mb-16 md:mb-32 ${i !== 0 && 'md:mt-32'}`}
+              className={`my-16 md:my-32`}
             />
           case "module.content.moreInformation":
             return <MoreInformation
@@ -385,7 +386,7 @@ export default function Product() {
         title={{ class: "text-neutral-600" }}
         className="mb-12"
       />}
-      {(productPage?.faq.length || 0) > 0 && <div className="px-4 mx-auto mb-12 sm:px-10 max-w-8xl sm:mb-24">
+      {(productPage?.faq.length || 0) > 0 && <div className="px-4 mx-auto mb-12 lg:mt-24 sm:px-10 max-w-8xl sm:mb-24">
         <h1 className="text-2xl text-center uppercase sm:text-6xl font-accent">Questions fréquentes</h1>
         <div className="p-4 pt-3 mt-12 border sm:p-8 sm:mt-24 border-neutral-300">
           {productPage?.faq.map((f) => (
@@ -430,14 +431,12 @@ function ProductMain({
   const { title, descriptionHtml } = product;
 
   const hasDiscount = !!selectedVariant?.compareAtPrice;
-  const hasVariants = product.variants.nodes.length > 1;
-
   return (
     <div className={trim(`px-4 mt-6 ${className}`)}>
       <JudgeMeReviewStars productId={product.id} className="mb-3" />
       <ProductPrice selectedVariant={selectedVariant} className="mb-2" />
       <h1 className="mb-3 uppercase text-md-semibold lg:text-lg-semibold">{title}</h1>
-      {!hasVariants && <DeliveryDate className="mt-2 mb-4" type="date" />}
+      <DeliveryDate className="!inline-flex mt-2 mb-4" type="date" />
       {modules && modules.map((m) => {
         switch (m._type) {
           case "module.content.tablePoints":
@@ -473,7 +472,6 @@ function ProductMain({
           </Await>
         </Suspense>
       </form>
-      {hasVariants && <DeliveryDate className="mt-2 mb-4" type="date" />}
       <AddToCartButton
         className={trim(`w-full lg:max-w-xl !py-4`)}
         disabled={!selectedVariant || !selectedVariant.availableForSale}

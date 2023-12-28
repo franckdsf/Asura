@@ -30,7 +30,7 @@ export const DeliveryDate = ({ className = "", type = 'date' }: Props) => {
   return (
     <div className={`flex flex-row items-center justify-around bg-success-100 text-success-500 py-3 px-3 md:px-4 rounded-xs ${className}`}>
       <p className={`text-xs lg:text-sm first-letter:uppercase`}>
-        <Icon.Check className="inline-block mr-2 -mt-0.5" />
+        <Icon.ClockClockwise className="inline-block mr-2 -mt-0.5 icon-md" />
         {type === 'date' ? <>
           <span className="mr-1 font-medium">Livraison gratuite</span>
           entre le

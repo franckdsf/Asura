@@ -16,7 +16,7 @@ type Props = {
 export const BulletsBand = ({ items, className = '' }: Props) => {
   return (
     <div className={trim(`grid grid-cols-2 xl:flex flex-row items-start justify-around w-full px-4 
-      lg:px-10 py-4 bg-container-light/50 text-neutral-900 ${className}`)}>
+      lg:px-10 pt-4 pb-2 bg-container-light/50 text-neutral-900 ${className}`)}>
       {items.map(item => <div key={item.title + item.description}
         className="flex flex-col items-center justify-center m-4 my-2 text-center lg:my-6"
       >

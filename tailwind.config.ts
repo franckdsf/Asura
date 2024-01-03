@@ -122,6 +122,15 @@ export default {
       ...defaultTheme.screens,
     },
     extend: {
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        }
+      },
+      animation: {
+        fadeIn: 'fadeIn 100ms linear',
+      },
       maxWidth: {
         '2xs': '14rem',
         '8xl': '88rem',

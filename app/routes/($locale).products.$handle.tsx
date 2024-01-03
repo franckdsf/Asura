@@ -76,30 +76,15 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
     variables: { handle: 'recommended', ...paginationVariables },
   });
 
-  const selectedOptions = getSelectedProductOptions(request).filter(
-    (option) =>
-      // Filter out Shopify predictive search query params
-      !option.name.startsWith('_sid') &&
-      !option.name.startsWith('_pos') &&
-      !option.name.startsWith('_psq') &&
-      !option.name.startsWith('_ss') &&
-      !option.name.startsWith('_v') &&
-      // Filter out third party tracking params
-      !option.name.startsWith('fbclid') &&
-      // Filter out Google Ads tracking params
-      !option.name.startsWith('utm_medium') &&
-      !option.name.startsWith('utm_source') &&
-      !option.name.startsWith('utm_campaign') &&
-      !option.name.startsWith('currency') &&
-      !option.name.startsWith('variant') &&
-      !option.name.startsWith('stkn')
-  );
-
   if (!handle) {
     throw new Error('Expected product handle to be defined');
   }
 
   const productPage = await CMS.PRODUCT_PAGE_QUERY(handle);
+  const options = (productPage.store.options || []).map((o) => o.name);
+
+  const selectedOptions = getSelectedProductOptions(request)
+    .filter((option) => options.includes(option.name));
 
   // await the query for the critical product data
   const { product } = await storefront.query(PRODUCT_QUERY, {

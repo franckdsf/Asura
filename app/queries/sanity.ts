@@ -58,6 +58,7 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
     store: {
       slug: string,
       id: string,
+      options: Array<{ name: string, values: Array<string> }>
     },
     faq?: Array<{ question: string, answer: Array<Block> }>;
     showShopifyDescription?: boolean,
@@ -67,7 +68,8 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
   }> = await loadQuery(groq`*[_type == "product" && store.slug.current == "${slug}" ] {
     store {
       slug,
-      id
+      id,
+      options
     },
     modules,
     additionalDescriptionBlocks,

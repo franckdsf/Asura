@@ -93,8 +93,10 @@ export function AddToCartButton({
   className = "",
   openCart = false,
   showPaymentMethods = false,
+  quantity = 1,
   onClick,
 }: {
+  quantity?: number;
   className?: string;
   product: Omit<ShopifyAnalyticsProduct, 'variantGid'> & { variantGid: string; };
   children: React.ReactNode;
@@ -106,7 +108,7 @@ export function AddToCartButton({
   const analytics = { products: [product] };
   const lines: CartLineInput[] = [{
     merchandiseId: product.variantGid,
-    quantity: 1
+    quantity: quantity ?? 1,
   }]
 
   return (

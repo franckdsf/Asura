@@ -24,7 +24,7 @@ import type {
 import { getVariantUrl } from '~/utils';
 import {
   BigText, DeliveryDate, DescriptionBlock, ItemsLeft, JudgeMeReviewStars, JudgeMeReviews,
-  MoreInformation, ProductStickyATC, RecommendedProducts, VariantSelector, useJudgeMe
+  MoreInformation, MultipleQuantity, ProductStickyATC, RecommendedProducts, VariantSelector, useJudgeMe
 } from '~/components/products';
 import { AddToCartButton } from '~/tracking/components';
 import { BulletsBand, CarouselProductImages, TablePoints } from '~/ui/organisms';
@@ -37,7 +37,7 @@ import { type rootLoader } from '~/root';
 import { useGoogleEvents } from '~/tracking/hooks';
 import { useProduct } from '~/components/products/useProduct';
 import { STORE } from '~/store.info';
-import type { ContentMoreInformation, ContentTablePoints } from '~/queries/sanity.types';
+import type { ContentMoreInformation, ContentTablePoints, Discount } from '~/queries/sanity.types';
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   const siteName = STORE.name;
@@ -269,11 +269,12 @@ export default function Product() {
         />}
         {/* <ProductImage image={selectedVariant?.image} /> */}
         <ProductMain
-          className={trim(`z-10 w-full max-w-xl max-lg:mx-auto xl:max-w-2xl 2xl:max-w-3xl lg:px-16 pb-6
+          className={trim(`z-10 w-full max-w-xl max-lg:mx-auto xl:max-w-2xl 2xl:max-w-3xl lg:px-16 pb-6 3xl:max-w-4xl 3xl:px-40
             2xl:px-32 ${hasSideElements ? 'lg:py-16 md:pb-24 lg:sticky lg:top-header' : 'lg:py-6 lg:-mt-16'}`)}
           selectedVariant={selectedVariant}
           product={product}
           variants={variants}
+          discounts={productPage?.discounts}
           modules={productPage?.additionalDescriptionBlocks.map((m) => {
             switch (m._type) {
               case 'module.content.moreInformation':
@@ -403,6 +404,7 @@ function ProductMain({
   variants,
   pins,
   modules,
+  discounts = [],
   showDescription = true,
 }: {
   className?: string,
@@ -411,6 +413,7 @@ function ProductMain({
   variants: Promise<ProductVariantsQuery>;
   showDescription?: boolean;
   modules?: Array<ContentTablePoints | ContentMoreInformation>;
+  discounts?: Array<Discount>;
   pins: Array<{ name: string, icon?: string, details?: string }> | undefined;
 }) {
   const { title, descriptionHtml } = product;
@@ -473,6 +476,11 @@ function ProductMain({
       >
         {selectedVariant?.availableForSale ? 'Ajouter au panier' : 'Rupture de stock'}
       </AddToCartButton>
+      {discounts && discounts.length > 0 && <MultipleQuantity className='mt-6'
+        discounts={discounts}
+        product={product}
+        selectedVariant={selectedVariant}
+      />}
       {modules && modules.map((m) => {
         switch (m._type) {
           case "module.content.moreInformation":

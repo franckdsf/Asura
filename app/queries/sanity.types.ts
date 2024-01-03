@@ -86,6 +86,14 @@ export type ActionBlock = {
   }
 }
 
+export type Discount = {
+  _type: 'discount',
+  linkedProducts: Array<string>;
+  discountPercentage: number;
+  minQuantity: number;
+  name?: string;
+}
+
 export type FreeItem = {
   _type: 'freeItem';
   name: string;

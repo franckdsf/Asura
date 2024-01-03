@@ -9,7 +9,8 @@ import type {
   Block,
   CartModule,
   FreeItem,
-  ContentTablePoints
+  ContentTablePoints,
+  Discount
 } from "./sanity.types";
 
 const urlForVideo = (id: string) => {
@@ -60,6 +61,7 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
       id: string,
       options: Array<{ name: string, values: Array<string> }>
     },
+    discounts?: Array<Discount>,
     faq?: Array<{ question: string, answer: Array<Block> }>;
     showShopifyDescription?: boolean,
     additionalDescriptionBlocks: Array<ContentTablePoints | ContentMoreInformation>,
@@ -75,6 +77,7 @@ const PRODUCT_PAGE_QUERY = async (slug: string) => {
     additionalDescriptionBlocks,
     showShopifyDescription,
     faq,
+    "discounts": *[_type == "discount" && "${slug}" in linkedProducts[]->store.slug.current],
     "page": *[_type == "productPage"] {
     defaultInformation,
     bulletsBand,

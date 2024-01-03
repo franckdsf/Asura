@@ -81,7 +81,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
   }
 
   const productPage = await CMS.PRODUCT_PAGE_QUERY(handle);
-  const options = (productPage.store.options || []).map((o) => o.name);
+  const options = (productPage?.store.options || []).map((o) => o.name);
 
   const selectedOptions = getSelectedProductOptions(request)
     .filter((option) => options.includes(option.name));
@@ -433,7 +433,7 @@ function ProductMain({
                 description: i.description,
               }))}
               key={JSON.stringify(m)}
-              className="my-6"
+              className="mb-6"
             />
           default:
             return null;

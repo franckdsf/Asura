@@ -20,7 +20,8 @@ const Component = ({ selected, pricePerAmount, compareAtPricePerAmount, discount
   const price = Number(pricePerAmount.amount) * quantity;
 
   const finalPrice = price * (1 - (discountPercentage / 100));
-  const finalDiscountPercentage = compareAtPrice ? Math.round((1 - (finalPrice / compareAtPrice)) * 100) : 0;
+  const finalCompareAtPrice = compareAtPrice ? compareAtPrice : price;
+  const finalDiscountPercentage = Math.round((1 - (finalPrice / finalCompareAtPrice)) * 100);
 
   return (
     <button
@@ -41,7 +42,7 @@ const Component = ({ selected, pricePerAmount, compareAtPricePerAmount, discount
         </div>
       </div>
       <div className="text-sm sm:text-md">
-        {finalDiscountPercentage > 0 && <Money data={{ amount: `${compareAtPrice}`, currencyCode: pricePerAmount.currencyCode }}
+        {finalCompareAtPrice !== finalPrice && <Money data={{ amount: `${finalCompareAtPrice}`, currencyCode: pricePerAmount.currencyCode }}
           className="line-through mb-0.5 text-neutral-900/60" />}
         <Money data={{ amount: `${finalPrice}`, currencyCode: pricePerAmount.currencyCode }} className="font-medium" />
       </div>
@@ -74,7 +75,7 @@ export const MultipleQuantity = ({ product, selectedVariant, discounts, classNam
     <div>
       <div className={trim(`flex flex-row items-center justify-center gap-x-2 ${className}`)}>
         <hr className="flex-grow h-1px bg-neutral-900" />
-        <p>Économisez jusqu&apos;a {maxDiscountPercentage}% de plus</p>
+        <p>Économisez jusqu&apos;à {maxDiscountPercentage}% de plus</p>
         <hr className="flex-grow h-1px bg-neutral-900" />
       </div>
       <ul className="w-full mt-6 space-y-4">

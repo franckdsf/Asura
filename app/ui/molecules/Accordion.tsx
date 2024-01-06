@@ -1,4 +1,4 @@
-import { type ComponentProps, useState } from "react";
+import { type ComponentProps, useRef, useState, useCallback } from "react";
 import { trim } from "../utils/trim";
 import { PortableText } from "@portabletext/react";
 import { IconFromStr } from "../atoms";
@@ -16,10 +16,14 @@ type Props = {
   size?: 'small' | 'default';
 }
 export const Accordion = ({ size = 'default', icon, showBorder = true, title, className, content }: Props) => {
-  const [expanded, setExpanded] = useState(false);
-  const toggleExpanded = () => setExpanded((current) => !current);
+  const ref = useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState<number>(0);
 
   const basicFormat = typeof content === "string" || Array.isArray(content) && typeof content[0] === "string";
+
+  const toggleExpanded = useCallback(() => {
+    setExpanded((current) => current === 0 ? ref.current!.scrollHeight : 0)
+  }, [])
 
   return (
     <button className={trim(`w-full my-2 cursor-pointer ${size === "small" ? 'my-2' : 'sm:my-4 md:my-6'} ${showBorder && 'border-b'} border-neutral-600 ${className}`)} onClick={toggleExpanded}>
@@ -30,13 +34,13 @@ export const Accordion = ({ size = 'default', icon, showBorder = true, title, cl
         </h5>
         <div className="flex-none pl-4">{expanded ? minusIcon : plusIcon}</div>
       </div>
-      <div className={`px-6 pt-2 overflow-hidden transition-[max-height] duration-500 ease-in ${expanded ? "max-h-screen xl:max-h-screen" : "max-h-0"}`}>
+      <div ref={ref} style={{ maxHeight: expanded }} className={`px-6 pt-2 overflow-hidden transition-[max-height] duration-300 ease-in`}>
         {basicFormat && [...(typeof content === "string" ? [content] : content)].map((c) => (
           <p className="pb-8 text-left text-md" key={c.toString()}>
             {c.toString()}
           </p>
         ))}
-        {!basicFormat && <div className="pb-8 text-left text-md [&>p]:mb-4" >
+        {!basicFormat && <div className="pb-8 text-left text-md [&>p]:mb-4 [&>ul]:list-disc md:[&>ul]:pl-2" >
           <PortableText value={content as PortableTextProp} />
         </div>
         }
